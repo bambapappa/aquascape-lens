@@ -20,7 +20,7 @@
   ExtraData:
     {}
   AssetDataMap:
-    {}
+    Scene: !<own> 38c5d3c1-93ef-4bfd-ac37-3c83423b6f74
   DependentFiles:
     []
   ImporterSettings: !<GltfImporterSettings>
@@ -48,3 +48,88 @@
       jpg: Performance Compression
     Overrides:
       {}
+- !<SceneObject/249b57f0-14a2-4e3c-6975-b99ea1d13c74>
+  PrefabRemaps:
+    []
+  Name: Scenes
+  Enabled: true
+  Layers: 1
+  LocalTransform: !<TransformEntity>
+    Position: {x: 0.000000, y: 0.000000, z: 0.000000}
+    Rotation: {x: 0.000000, y: 0.000000, z: 0.000000}
+    Scale: {x: 1.000000, y: 1.000000, z: 1.000000}
+    HasSegmentScaleCompensation: false
+  Children:
+    - !<own> abae22c7-0852-40c1-4f72-3b16c1a172f6
+  Components:
+    []
+- !<ObjectPrefabAssetData/38c5d3c1-93ef-4bfd-ac37-3c83423b6f74>
+  Prototype: !<ObjectOwner/18b49be3-908f-42f9-b4f6-9c38f17c04e3>
+    PackagePath: ""
+    objects:
+      - !<own> d9bd5f7b-0277-42c6-45f7-3b86d968dcd3
+- !<RenderMeshVisual/a964bf87-7467-4a96-751c-5fb6963a4f12>
+  PrefabRemaps:
+    []
+  Name: ""
+  Enabled: true
+  RenderOrder: 0
+  StretchMode: Stretch
+  VerticalAlignment: Center
+  HorizontalAlignment: Center
+  MeshShadowMode: None
+  ShadowColor: {x: 1.000000, y: 1.000000, z: 1.000000, w: 1.000000}
+  ShadowDensity: 1.000000
+  Materials:
+    - !<reference> 1b0106d6-0a94-401e-9593-cb283e6908ff
+  Mesh: !<reference> 70ca19ea-904f-431a-83fb-e47e62b1a06b
+  Skin: !<reference> 00000000-0000-0000-0000-000000000000
+  BlendShapesEnabled: true
+  BlendNormals: false
+  BlendShapes:
+    {}
+- !<SceneObject/abae22c7-0852-40c1-4f72-3b16c1a172f6>
+  PrefabRemaps:
+    []
+  Name: Scene0
+  Enabled: true
+  Layers: 1
+  LocalTransform: !<TransformEntity>
+    Position: {x: 0.000000, y: 0.000000, z: 0.000000}
+    Rotation: {x: 0.000000, y: 0.000000, z: 0.000000}
+    Scale: {x: 1.000000, y: 1.000000, z: 1.000000}
+    HasSegmentScaleCompensation: false
+  Children:
+    - !<own> d0234211-a397-4513-48d5-54ace0b0c538
+  Components:
+    []
+- !<SceneObject/d0234211-a397-4513-48d5-54ace0b0c538>
+  PrefabRemaps:
+    []
+  Name: sceneObject_3
+  Enabled: true
+  Layers: 1
+  LocalTransform: !<TransformEntity>
+    Position: {x: 0.000000, y: 0.000000, z: 0.000000}
+    Rotation: {x: 0.000000, y: 0.000000, z: 0.000000}
+    Scale: {x: 1.000000, y: 1.000000, z: 1.000000}
+    HasSegmentScaleCompensation: false
+  Children:
+    []
+  Components:
+    - !<own> a964bf87-7467-4a96-751c-5fb6963a4f12
+- !<SceneObject/d9bd5f7b-0277-42c6-45f7-3b86d968dcd3>
+  PrefabRemaps:
+    []
+  Name: SeiryuStone
+  Enabled: true
+  Layers: 1
+  LocalTransform: !<TransformEntity>
+    Position: {x: 0.000000, y: 0.000000, z: 0.000000}
+    Rotation: {x: 0.000000, y: 0.000000, z: 0.000000}
+    Scale: {x: 100.000000, y: 100.000000, z: 100.000000}
+    HasSegmentScaleCompensation: false
+  Children:
+    - !<own> 249b57f0-14a2-4e3c-6975-b99ea1d13c74
+  Components:
+    []
