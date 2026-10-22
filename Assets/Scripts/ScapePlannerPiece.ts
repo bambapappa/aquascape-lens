@@ -114,28 +114,38 @@ export class ScapePlannerPiece {
       print("ScapePlannerPiece: prefab has no RenderMeshVisual: " + this.label);
       return;
     }
+    // Bounds in the wrapper's local frame, computed from each mesh's own AABB corners
+    // pushed through the mesh transform. Deterministic on the frame of instantiation,
+    // unlike worldAabbMin/Max which can lag one frame behind.
+    const toWrapper = this.root.getTransform().getInvertedWorldTransform();
     let min = new vec3(Infinity, Infinity, Infinity);
     let max = new vec3(-Infinity, -Infinity, -Infinity);
     for (const v of visuals) {
-      const a = v.worldAabbMin();
-      const b = v.worldAabbMax();
-      min = new vec3(Math.min(min.x, a.x), Math.min(min.y, a.y), Math.min(min.z, a.z));
-      max = new vec3(Math.max(max.x, b.x), Math.max(max.y, b.y), Math.max(max.z, b.z));
+      const mesh = v.mesh;
+      if (!mesh) continue;
+      const a = mesh.aabbMin;
+      const b = mesh.aabbMax;
+      const world = v.getTransform().getWorldTransform();
+      for (let i = 0; i < 8; i++) {
+        const corner = new vec3(i & 1 ? b.x : a.x, i & 2 ? b.y : a.y, i & 4 ? b.z : a.z);
+        const p = toWrapper.multiplyPoint(world.multiplyPoint(corner));
+        min = new vec3(Math.min(min.x, p.x), Math.min(min.y, p.y), Math.min(min.z, p.z));
+        max = new vec3(Math.max(max.x, p.x), Math.max(max.y, p.y), Math.max(max.z, p.z));
+      }
     }
     const size = max.sub(min);
     if (!(size.y > 0.0001)) {
       print("ScapePlannerPiece: zero-height bounds for " + this.label);
       return;
     }
-    // The wrapper is at unit world scale under the tank, so world units equal local cm here.
     const factor = heightCm / size.y;
     const t = visual.getTransform();
     const s = t.getLocalScale();
     t.setLocalScale(new vec3(s.x * factor, s.y * factor, s.z * factor));
-    // Re-centre: the wrapper origin is the collider centre, so the bounds centre must sit at the origin.
-    const centreLocal = min.add(max).uniformScale(0.5).sub(this.root.getTransform().getWorldPosition());
+    // Re-centre: the wrapper origin is the collider centre, so the scaled bounds centre must sit at the origin.
+    const centre = min.add(max).uniformScale(0.5);
     const lp = t.getLocalPosition();
-    t.setLocalPosition(new vec3(lp.x - centreLocal.x * factor, lp.y - centreLocal.y * factor, lp.z - centreLocal.z * factor));
+    t.setLocalPosition(new vec3(lp.x - centre.x * factor, lp.y - centre.y * factor, lp.z - centre.z * factor));
   }
 
   private collectVisuals(obj: SceneObject, out: RenderMeshVisual[]): void {

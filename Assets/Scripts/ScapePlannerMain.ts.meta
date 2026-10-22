@@ -77,6 +77,6 @@
     - // @input Asset.ObjectPrefab stemsPrefab
     - '// @ui {"widget":"label", "label":"Placement"}'
     - '// @input float distanceCm = 100 {"hint":"How far in front of the user the tank is placed, in cm"}'
-    - '// @input float dropBelowEyesCm = 90 {"hint":"How far below eye level the tank floor sits, in cm (eye height minus table height)"}'
+    - '// @input float dropBelowEyesCm = 85 {"hint":"How far below eye level the tank floor sits, in cm (eye height minus table height)"}'
     - '// @input bool placeOnStart = true {"hint":"Place the tank in front of the user when the Lens starts"}'
     - '// @input bool debugColliders {"hint":"Render colliders as wireframes for debugging"}'

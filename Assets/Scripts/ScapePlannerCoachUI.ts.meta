@@ -62,7 +62,7 @@
       {}
   InputLines:
     - '// @ui {"widget":"label", "label":"Panel"}'
-    - '// @input float widthCm = 26 {"hint":"Panel width in cm"}'
+    - '// @input float widthCm = 34 {"hint":"Panel width in cm"}'
     - '// @input float paddingCm = 1.4 {"hint":"Padding inside the panel in cm"}'
     - '// @input float gapCm = 0.7 {"hint":"Gap between rows in cm"}'
     - '// @input string titleText = "Coach" {"hint":"Title shown at the top"}'

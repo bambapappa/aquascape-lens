@@ -51,7 +51,7 @@ export class ScapePlannerMain extends BaseScriptComponent {
   distanceCm: number = 100;
   @input
   @hint("How far below eye level the tank floor sits, in cm (eye height minus table height)")
-  dropBelowEyesCm: number = 90;
+  dropBelowEyesCm: number = 85;
   @input
   @hint("Place the tank in front of the user when the Lens starts")
   placeOnStart: boolean = true;

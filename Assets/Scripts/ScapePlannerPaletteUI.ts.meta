@@ -29,6 +29,7 @@
   PackagePolicy: CanBeUnpacked
   ScriptInputsHidden:
     buttonHeightCm: false
+    buttonWidthCm: false
     faceUser: false
     gapCm: false
     paddingCm: false
@@ -47,6 +48,7 @@
       paddingCm: 1.600000
       gapCm: 0.900000
       buttonHeightCm: !<float> 6.000000
+      buttonWidthCm: !<float> 10.000000
       titleText: Scape Planner
       faceUser: true
   ScriptTypes:
@@ -54,9 +56,10 @@
       {}
   InputLines:
     - '// @ui {"widget":"label", "label":"Panel"}'
-    - '// @input float widthCm = 24 {"hint":"Panel width in cm"}'
+    - '// @input float widthCm = 56 {"hint":"Panel width in cm"}'
     - '// @input float paddingCm = 1.6 {"hint":"Padding inside the panel in cm"}'
     - '// @input float gapCm = 0.9 {"hint":"Gap between buttons in cm"}'
-    - '// @input float buttonHeightCm = 6 {"hint":"Button height in cm (targets at least 6 cm are easy to pinch)"}'
+    - '// @input float buttonHeightCm = 5 {"hint":"Button height in cm"}'
+    - '// @input float buttonWidthCm = 10 {"hint":"Button width in cm"}'
     - '// @input string titleText = "Scape Planner" {"hint":"Title shown above the buttons"}'
-    - '// @input bool faceUser = true {"hint":"Turn the panel toward the user"}'
+    - '// @input bool faceUser {"hint":"Turn the panel toward the user (off: keep the authored tilt, e.g. lying on the table)"}'

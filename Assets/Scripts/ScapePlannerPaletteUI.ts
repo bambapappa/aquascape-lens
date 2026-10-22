@@ -55,7 +55,7 @@ export class ScapePlannerPaletteUI extends BaseScriptComponent {
   @ui.label("Panel")
   @input
   @hint("Panel width in cm")
-  widthCm: number = 24;
+  widthCm: number = 56;
   @input
   @hint("Padding inside the panel in cm")
   paddingCm: number = 1.6;
@@ -63,14 +63,17 @@ export class ScapePlannerPaletteUI extends BaseScriptComponent {
   @hint("Gap between buttons in cm")
   gapCm: number = 0.9;
   @input
-  @hint("Button height in cm (targets at least 6 cm are easy to pinch)")
-  buttonHeightCm: number = 6;
+  @hint("Button height in cm")
+  buttonHeightCm: number = 5;
+  @input
+  @hint("Button width in cm")
+  buttonWidthCm: number = 10;
   @input
   @hint("Title shown above the buttons")
   titleText: string = "Scape Planner";
   @input
-  @hint("Turn the panel toward the user")
-  faceUser: boolean = true;
+  @hint("Turn the panel toward the user (off: keep the authored tilt, e.g. lying on the table)")
+  faceUser: boolean = false;
 
   private _onAction = new Event<PaletteAction>();
   get onAction(): PublicApi<PaletteAction> {
@@ -93,6 +96,8 @@ export class ScapePlannerPaletteUI extends BaseScriptComponent {
     content.getTransform().setLocalPosition(new vec3(0, 0, 0.6));
 
     const flex = content.createComponent(FlexLayout.getTypeName()) as FlexLayout;
+
+    flex.autoDiscoverItemsOnStart = false; // items are added programmatically below
     flex.width = this.widthCm;
     flex.height = -1;
     flex.direction = FlexDirection.Column;
@@ -109,9 +114,8 @@ export class ScapePlannerPaletteUI extends BaseScriptComponent {
 
     const items: FlexItem[] = [];
     items.push(this.addHeader(content, this.titleText));
-    for (const spec of BUTTONS) {
-      items.push(this.addButton(content, spec));
-    }
+    items.push(this.addRow(content, BUTTONS.slice(0, 5)));
+    items.push(this.addRow(content, BUTTONS.slice(5)));
     flex.addItems(items);
   }
 
@@ -126,17 +130,18 @@ export class ScapePlannerPaletteUI extends BaseScriptComponent {
     so.setParent(parent);
     so.getTransform().setLocalPosition(new vec3(0, 0, LAYOUT_Z_LIFT));
     const innerW = this.widthCm - this.paddingCm * 2;
-    const headerH = 3.2;
+    const headerH = 2.6;
     const t = so.createComponent("Component.Text") as Text;
     t.text = label;
     t.depthTest = true;
-    applyTextRole(t, "Headline2");
+    applyTextRole(t, "Subheadline");
     t.horizontalAlignment = HorizontalAlignment.Center;
     t.verticalAlignment = VerticalAlignment.Center;
     t.horizontalOverflow = HorizontalOverflow.Overflow;
     t.verticalOverflow = VerticalOverflow.Overflow;
     t.layoutRect = Rect.create(-innerW / 2, innerW / 2, -headerH / 2, headerH / 2);
     const item = so.createComponent(FlexItem.getTypeName()) as FlexItem;
+    item.flexShrink = 0;
     item.overrideWidth = innerW;
     item.overrideHeight = headerH;
     item.marginBottom = 0.6;
@@ -144,20 +149,49 @@ export class ScapePlannerPaletteUI extends BaseScriptComponent {
     return item;
   }
 
+  private addRow(parent: SceneObject, specs: ButtonSpec[]): FlexItem {
+    const innerW = this.widthCm - this.paddingCm * 2;
+    const row = global.scene.createSceneObject("Row");
+    row.setParent(parent);
+    row.getTransform().setLocalPosition(new vec3(0, 0, LAYOUT_Z_LIFT));
+    const rowItem = row.createComponent(FlexItem.getTypeName()) as FlexItem;
+    rowItem.flexShrink = 0;
+    rowItem.overrideWidth = innerW;
+    rowItem.overrideHeight = this.buttonHeightCm;
+    const flex = row.createComponent(FlexLayout.getTypeName()) as FlexLayout;
+    flex.autoDiscoverItemsOnStart = false;
+    flex.width = innerW;
+    flex.height = this.buttonHeightCm;
+    flex.direction = FlexDirection.Row;
+    flex.alignItems = FlexAlign.Center;
+    flex.justifyContent = FlexJustify.Center;
+    flex.columnGap = this.gapCm;
+    const items: FlexItem[] = [];
+    for (const spec of specs) items.push(this.addButton(row, spec));
+    flex.addItems(items);
+    return rowItem;
+  }
+
   private addButton(parent: SceneObject, spec: ButtonSpec): FlexItem {
-    const sizeX = this.widthCm - this.paddingCm * 2;
+    const sizeX = this.buttonWidthCm;
     const sizeY = this.buttonHeightCm;
     const so = global.scene.createSceneObject("Button_" + spec.id);
     so.setParent(parent);
     so.getTransform().setLocalPosition(new vec3(0, 0, LAYOUT_Z_LIFT));
     const btn = so.createComponent(Button.getTypeName()) as Button;
-    btn.size = new vec3(sizeX, sizeY, 1); // before init, same rule as Slider/Switch
+    btn.size = new vec3(sizeX, sizeY, 1);
+    // Button defers its own configuration to init; re-apply the size there so it cannot be
+    // reset to the default (specs-build-ui gotcha G2).
+    btn.onInitialized.add(() => {
+      btn.size = new vec3(sizeX, sizeY, 1);
+    });
     if (spec.id === "guides") {
       btn.setIsToggleable(true);
       btn.isOn = true;
     }
     this.addButtonLabel(so, spec.label, sizeX - 0.5);
     const item = so.createComponent(FlexItem.getTypeName()) as FlexItem;
+    item.flexShrink = 0;
     item.overrideWidth = sizeX;
     item.overrideHeight = sizeY;
     btn.onTriggerUp.add(() => this._onAction.invoke(spec.id));

@@ -36,7 +36,7 @@ export class ScapePlannerCoachUI extends BaseScriptComponent {
   @ui.label("Panel")
   @input
   @hint("Panel width in cm")
-  widthCm: number = 26;
+  widthCm: number = 34;
   @input
   @hint("Padding inside the panel in cm")
   paddingCm: number = 1.4;
@@ -83,6 +83,8 @@ export class ScapePlannerCoachUI extends BaseScriptComponent {
     content.getTransform().setLocalPosition(new vec3(0, 0, 0.6));
 
     const flex = content.createComponent(FlexLayout.getTypeName()) as FlexLayout;
+
+    flex.autoDiscoverItemsOnStart = false; // items are added programmatically below
     flex.width = this.widthCm;
     flex.height = -1;
     flex.direction = FlexDirection.Column;
@@ -152,9 +154,10 @@ export class ScapePlannerCoachUI extends BaseScriptComponent {
 
   private addHeader(parent: SceneObject): FlexItem {
     const innerW = this.widthCm - this.paddingCm * 2;
-    const h = 3.0;
+    const h = 2.6;
     this.titleTextComp = this.makeText(parent, "Header", this.titleText, "Headline2", innerW, h, HorizontalAlignment.Center);
     const item = this.titleTextComp.getSceneObject().createComponent(FlexItem.getTypeName()) as FlexItem;
+    item.flexShrink = 0;
     item.overrideWidth = innerW;
     item.overrideHeight = h;
     item.marginBottom = 0.4;
@@ -164,15 +167,18 @@ export class ScapePlannerCoachUI extends BaseScriptComponent {
 
   private addRow(parent: SceneObject, index: number): FlexItem {
     const innerW = this.widthCm - this.paddingCm * 2;
-    const rowH = 4.0;
+    const rowH = 3.2;
     const row = global.scene.createSceneObject("Row_" + index);
     row.setParent(parent);
     row.getTransform().setLocalPosition(new vec3(0, 0, LAYOUT_Z_LIFT));
     const rowItem = row.createComponent(FlexItem.getTypeName()) as FlexItem;
+    rowItem.flexShrink = 0;
     rowItem.overrideWidth = innerW;
     rowItem.overrideHeight = rowH;
 
     const flex = row.createComponent(FlexLayout.getTypeName()) as FlexLayout;
+
+    flex.autoDiscoverItemsOnStart = false; // items are added programmatically below
     flex.width = innerW;
     flex.height = rowH;
     flex.direction = FlexDirection.Row;
@@ -185,15 +191,18 @@ export class ScapePlannerCoachUI extends BaseScriptComponent {
     const dot = this.makeText(row, "Dot", "●", "Headline1", dotW, rowH, HorizontalAlignment.Center);
     dot.textFill.color = this.neutralColor;
     const dotItem = dot.getSceneObject().createComponent(FlexItem.getTypeName()) as FlexItem;
+    dotItem.flexShrink = 0;
     dotItem.overrideWidth = dotW;
     dotItem.overrideHeight = rowH;
 
     const textCol = global.scene.createSceneObject("TextCol");
     textCol.setParent(row);
     const colItem = textCol.createComponent(FlexItem.getTypeName()) as FlexItem;
+    colItem.flexShrink = 0;
     colItem.overrideWidth = textW;
     colItem.overrideHeight = rowH;
     const colFlex = textCol.createComponent(FlexLayout.getTypeName()) as FlexLayout;
+    colFlex.autoDiscoverItemsOnStart = false; // items are added programmatically below
     colFlex.width = textW;
     colFlex.height = rowH;
     colFlex.direction = FlexDirection.Column;
@@ -201,14 +210,16 @@ export class ScapePlannerCoachUI extends BaseScriptComponent {
     colFlex.justifyContent = FlexJustify.Center;
     colFlex.rowGap = 0.1;
 
-    const title = this.makeText(textCol, "Title", ROW_TITLES[index], "Caption", textW, 1.6, HorizontalAlignment.Left);
+    const title = this.makeText(textCol, "Title", ROW_TITLES[index], "Caption", textW, 1.3, HorizontalAlignment.Left);
     const titleItem = title.getSceneObject().createComponent(FlexItem.getTypeName()) as FlexItem;
+    titleItem.flexShrink = 0;
     titleItem.overrideWidth = textW;
-    titleItem.overrideHeight = 1.6;
-    const msg = this.makeText(textCol, "Message", "", "Body", textW, 2.0, HorizontalAlignment.Left);
+    titleItem.overrideHeight = 1.3;
+    const msg = this.makeText(textCol, "Message", "", "Body", textW, 1.8, HorizontalAlignment.Left);
     const msgItem = msg.getSceneObject().createComponent(FlexItem.getTypeName()) as FlexItem;
+    msgItem.flexShrink = 0;
     msgItem.overrideWidth = textW;
-    msgItem.overrideHeight = 2.0;
+    msgItem.overrideHeight = 1.8;
     colFlex.addItems([titleItem, msgItem]);
 
     flex.addItems([dotItem, colItem]);
