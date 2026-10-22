@@ -1,0 +1,50 @@
+- !<AssetImportMetadata/736b9add-b7f6-4837-b9fd-1f08472695f4>
+  ImportedAssetIds:
+    .hidden/Material 1: !<reference> 9c56ce4a-5122-43f8-9c8f-1a86c7621d60
+    26ba073d67b9d0dd: !<reference> d9bd5f7b-0277-42c6-ba08-c4792697232c
+    5c00ff2fa6202642: !<reference> d0234211-a397-4513-b72a-ab531f4f3ac7
+    88ab437fd121cc69: !<reference> 249b57f0-14a2-4e3c-968a-46615e2ec38b
+    8c2c6f3cf8d060fd: !<reference> abae22c7-0852-40c1-b08d-c4e93e5e8d09
+    Materials/Material 1: !<reference> 1b0106d6-0a94-401e-9593-cb283e6908ff
+    Materials/Material 1|Material 1|GraphPassInfo: !<reference> 85c72db0-4384-4a68-9e57-8a4ad2729297
+    Meshes/Mesh 1: !<reference> 70ca19ea-904f-431a-83fb-e47e62b1a06b
+    Scene: !<reference> 1b372a58-f7c9-4c47-93ff-9da88df669c5
+    Textures/texture: !<reference> 0233abcb-f944-4616-9b6e-e6c9d92a669f
+    Textures/texture1: !<reference> 8619144e-2ee1-4a57-881a-1fc351963b08
+    Textures/texture2: !<reference> ca5e74ca-695c-426f-9e3c-08aee7f7f40b
+    e21a1de8b9ce7b0e: !<reference> a964bf87-7467-4a96-8ae3-a04969c5b0ed
+  ImporterName: GltfImporter
+  PrimaryAsset: !<reference> 1b372a58-f7c9-4c47-93ff-9da88df669c5
+  PackageType: LegacyPackage
+  LegacyPackagePolicy: CanBeUnpackedTransparent
+  ExtraData:
+    {}
+  AssetDataMap:
+    {}
+  DependentFiles:
+    []
+  ImporterSettings: !<GltfImporterSettings>
+    UseLegacyImporter: false
+    WithMaterials: true
+    NamingConvention: ByCategorySanitizeV2
+    PersistentIdGenerationAlgorithm: DescriptorBasedV2
+    AnimationCurveOptimization: true
+    CustomAnimationSamplingRate: 30.000000
+    ImportVertexColor: true
+    ImportTangents: true
+    ImportMorphTargetAnimation: true
+    ConvertMetersToCentimeters: true
+    RegenerateTangents: false
+    OptimizeMesh: true
+  CompressionSettings: !<ComplexCompressionSettings>
+    Presets:
+      None Compression: !<FileCompressionSettings>
+        {}
+      Performance Compression: !<PerformanceCompressionSettings>
+        Level: Medium
+        Mipmap: false
+    ExtensionMappings:
+      mesh: None Compression
+      jpg: Performance Compression
+    Overrides:
+      {}
