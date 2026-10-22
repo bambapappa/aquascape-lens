@@ -55,6 +55,12 @@ as a pinch. No SPECS glasses are needed.
 - `Packages/`: Spectacles Interaction Kit and UI Kit (from Snap's Specs
   Base Template).
 
+## Tests
+
+Six LEAF scenarios in `Assets/Tests/` (one per done criterion in the brief,
+plus an IK reachability check of the palette) run from the LEAF panel in
+Lens Studio and all pass in the preview. `LeafIndex.ts` registers them.
+
 ## Run it
 
 1. Open `AquascapeLens.esproj` in Lens Studio 5.22 or later.

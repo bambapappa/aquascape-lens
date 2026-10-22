@@ -1,0 +1,93 @@
+# Build log: how Scape Planner was built
+
+Written 2026-10-23 at the end of the build session. This is the honest record
+of the process, including what deviated from the hackathon's standard flow.
+
+## Timeline (one night, 22 to 23 October 2026)
+
+1. **Setup.** Lens Studio 5.24.1 installed on the Mac mini. Project started
+   from Snap's *Specs Base Template* (`specs-devs/samples`), which bundles
+   Spectacles Interaction Kit 2.0 and UI Kit 2.0. The CLAD plugin (`ls-clad`
+   from `lens-studio-devs/ls-extensions`) and the Devpost Learn skill pack
+   (`challengepost/learn-specs`) were installed. Lens Studio opened the
+   project, migrated it to 5.24, started its MCP server and wrote `.mcp.json`.
+2. **Research.** Aquascaping guidance was gathered first (see
+   `research-notes.md`): dry layout before water, scale mistakes, Green
+   Aqua's composition rules, planting zones, existing tools.
+3. **Plan.** The `plan-lens` interview was run against the learner's written
+   answers in `interview-answers.md` and produced `design-brief.md`
+   (status: approved).
+4. **Assets.** Five 3D models were generated with Meshy under the author's
+   paid plan (preview plus textured refine, PBR maps), downloaded as GLB and
+   imported by Lens Studio: Seiryu stone, spider wood, Monte Carlo carpet,
+   Cryptocoryne bush, Rotala stems. Snap's own text-to-3D was not used
+   because it needs a signed-in Lens Studio account.
+5. **Build.** Following CLAD's `specs-experience-builder` pipeline: project
+   init survey (camera with world tracking, SIK prefab present, preview set
+   to the SPECS 27 stereo device in Interactive mode), scripts written with
+   the UIKit and SIK patterns from the `specs-build-ui`, `specs-interaction-
+   recipes` and `lens-api` skills, scene bootstrapped in two `VirtualScene`
+   applies (Phase A: assets and authored objects; Phase B: `@input` wiring
+   after `RecompileTypeScriptTool`), then the see-and-fix loop with
+   `RunAndCollectLogsTool`, `CapturePanelScreenshotTool` and
+   `QueryRuntimeSceneTool`.
+6. **Test.** LEAF installed from the Asset Library; six scenarios written
+   (one per done criterion plus an IK reachability test) and run in the
+   preview through the LEAF panel. All six pass.
+
+## What deviated from the standard flow, and why
+
+- **The coding agent drove the Lens Studio MCP directly.** The build was run
+  by Claude (Anthropic's model) from a Claude desktop session. Partway through
+  the night the standalone Claude Code CLI lost its sign-in and could not be
+  re-authenticated without the author, so the planned headless Claude Code
+  session inside the project folder was not possible. Instead the agent
+  connected to Lens Studio's MCP server with a small JSON-RPC client
+  (streamable HTTP, the normal MCP protocol) and followed the CLAD plugin's
+  skills and agent instructions step by step from their installed files.
+  Every scene write, recompile, log read, preview capture, interaction and
+  LEAF run went through the Lens Studio MCP tools. The CLAD plugin files were
+  the method; the transport was a plain MCP client rather than Claude Code's
+  built-in one.
+- **The plan-lens interview was answered from a prepared document.** The
+  learner (the project owner) wrote the answers in advance and signed off in
+  writing, because the session ran overnight without them.
+- **Meshes came from Meshy, not SPECS text-to-3D.** See step 4.
+
+## Verification record
+
+Checked in Lens Studio 5.24.1, Interactive Preview, Sunlit Room scene, SPECS
+27 stereo device, mouse as pinch (simulated through the AiPreviewAgent and
+LEAF interactors).
+
+| Done criterion | How it was checked | Result |
+|---|---|---|
+| 1. Tank 60 x 30 x 36 cm on a table 1 m ahead; Guides toggles the thirds grid | LEAF `scape-1-tank-and-guides`; preview captures | pass |
+| 2. Stone pinch places a 22 cm stone; grab and drag; never leaves the tank | LEAF `scape-2-place-and-drag-stone`; drag to the front glass clamps at the inner wall | pass |
+| 3. Centred main stone: amber; stone on a third: green | LEAF `scape-3-focal-point` (pull to centre, fresh stone on a third); drag back to a third checked with the AiPreviewAgent drag tool (x = -8.9 cm gave "Main stone sits on a third") | pass |
+| 4. Two stones: amber count; three: green | LEAF `scape-4-odd-count` | pass |
+| 5. Undo removes last; Clear empties; coach resets | LEAF `scape-5-undo-clear` | pass |
+| Reach: a simulated arm can pinch the palette on the table | LEAF `scape-6-reach-ik` | pass |
+| Zone check (extra): stems in the midground warn "Rotala belongs in the background" | LEAF `scape-5-undo-clear` | pass |
+
+Logic proven: everything in the table. Feel unproven: pinching a virtual
+stone while holding a real one, comfort of looking down at a tank for a
+long session, hand tracking near glass. Only real glasses can tell.
+
+## Known limitations
+
+- The palette's near-field interaction volume (UIKit) sits in front of the
+  tank; a far-field drag toward the back of the tank can be blocked when the
+  ray passes through it. Moving the palette to the table front minimised
+  this; it is the reason the palette is a tray and not a floating column.
+- LEAF's far-field drag applies its vector per update, so scenarios use it
+  for coarse moves only.
+- The preview cannot recognise a real tank; the virtual tank is the stand-in
+  the brief describes.
+- Repository visibility: the repo was created private during the overnight
+  build and is to be made public by the author before submission.
+
+## Credits
+
+Composition rules from Green Aqua. 3D models generated with Meshy. Built on
+Snap's Specs Base Template, SIK, UI Kit, CLAD skills and LEAF.
