@@ -33,3 +33,6 @@ ls-live-instance.json.tmp
 
 # Added by Lens Studio (LEAF plugin)
 leaf_plugin_settings.json
+
+# Local demo drafts (the real demo lives on YouTube)
+*.mp4
