@@ -4,6 +4,8 @@
     - !<own> 00000000-0000-0065-0000-000000000064
     - !<own> 0005641c-028d-459a-0000-000000014b4d
     - !<own> f5d74682-203a-4970-81ea-9fa7b88c96bb
+    - !<own> 02351f9f-7b70-4049-b6dd-e30bbb7bb482
+    - !<own> 95302fc2-335c-4e4b-8df6-072371d77e0d
   layers: !<Layers/267ee9a7-aff2-4f9d-9a49-f71214747d03>
     userLayers:
       - id: 1
@@ -13,6 +15,8 @@
   RenderPreviewOutput: !<reference> 923415f5-4245-4675-ade1-6d69d6d23e71
   RenderOverlayOutput: !<reference> 00000000-0000-0000-0000-000000000000
   PhysicsRootWorldSettings: !<reference> 00000000-0000-0000-0000-000000000000
+  HiddenInCaptureLayers: 0
+  HiddenInDisplayLayers: 0
   PrefabPreviewEnvironmentInitialized: false
   PrefabPreviewEnvironment: !<reference> 00000000-0000-0000-0000-000000000000
 - !<SceneObject/00000000-0000-0065-0000-000000000064>
@@ -117,6 +121,7 @@
   EnvMapRotation: 0.000000
   DiffuseEnvTexture: !<reference> 00000000-0000-0000-0000-000000000000
   SpecularEnvTexture: !<reference> 00000000-0000-0000-0000-000000000000
+  SpecularCubemapTexture: !<reference> 00000000-0000-0000-0000-000000000000
   Color: {x: 1.000000, y: 1.000000, z: 1.000000, w: 1.000000}
   ShadowColor: {x: 0.000000, y: 0.000000, z: 0.000000, w: 1.000000}
   DynamicEnvInputTexture: !<reference> 00000000-0000-0000-0000-000000000000
@@ -164,6 +169,7 @@
   EnvMapRotation: 0.000000
   DiffuseEnvTexture: !<reference> 2013a19b-93c1-4f21-b7ea-876a33550c7b
   SpecularEnvTexture: !<reference> d795fd46-e16b-4cb9-8dfb-4ef227298f7a
+  SpecularCubemapTexture: !<reference> 00000000-0000-0000-0000-000000000000
   Color: {x: 1.000000, y: 1.000000, z: 1.000000, w: 1.000000}
   ShadowColor: {x: 0.000000, y: 0.000000, z: 0.000000, w: 1.000000}
   DynamicEnvInputTexture: !<reference> 00000000-0000-0000-0000-000000000000
@@ -187,6 +193,23 @@
     - !<own> 276368e3-f687-4cc6-947d-24de3a78c9af
   Components:
     []
+- !<SceneObject/02351f9f-7b70-4049-b6dd-e30bbb7bb482>
+  PrefabRemaps:
+    []
+  Name: ScapePlanner
+  Enabled: true
+  Layers: 1
+  LocalTransform: !<TransformEntity>
+    Position: {x: 0.000000, y: -90.000000, z: -100.000000}
+    Rotation: {x: 0.000000, y: 0.000000, z: 0.000000}
+    Scale: {x: 1.000000, y: 1.000000, z: 1.000000}
+    HasSegmentScaleCompensation: false
+  Children:
+    - !<own> e6e42d3f-1dc6-4de2-9f27-0f63206a0c0e
+    - !<own> b30a2d3a-0f13-4c96-bb20-c94c534ba2cd
+    - !<own> cf93f461-1a28-49c3-9b36-f9a054e27afd
+  Components:
+    - !<own> a4b716f3-6f9e-4f02-9e8c-9c3a396eb462
 - !<SceneObject/0451d993-a1f7-464e-9b69-32c0d9af8ed7>
   PrefabRemaps:
     []
@@ -509,6 +532,32 @@
     []
   Components:
     []
+- !<ScriptComponent/1917c044-d7b2-4e12-8933-021ab72cd552>
+  PrefabRemaps:
+    []
+  Name: ScapePlannerPaletteUI
+  Enabled: true
+  ScriptAsset: !<reference> 9aea92fd-83ec-46a6-8af5-8869f0773f0f
+  ScriptInputsDefault:
+    widthCm: true
+    paddingCm: true
+    gapCm: true
+    buttonHeightCm: true
+    titleText: true
+    faceUser: true
+  ScriptTypesDefault:
+    {}
+  ScriptInputs:
+    "":
+      widthCm: !<float> 24.000000
+      paddingCm: 1.600000
+      gapCm: 0.900000
+      buttonHeightCm: !<float> 6.000000
+      titleText: Scape Planner
+      faceUser: true
+  ScriptTypes:
+    "":
+      {}
 - !<RenderMeshVisual/1f969daa-5809-4500-b314-98d91ccba131>
   PrefabRemaps:
     []
@@ -1558,6 +1607,21 @@
     - !<own> e9454e66-5d09-4a8a-bcd7-dea762326a48
   Components:
     []
+- !<SceneObject/95302fc2-335c-4e4b-8df6-072371d77e0d>
+  PrefabRemaps:
+    []
+  Name: AiPreviewAgent Handler
+  Enabled: true
+  Layers: 1
+  LocalTransform: !<TransformEntity>
+    Position: {x: 0.000000, y: 0.000000, z: 0.000000}
+    Rotation: {x: 0.000000, y: 0.000000, z: 0.000000}
+    Scale: {x: 1.000000, y: 1.000000, z: 1.000000}
+    HasSegmentScaleCompensation: false
+  Children:
+    []
+  Components:
+    - !<own> b7dcd072-50b3-46b3-8b74-9b7e6c302afd
 - !<SceneObject/988c408a-99dc-47e6-b7c4-efbf4bf8dc3c>
   PrefabRemaps:
     []
@@ -1653,6 +1717,36 @@
     - !<own> 82a4b4e8-283b-441c-8b94-9fdc50c958f2
   Components:
     []
+- !<ScriptComponent/a4b716f3-6f9e-4f02-9e8c-9c3a396eb462>
+  PrefabRemaps:
+    []
+  Name: ScapePlannerMain
+  Enabled: true
+  ScriptAsset: !<reference> 88e499d2-8f1e-4975-8c80-63882ecf61a6
+  ScriptInputsDefault:
+    distanceCm: true
+    dropBelowEyesCm: true
+    placeOnStart: true
+    debugColliders: true
+  ScriptTypesDefault:
+    {}
+  ScriptInputs:
+    "":
+      tank: !<MappingBased.AssignableType_1> fd630fa3-e0cd-4963-8f90-60b1c4aeb786
+      palette: !<MappingBased.AssignableType_2> 1917c044-d7b2-4e12-8933-021ab72cd552
+      coach: !<MappingBased.AssignableType_3> eec3a736-a21d-4d97-8a42-9cf40bbb997c
+      stonePrefab: !<reference.ObjectPrefab> 1b372a58-f7c9-4c47-93ff-9da88df669c5
+      woodPrefab: !<reference.ObjectPrefab> fdc4631b-e30d-4587-8831-f85cd7ae37f2
+      carpetPrefab: !<reference.ObjectPrefab> 4c54ca4f-e8a1-479b-a231-35ef744e899c
+      bushPrefab: !<reference.ObjectPrefab> de9217d0-9c59-4af0-ab02-9036eabf56d8
+      stemsPrefab: !<reference.ObjectPrefab> 77d8553c-ad5f-4f8f-9fd3-99a743ca1b66
+      distanceCm: !<float> 100.000000
+      dropBelowEyesCm: !<float> 90.000000
+      placeOnStart: true
+      debugColliders: false
+  ScriptTypes:
+    "":
+      {}
 - !<SceneObject/a4de4ce7-f468-4966-8a06-e29eea60c023>
   PrefabRemaps:
     []
@@ -1788,6 +1882,21 @@
     - !<own> 3de2c7ea-1525-465a-9056-68565a4014a7
   Components:
     []
+- !<SceneObject/b30a2d3a-0f13-4c96-bb20-c94c534ba2cd>
+  PrefabRemaps:
+    []
+  Name: Palette
+  Enabled: true
+  Layers: 1
+  LocalTransform: !<TransformEntity>
+    Position: {x: -52.000000, y: 10.000000, z: 4.000000}
+    Rotation: {x: 0.000000, y: 0.000000, z: 0.000000}
+    Scale: {x: 1.000000, y: 1.000000, z: 1.000000}
+    HasSegmentScaleCompensation: false
+  Children:
+    []
+  Components:
+    - !<own> 1917c044-d7b2-4e12-8933-021ab72cd552
 - !<SceneObject/b463be13-dddb-4b36-a3dd-c344bd3d8ef5>
   PrefabRemaps:
     []
@@ -1848,6 +1957,22 @@
     []
   Components:
     []
+- !<ScriptComponent/b7dcd072-50b3-46b3-8b74-9b7e6c302afd>
+  PrefabRemaps:
+    []
+  Name: AgentInspectScript
+  Enabled: true
+  ScriptAsset: !<reference> 0b25079c-f5bf-4c6d-96c4-f43b89dfa213
+  ScriptInputsDefault:
+    {}
+  ScriptTypesDefault:
+    {}
+  ScriptInputs:
+    "":
+      {}
+  ScriptTypes:
+    "":
+      {}
 - !<SceneObject/b859e31c-4c76-46bd-bd6a-042228e52728>
   PrefabRemaps:
     []
@@ -2081,6 +2206,21 @@
     - !<own> 650dc0b4-8d22-4aab-87b4-d8e56fb59a67
   Components:
     - !<own> 0847d2bb-a13f-4c4a-a404-169f67308f6f
+- !<SceneObject/cf93f461-1a28-49c3-9b36-f9a054e27afd>
+  PrefabRemaps:
+    []
+  Name: Coach
+  Enabled: true
+  Layers: 1
+  LocalTransform: !<TransformEntity>
+    Position: {x: 52.000000, y: 14.000000, z: 4.000000}
+    Rotation: {x: 0.000000, y: 0.000000, z: 0.000000}
+    Scale: {x: 1.000000, y: 1.000000, z: 1.000000}
+    HasSegmentScaleCompensation: false
+  Children:
+    []
+  Components:
+    - !<own> eec3a736-a21d-4d97-8a42-9cf40bbb997c
 - !<SceneObject/d08269e3-acd4-4156-b5b9-477ca259611d>
   PrefabRemaps:
     []
@@ -2296,6 +2436,21 @@
     InvertRotation: false
   SurfaceOptions: !<SurfaceOptions>
     EnhanceWithNativeAR: false
+- !<SceneObject/e6e42d3f-1dc6-4de2-9f27-0f63206a0c0e>
+  PrefabRemaps:
+    []
+  Name: Tank
+  Enabled: true
+  Layers: 1
+  LocalTransform: !<TransformEntity>
+    Position: {x: 0.000000, y: 0.000000, z: 0.000000}
+    Rotation: {x: 0.000000, y: 0.000000, z: 0.000000}
+    Scale: {x: 1.000000, y: 1.000000, z: 1.000000}
+    HasSegmentScaleCompensation: false
+  Children:
+    []
+  Components:
+    - !<own> fd630fa3-e0cd-4963-8f90-60b1c4aeb786
 - !<SceneObject/e76a5053-8f30-4cda-9cd1-def2036e3255>
   PrefabRemaps:
     []
@@ -2349,6 +2504,40 @@
     Fingers_length: 0.000000
     Thumb_inflate: 0.000000
     Thumb_length: 0.000000
+- !<ScriptComponent/eec3a736-a21d-4d97-8a42-9cf40bbb997c>
+  PrefabRemaps:
+    []
+  Name: ScapePlannerCoachUI
+  Enabled: true
+  ScriptAsset: !<reference> 20ee1dc4-99ef-46fe-a2b7-dc6902059a10
+  ScriptInputsDefault:
+    widthCm: true
+    paddingCm: true
+    gapCm: true
+    titleText: true
+    speakUpSeconds: true
+    faceUser: true
+    okColor: true
+    warnColor: true
+    neutralColor: true
+    textColor: true
+  ScriptTypesDefault:
+    {}
+  ScriptInputs:
+    "":
+      widthCm: !<float> 26.000000
+      paddingCm: 1.400000
+      gapCm: 0.700000
+      titleText: Coach
+      speakUpSeconds: !<float> 4.000000
+      faceUser: true
+      okColor: !<Vec4> {x: 0.350000, y: 0.920000, z: 0.500000, w: 1.000000}
+      warnColor: !<Vec4> {x: 1.000000, y: 0.720000, z: 0.200000, w: 1.000000}
+      neutralColor: !<Vec4> {x: 0.620000, y: 0.660000, z: 0.720000, w: 1.000000}
+      textColor: !<Vec4> {x: 0.950000, y: 0.970000, z: 1.000000, w: 1.000000}
+  ScriptTypes:
+    "":
+      {}
 - !<SceneObject/f0394c5d-4c44-4c65-a77c-e1c7e05ca905>
   PrefabRemaps:
     []
@@ -2586,6 +2775,40 @@
     - !<own> 2dae2a27-8ce6-466a-8bff-622195c1b3a8
   Components:
     []
+- !<ScriptComponent/fd630fa3-e0cd-4963-8f90-60b1c4aeb786>
+  PrefabRemaps:
+    []
+  Name: ScapePlannerTank
+  Enabled: true
+  ScriptAsset: !<reference> 357edeb3-5371-4ec0-9b19-ce74737320df
+  ScriptInputsDefault:
+    widthCm: true
+    depthCm: true
+    heightCm: true
+    substrateFrontCm: true
+    substrateBackCm: true
+    tableHeightCm: true
+    tableWidthCm: true
+    tableDepthCm: true
+  ScriptTypesDefault:
+    {}
+  ScriptInputs:
+    "":
+      widthCm: !<float> 60.000000
+      depthCm: !<float> 30.000000
+      heightCm: !<float> 36.000000
+      substrateFrontCm: !<float> 4.000000
+      substrateBackCm: !<float> 7.000000
+      tableHeightCm: !<float> 75.000000
+      tableWidthCm: !<float> 90.000000
+      tableDepthCm: !<float> 50.000000
+      boxMesh: !<reference.RenderMesh> 58bd885d-0d4f-4796-bafc-6c195f141f56
+      glassMaterial: !<reference.Material> 2d590bed-5d9d-4a9b-9143-b8b209e672af
+      lineMaterial: !<reference.Material> d19969a9-d894-4c40-b071-0d5c66ddf8b1
+      solidMaterial: !<reference.Material> 1893f371-0ddb-440d-b8bb-a293c91a7e1f
+  ScriptTypes:
+    "":
+      {}
 - !<SceneObject/fe93d992-1114-4f1f-8bef-0a0bbd75747d>
   PrefabRemaps:
     []

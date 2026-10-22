@@ -1,0 +1,83 @@
+- !<AssetImportMetadata/3c188c20-085d-4315-bdc4-6d88be4bf1fa>
+  ImportedAssetIds:
+    TypeScriptAsset: !<reference> 357edeb3-5371-4ec0-9b19-ce74737320df
+  ImporterName: TypeScriptAssetImporter
+  PrimaryAsset: !<reference> 357edeb3-5371-4ec0-9b19-ce74737320df
+  PackageType: NotAPackage
+  LegacyPackagePolicy: ~
+  ExtraData:
+    {}
+  AssetDataMap:
+    TypeScriptAsset: !<own> 343436b4-37b2-4cd2-bd9e-38b25ac51902
+  DependentFiles:
+    []
+  ImporterSettings: !<AssetImporterSettings>
+    {}
+  CompressionSettings: !<own> 00000000-0000-0000-0000-000000000000
+- !<TypeScriptAssetData/343436b4-37b2-4cd2-bd9e-38b25ac51902>
+  SvgIcon: ""
+  SetupScript:
+    code: ""
+  Description: ""
+  VersionMajor: 0
+  VersionMinor: 0
+  VersionPatch: 0
+  VersionPrerelease: ""
+  UpdateOrder: 0
+  ComponentUid: 656e7e9a-46f7-45fe-ab75-a93d94e6cf7d
+  ExportUid: 00000000-0000-0000-0000-000000000000
+  PackagePolicy: CanBeUnpacked
+  ScriptInputsHidden:
+    boxMesh: false
+    depthCm: false
+    glassMaterial: false
+    heightCm: false
+    lineMaterial: false
+    solidMaterial: false
+    substrateBackCm: false
+    substrateFrontCm: false
+    tableDepthCm: false
+    tableHeightCm: false
+    tableWidthCm: false
+    widthCm: false
+  ScriptTypesHidden:
+    {}
+  ReadMe: !<reference> 00000000-0000-0000-0000-000000000000
+  DeclarationFile: !<reference> 00000000-0000-0000-0000-000000000000
+  Tags:
+    []
+  Attachments:
+    []
+  DefaultScriptInputs:
+    - widthCm: !<float> 60.000000
+      depthCm: !<float> 30.000000
+      heightCm: !<float> 36.000000
+      substrateFrontCm: !<float> 4.000000
+      substrateBackCm: !<float> 7.000000
+      tableHeightCm: !<float> 75.000000
+      tableWidthCm: !<float> 90.000000
+      tableDepthCm: !<float> 50.000000
+      boxMesh: !<reference.RenderMesh> 00000000-0000-0000-0000-000000000000
+      glassMaterial: !<reference.Material> 00000000-0000-0000-0000-000000000000
+      lineMaterial: !<reference.Material> 00000000-0000-0000-0000-000000000000
+      solidMaterial: !<reference.Material> 00000000-0000-0000-0000-000000000000
+  ScriptTypes:
+    -
+      {}
+  InputLines:
+    - '// @ui {"widget":"label", "label":"Tank size (cm)"}'
+    - '// @input float widthCm = 60 {"hint":"Inner width of the tank, left to right"}'
+    - '// @input float depthCm = 30 {"hint":"Inner depth of the tank, front glass to back glass"}'
+    - '// @input float heightCm = 36 {"hint":"Inner height of the tank"}'
+    - '// @ui {"widget":"label", "label":"Substrate (cm)"}'
+    - // @input float substrateFrontCm = 4
+    - // @input float substrateBackCm = 7
+    - '// @ui {"widget":"label", "label":"Table"}'
+    - // @input float tableHeightCm = 75
+    - // @input float tableWidthCm = 90
+    - // @input float tableDepthCm = 50
+    - '// @ui {"widget":"label", "label":"Visuals"}'
+    - '// @input Asset.RenderMesh boxMesh {"hint":"Unit box mesh used for every panel, bar and band"}'
+    - '// @input Asset.Material glassMaterial {"hint":"Translucent material for the glass panes"}'
+    - '// @input Asset.Material lineMaterial {"hint":"Unlit material for guide lines and zone bands (cloned and tinted per element)"}'
+    - '// @input Asset.Material solidMaterial {"hint":"Lit material for substrate and table (cloned and tinted per element)"}'

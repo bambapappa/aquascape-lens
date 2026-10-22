@@ -1,0 +1,229 @@
+// Scape Planner: the virtual tank, the stand-in for the real aquarium.
+// Builds a glass box on a table at real size, a sloped substrate, and the
+// composition guides (thirds grid on the front glass, zone bands on the
+// substrate). Everything is built from one box mesh and three materials
+// that the bootstrap wires in as @inputs, so a human can swap them.
+//
+// Local frame: origin at the centre of the tank floor (inside the glass),
+// +x to the right, +y up, +z toward the front glass (toward the user).
+
+@component
+export class ScapePlannerTank extends BaseScriptComponent {
+  @ui.label("Tank size (cm)")
+  @input
+  @hint("Inner width of the tank, left to right")
+  widthCm: number = 60;
+  @input
+  @hint("Inner depth of the tank, front glass to back glass")
+  depthCm: number = 30;
+  @input
+  @hint("Inner height of the tank")
+  heightCm: number = 36;
+
+  @ui.label("Substrate (cm)")
+  @input
+  substrateFrontCm: number = 4;
+  @input
+  substrateBackCm: number = 7;
+
+  @ui.label("Table")
+  @input
+  tableHeightCm: number = 75;
+  @input
+  tableWidthCm: number = 90;
+  @input
+  tableDepthCm: number = 50;
+
+  @ui.label("Visuals")
+  @input
+  @hint("Unit box mesh used for every panel, bar and band")
+  boxMesh!: RenderMesh;
+  @input
+  @hint("Translucent material for the glass panes")
+  glassMaterial!: Material;
+  @input
+  @hint("Unlit material for guide lines and zone bands (cloned and tinted per element)")
+  lineMaterial!: Material;
+  @input
+  @hint("Lit material for substrate and table (cloned and tinted per element)")
+  solidMaterial!: Material;
+
+  private guidesRoot!: SceneObject;
+  private boxSizeCm: vec3 = new vec3(1, 1, 1);
+  private built = false;
+
+  onAwake(): void {
+    if (!this.boxMesh || !this.glassMaterial || !this.lineMaterial || !this.solidMaterial) {
+      print("ScapePlannerTank: a mesh or material @input is not wired. Check the bootstrap Phase B.");
+      return;
+    }
+    this.measureBoxMesh();
+    this.buildTable();
+    this.buildGlass();
+    this.buildSubstrate();
+    this.buildGuides();
+    this.built = true;
+  }
+
+  // ── Public API used by the main script ──────────────────────────────────
+
+  get halfWidth(): number {
+    return this.widthCm / 2;
+  }
+
+  get halfDepth(): number {
+    return this.depthCm / 2;
+  }
+
+  /** Height of the substrate surface above the tank floor at a local z. */
+  substrateTopAt(zLocal: number): number {
+    const t = (this.halfDepth - zLocal) / this.depthCm; // 0 at the front glass, 1 at the back
+    return this.substrateFrontCm + (this.substrateBackCm - this.substrateFrontCm) * t;
+  }
+
+  setGuidesVisible(visible: boolean): void {
+    if (this.guidesRoot) this.guidesRoot.enabled = visible;
+  }
+
+  get guidesVisible(): boolean {
+    return this.guidesRoot ? this.guidesRoot.enabled : false;
+  }
+
+  get isBuilt(): boolean {
+    return this.built;
+  }
+
+  // ── Construction ────────────────────────────────────────────────────────
+
+  private measureBoxMesh(): void {
+    const min = this.boxMesh.aabbMin;
+    const max = this.boxMesh.aabbMax;
+    const size = max.sub(min);
+    this.boxSizeCm = new vec3(
+      size.x > 0.0001 ? size.x : 1,
+      size.y > 0.0001 ? size.y : 1,
+      size.z > 0.0001 ? size.z : 1
+    );
+  }
+
+  private box(
+    parent: SceneObject,
+    name: string,
+    material: Material,
+    centre: vec3,
+    size: vec3,
+    tint?: vec4,
+    rotation?: quat
+  ): SceneObject {
+    const so = global.scene.createSceneObject(name);
+    so.setParent(parent);
+    const t = so.getTransform();
+    t.setLocalPosition(centre);
+    t.setLocalScale(
+      new vec3(size.x / this.boxSizeCm.x, size.y / this.boxSizeCm.y, size.z / this.boxSizeCm.z)
+    );
+    if (rotation) t.setLocalRotation(rotation);
+    const rmv = so.createComponent("Component.RenderMeshVisual") as RenderMeshVisual;
+    rmv.mesh = this.boxMesh;
+    const mat = material.clone();
+    rmv.clearMaterials();
+    rmv.addMaterial(mat);
+    if (tint) mat.mainPass.baseColor = tint;
+    return so;
+  }
+
+  private group(name: string, parent?: SceneObject): SceneObject {
+    const so = global.scene.createSceneObject(name);
+    so.setParent(parent ? parent : this.sceneObject);
+    return so;
+  }
+
+  private buildTable(): void {
+    const g = this.group("Table");
+    const top = 4;
+    const woodTop = new vec4(0.62, 0.45, 0.3, 1);
+    const woodLeg = new vec4(0.45, 0.32, 0.22, 1);
+    this.box(g, "TableTop", this.solidMaterial, new vec3(0, -top / 2, 0),
+      new vec3(this.tableWidthCm, top, this.tableDepthCm), woodTop);
+    const legSize = 5;
+    const legH = this.tableHeightCm - top;
+    const lx = this.tableWidthCm / 2 - legSize;
+    const lz = this.tableDepthCm / 2 - legSize;
+    const corners = [new vec3(lx, 0, lz), new vec3(-lx, 0, lz), new vec3(lx, 0, -lz), new vec3(-lx, 0, -lz)];
+    for (let i = 0; i < corners.length; i++) {
+      const c = corners[i];
+      this.box(g, "Leg" + i, this.solidMaterial, new vec3(c.x, -top - legH / 2, c.z),
+        new vec3(legSize, legH, legSize), woodLeg);
+    }
+  }
+
+  private buildGlass(): void {
+    const g = this.group("Glass");
+    const w = this.widthCm;
+    const d = this.depthCm;
+    const h = this.heightCm;
+    const glass = 0.6;
+    const tint = new vec4(0.75, 0.9, 1.0, 0.14);
+    // Panes sit just outside the inner volume so pieces can touch the inner faces.
+    this.box(g, "Front", this.glassMaterial, new vec3(0, h / 2, d / 2 + glass / 2), new vec3(w + 2 * glass, h, glass), tint);
+    this.box(g, "Back", this.glassMaterial, new vec3(0, h / 2, -d / 2 - glass / 2), new vec3(w + 2 * glass, h, glass), tint);
+    this.box(g, "Left", this.glassMaterial, new vec3(-w / 2 - glass / 2, h / 2, 0), new vec3(glass, h, d), tint);
+    this.box(g, "Right", this.glassMaterial, new vec3(w / 2 + glass / 2, h / 2, 0), new vec3(glass, h, d), tint);
+    this.box(g, "Bottom", this.glassMaterial, new vec3(0, -glass / 2, 0), new vec3(w + 2 * glass, glass, d + 2 * glass), tint);
+    // Visible edges: thin light bars along the twelve edges of the box.
+    const e = this.group("Edges", g);
+    const bar = 0.8;
+    const edgeTint = new vec4(0.85, 0.95, 1.0, 0.9);
+    const X = w / 2 + glass;
+    const Z = d / 2 + glass;
+    const xs = [-X, X];
+    const zs = [-Z, Z];
+    for (let i = 0; i < 2; i++) {
+      for (let j = 0; j < 2; j++) {
+        this.box(e, "Vertical", this.lineMaterial, new vec3(xs[i], h / 2, zs[j]), new vec3(bar, h, bar), edgeTint);
+      }
+      this.box(e, "TopX", this.lineMaterial, new vec3(0, h, zs[i]), new vec3(2 * X, bar, bar), edgeTint);
+      this.box(e, "BottomX", this.lineMaterial, new vec3(0, 0, zs[i]), new vec3(2 * X, bar, bar), edgeTint);
+      this.box(e, "TopZ", this.lineMaterial, new vec3(xs[i], h, 0), new vec3(bar, bar, 2 * Z), edgeTint);
+      this.box(e, "BottomZ", this.lineMaterial, new vec3(xs[i], 0, 0), new vec3(bar, bar, 2 * Z), edgeTint);
+    }
+  }
+
+  private buildSubstrate(): void {
+    const g = this.group("Substrate");
+    const w = this.widthCm - 0.4;
+    const d = this.depthCm - 0.4;
+    const hAvg = (this.substrateFrontCm + this.substrateBackCm) / 2;
+    const slope = Math.atan((this.substrateBackCm - this.substrateFrontCm) / this.depthCm);
+    const soil = new vec4(0.16, 0.11, 0.07, 1);
+    // A box tilted around x so its top runs from substrateFront at the front to substrateBack at the back.
+    this.box(g, "Soil", this.solidMaterial, new vec3(0, hAvg / 2, 0), new vec3(w, hAvg, d), soil,
+      quat.angleAxis(slope, new vec3(1, 0, 0)));
+  }
+
+  private buildGuides(): void {
+    this.guidesRoot = this.group("Guides");
+    const w = this.widthCm;
+    const d = this.depthCm;
+    const h = this.heightCm;
+    const line = 0.4;
+    const cyan = new vec4(0.3, 0.95, 1.0, 0.85);
+    const zFront = d / 2 - line; // just inside the front glass
+    // Thirds grid on the front glass: two vertical lines, one horizontal line.
+    this.box(this.guidesRoot, "ThirdLeft", this.lineMaterial, new vec3(-w / 6, h / 2, zFront), new vec3(line, h, line), cyan);
+    this.box(this.guidesRoot, "ThirdRight", this.lineMaterial, new vec3(w / 6, h / 2, zFront), new vec3(line, h, line), cyan);
+    this.box(this.guidesRoot, "ThirdHorizontal", this.lineMaterial, new vec3(0, h * 2 / 3, zFront), new vec3(w, line, line), cyan);
+    // Zone bands on the substrate: foreground (front), midground, background (back).
+    const zones = [
+      { name: "Foreground", z: d / 3, tint: new vec4(0.4, 1.0, 0.5, 0.28) },
+      { name: "Midground", z: 0, tint: new vec4(1.0, 0.9, 0.3, 0.22) },
+      { name: "Background", z: -d / 3, tint: new vec4(1.0, 0.55, 0.3, 0.22) },
+    ];
+    for (const zone of zones) {
+      const y = this.substrateTopAt(zone.z) + 0.25;
+      const slope = Math.atan((this.substrateBackCm - this.substrateFrontCm) / this.depthCm);
+      this.box(this.guidesRoot, zone.name, this.lineMaterial, new vec3(0, y, zone.z),
+        new vec3(w - 1, 0.15, d / 3 - 1), zone.tint, quat.angleAxis(slope, new vec3(1, 0, 0)));
+    }
+  }
+}

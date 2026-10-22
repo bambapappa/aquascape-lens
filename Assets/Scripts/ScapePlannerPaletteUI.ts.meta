@@ -1,0 +1,62 @@
+- !<AssetImportMetadata/df8bdbbd-f530-46b3-aa06-8ec22cb8486c>
+  ImportedAssetIds:
+    TypeScriptAsset: !<reference> 9aea92fd-83ec-46a6-8af5-8869f0773f0f
+  ImporterName: TypeScriptAssetImporter
+  PrimaryAsset: !<reference> 9aea92fd-83ec-46a6-8af5-8869f0773f0f
+  PackageType: NotAPackage
+  LegacyPackagePolicy: ~
+  ExtraData:
+    {}
+  AssetDataMap:
+    TypeScriptAsset: !<own> 2bb8ad7e-98c8-4360-a56a-b3a5299c107d
+  DependentFiles:
+    []
+  ImporterSettings: !<AssetImporterSettings>
+    {}
+  CompressionSettings: !<own> 00000000-0000-0000-0000-000000000000
+- !<TypeScriptAssetData/2bb8ad7e-98c8-4360-a56a-b3a5299c107d>
+  SvgIcon: ""
+  SetupScript:
+    code: ""
+  Description: ""
+  VersionMajor: 0
+  VersionMinor: 0
+  VersionPatch: 0
+  VersionPrerelease: ""
+  UpdateOrder: 0
+  ComponentUid: 70cf1dc0-6151-433d-97ef-99b91f7dbbc5
+  ExportUid: 00000000-0000-0000-0000-000000000000
+  PackagePolicy: CanBeUnpacked
+  ScriptInputsHidden:
+    buttonHeightCm: false
+    faceUser: false
+    gapCm: false
+    paddingCm: false
+    titleText: false
+    widthCm: false
+  ScriptTypesHidden:
+    {}
+  ReadMe: !<reference> 00000000-0000-0000-0000-000000000000
+  DeclarationFile: !<reference> 00000000-0000-0000-0000-000000000000
+  Tags:
+    []
+  Attachments:
+    []
+  DefaultScriptInputs:
+    - widthCm: !<float> 24.000000
+      paddingCm: 1.600000
+      gapCm: 0.900000
+      buttonHeightCm: !<float> 6.000000
+      titleText: Scape Planner
+      faceUser: true
+  ScriptTypes:
+    -
+      {}
+  InputLines:
+    - '// @ui {"widget":"label", "label":"Panel"}'
+    - '// @input float widthCm = 24 {"hint":"Panel width in cm"}'
+    - '// @input float paddingCm = 1.6 {"hint":"Padding inside the panel in cm"}'
+    - '// @input float gapCm = 0.9 {"hint":"Gap between buttons in cm"}'
+    - '// @input float buttonHeightCm = 6 {"hint":"Button height in cm (targets at least 6 cm are easy to pinch)"}'
+    - '// @input string titleText = "Scape Planner" {"hint":"Title shown above the buttons"}'
+    - '// @input bool faceUser = true {"hint":"Turn the panel toward the user"}'

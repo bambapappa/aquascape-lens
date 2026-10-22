@@ -1,0 +1,82 @@
+- !<AssetImportMetadata/059b9ff0-af5c-4358-b761-8bfd1270035a>
+  ImportedAssetIds:
+    TypeScriptAsset: !<reference> 88e499d2-8f1e-4975-8c80-63882ecf61a6
+  ImporterName: TypeScriptAssetImporter
+  PrimaryAsset: !<reference> 88e499d2-8f1e-4975-8c80-63882ecf61a6
+  PackageType: NotAPackage
+  LegacyPackagePolicy: ~
+  ExtraData:
+    {}
+  AssetDataMap:
+    TypeScriptAsset: !<own> a5bd3c55-4711-494a-968b-19f8f5ed2de7
+  DependentFiles:
+    []
+  ImporterSettings: !<AssetImporterSettings>
+    {}
+  CompressionSettings: !<own> 00000000-0000-0000-0000-000000000000
+- !<TypeScriptAssetData/a5bd3c55-4711-494a-968b-19f8f5ed2de7>
+  SvgIcon: ""
+  SetupScript:
+    code: ""
+  Description: ""
+  VersionMajor: 0
+  VersionMinor: 0
+  VersionPatch: 0
+  VersionPrerelease: ""
+  UpdateOrder: 0
+  ComponentUid: 7a3326d2-524d-4879-8059-896207954ddf
+  ExportUid: 00000000-0000-0000-0000-000000000000
+  PackagePolicy: CanBeUnpacked
+  ScriptInputsHidden:
+    bushPrefab: false
+    carpetPrefab: false
+    coach: false
+    debugColliders: false
+    distanceCm: false
+    dropBelowEyesCm: false
+    palette: false
+    placeOnStart: false
+    stemsPrefab: false
+    stonePrefab: false
+    tank: false
+    woodPrefab: false
+  ScriptTypesHidden:
+    {}
+  ReadMe: !<reference> 00000000-0000-0000-0000-000000000000
+  DeclarationFile: !<reference> 00000000-0000-0000-0000-000000000000
+  Tags:
+    []
+  Attachments:
+    []
+  DefaultScriptInputs:
+    - tank: !<MappingBased.AssignableType_1> 00000000-0000-0000-0000-000000000000
+      palette: !<MappingBased.AssignableType_2> 00000000-0000-0000-0000-000000000000
+      coach: !<MappingBased.AssignableType_3> 00000000-0000-0000-0000-000000000000
+      stonePrefab: !<reference.ObjectPrefab> 00000000-0000-0000-0000-000000000000
+      woodPrefab: !<reference.ObjectPrefab> 00000000-0000-0000-0000-000000000000
+      carpetPrefab: !<reference.ObjectPrefab> 00000000-0000-0000-0000-000000000000
+      bushPrefab: !<reference.ObjectPrefab> 00000000-0000-0000-0000-000000000000
+      stemsPrefab: !<reference.ObjectPrefab> 00000000-0000-0000-0000-000000000000
+      distanceCm: !<float> 100.000000
+      dropBelowEyesCm: !<float> 90.000000
+      placeOnStart: true
+      debugColliders: false
+  ScriptTypes:
+    -
+      {}
+  InputLines:
+    - '// @ui {"widget":"label", "label":"Authored scene parts (wired by the bootstrap)"}'
+    - '// @input AssignableType_1 tank {"hint":"The virtual tank component"}'
+    - '// @input AssignableType_2 palette {"hint":"The palette of pinch buttons"}'
+    - '// @input AssignableType_3 coach {"hint":"The coach card"}'
+    - '// @ui {"widget":"label", "label":"Piece prefabs (GLB imports)"}'
+    - // @input Asset.ObjectPrefab stonePrefab
+    - // @input Asset.ObjectPrefab woodPrefab
+    - // @input Asset.ObjectPrefab carpetPrefab
+    - // @input Asset.ObjectPrefab bushPrefab
+    - // @input Asset.ObjectPrefab stemsPrefab
+    - '// @ui {"widget":"label", "label":"Placement"}'
+    - '// @input float distanceCm = 100 {"hint":"How far in front of the user the tank is placed, in cm"}'
+    - '// @input float dropBelowEyesCm = 90 {"hint":"How far below eye level the tank floor sits, in cm (eye height minus table height)"}'
+    - '// @input bool placeOnStart = true {"hint":"Place the tank in front of the user when the Lens starts"}'
+    - '// @input bool debugColliders {"hint":"Render colliders as wireframes for debugging"}'

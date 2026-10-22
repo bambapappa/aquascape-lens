@@ -1,0 +1,75 @@
+- !<AssetImportMetadata/b96b9090-88f2-4aee-9035-ac9a5b4dd371>
+  ImportedAssetIds:
+    TypeScriptAsset: !<reference> 20ee1dc4-99ef-46fe-a2b7-dc6902059a10
+  ImporterName: TypeScriptAssetImporter
+  PrimaryAsset: !<reference> 20ee1dc4-99ef-46fe-a2b7-dc6902059a10
+  PackageType: NotAPackage
+  LegacyPackagePolicy: ~
+  ExtraData:
+    {}
+  AssetDataMap:
+    TypeScriptAsset: !<own> 40b71c47-c2d8-44fe-8d59-9e66e98832db
+  DependentFiles:
+    []
+  ImporterSettings: !<AssetImporterSettings>
+    {}
+  CompressionSettings: !<own> 00000000-0000-0000-0000-000000000000
+- !<TypeScriptAssetData/40b71c47-c2d8-44fe-8d59-9e66e98832db>
+  SvgIcon: ""
+  SetupScript:
+    code: ""
+  Description: ""
+  VersionMajor: 0
+  VersionMinor: 0
+  VersionPatch: 0
+  VersionPrerelease: ""
+  UpdateOrder: 0
+  ComponentUid: 4cbe56f0-b191-401d-a5a5-caaf69cb5801
+  ExportUid: 00000000-0000-0000-0000-000000000000
+  PackagePolicy: CanBeUnpacked
+  ScriptInputsHidden:
+    faceUser: false
+    gapCm: false
+    neutralColor: false
+    okColor: false
+    paddingCm: false
+    speakUpSeconds: false
+    textColor: false
+    titleText: false
+    warnColor: false
+    widthCm: false
+  ScriptTypesHidden:
+    {}
+  ReadMe: !<reference> 00000000-0000-0000-0000-000000000000
+  DeclarationFile: !<reference> 00000000-0000-0000-0000-000000000000
+  Tags:
+    []
+  Attachments:
+    []
+  DefaultScriptInputs:
+    - widthCm: !<float> 26.000000
+      paddingCm: 1.400000
+      gapCm: 0.700000
+      titleText: Coach
+      speakUpSeconds: !<float> 4.000000
+      faceUser: true
+      okColor: !<Vec4> {x: 0.350000, y: 0.920000, z: 0.500000, w: 1.000000}
+      warnColor: !<Vec4> {x: 1.000000, y: 0.720000, z: 0.200000, w: 1.000000}
+      neutralColor: !<Vec4> {x: 0.620000, y: 0.660000, z: 0.720000, w: 1.000000}
+      textColor: !<Vec4> {x: 0.950000, y: 0.970000, z: 1.000000, w: 1.000000}
+  ScriptTypes:
+    -
+      {}
+  InputLines:
+    - '// @ui {"widget":"label", "label":"Panel"}'
+    - '// @input float widthCm = 26 {"hint":"Panel width in cm"}'
+    - '// @input float paddingCm = 1.4 {"hint":"Padding inside the panel in cm"}'
+    - '// @input float gapCm = 0.7 {"hint":"Gap between rows in cm"}'
+    - '// @input string titleText = "Coach" {"hint":"Title shown at the top"}'
+    - '// @input float speakUpSeconds = 4 {"hint":"Seconds the title stays highlighted after a change"}'
+    - '// @input bool faceUser = true {"hint":"Turn the card toward the user"}'
+    - '// @ui {"widget":"label", "label":"Colours"}'
+    - "// @input vec4 okColor = {0.35,0.92,0.5,1}"
+    - "// @input vec4 warnColor = {1,0.72,0.2,1}"
+    - "// @input vec4 neutralColor = {0.62,0.66,0.72,1}"
+    - "// @input vec4 textColor = {0.95,0.97,1,1}"
