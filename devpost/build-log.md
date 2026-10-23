@@ -87,6 +87,23 @@ long session, hand tracking near glass. Only real glasses can tell.
 - Repository visibility: the repo was created private during the overnight
   build and is to be made public by the author before submission.
 
+## Version 2 (2026-10-23, evening)
+
+Added after the first submission draft: a piece catalogue of ten objects
+(five more Meshy models: dragon stone, Manzanita, Anubias nana, dwarf
+hairgrass, red Ludwigia), style-fit scoring for Iwagumi, Nature, Dutch and
+Jungle (weighted rules from ADA, Green Aqua, NBAT and AGA guidance, scored
+over applicable rules only), rotate, lean and size on the selected piece,
+a three-row palette tray, and fixes from a code review: front gap measured
+from the piece's front face, focal piece is the tallest stone or wood,
+plant zones follow the tank depth, lighter substrate for the additive
+display, spawn spots that avoid overlaps. The research for the rules and
+the catalogue was done by four parallel agents; the design and the code
+were done by hand afterwards. Seven LEAF scenarios pass.
+
+Not generated yet (Meshy credits): lava rock, Redmoor, Java fern,
+Vallisneria, moss, Staurogyne.
+
 ## Credits
 
 Composition rules from Green Aqua. 3D models generated with Meshy. Built on

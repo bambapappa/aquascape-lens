@@ -1,9 +1,10 @@
 # Handoff
 
-State 2026-10-23 (end of the overnight build session):
+State 2026-10-23 evening (after the v2 improvements):
 
-- Lens builds, runs in the Lens Studio 5.24.1 preview, and all six LEAF
-  scenarios in `Assets/Tests/` pass. Project saved, main pushed.
+- Lens builds, runs in the Lens Studio 5.24.1 preview, and all seven LEAF
+  scenarios in `Assets/Tests/` pass. v2 adds ten pieces, style scoring
+  (Iwagumi, Nature, Dutch, Jungle), rotate/lean/size. Project saved, main pushed.
 - `devpost/` holds the design brief (approved), interview answers, research
   notes, build log, video storyboard and submission text.
 - A captioned stop-motion draft of the demo was assembled from preview

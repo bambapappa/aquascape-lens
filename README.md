@@ -13,9 +13,19 @@ Built for **Learn AR with SPECS** (Devpost Learn, sponsor Snap), October 2026.
 
 - A virtual 60 x 30 x 36 cm tank on a 75 cm table appears about 1 m in front
   of you (the stand-in for your real tank, which the preview cannot see).
-- Pinch **Stone**, **Wood**, **Carpet**, **Bush** or **Stems** to place a
-  piece at real size on the substrate. Grab and drag it; it stays on the
-  substrate and inside the glass.
+- Pinch a piece in the palette tray to place it at real size on the
+  substrate: Seiryu and Dragon stone, spider wood and Manzanita, and six
+  plants (Monte Carlo carpet, dwarf hairgrass, Cryptocoryne, Anubias nana,
+  Rotala, red Ludwigia). Grab and drag it; it stays on the substrate and
+  inside the glass.
+- **Rotate** turns the selected piece 15 degrees, **Lean** tilts it toward
+  you in 10 degree steps (Iwagumi wants the main stone at 10 to 20), **Size**
+  cycles a stone through the Oyaishi, Fukuishi and Soeishi sizes. The
+  selected piece shows a cyan ring at its base.
+- **Style** cycles Iwagumi, Nature, Dutch and Jungle. The coach card scores
+  the layout 0 to 100 against that style's rules (stones only, main stone
+  height and lean, one dominant material, planted area, species count,
+  plant streets, and more) and lists the rules to fix first.
 - The coach card updates after every change: focal point, odd count, front
   gap, height, plant zones. Amber means fix it, green means good.
 - **Undo** removes the last piece, **Clear** empties the tank, **Guides**
@@ -46,6 +56,8 @@ as a pinch. No SPECS glasses are needed.
   - `ScapePlannerPiece.ts`: one placed piece: prefab scaling, collider,
     SIK grab, clamped to the tank.
   - `ScapePlannerRules.ts`: the composition checks as pure functions.
+  - `ScapePlannerStyles.ts`: the style-fit rules and scoring (pure).
+  - `ScapePlannerCatalog.ts`: the ten placeable pieces with sizes and zones.
   - `ScapePlannerPaletteUI.ts`, `ScapePlannerCoachUI.ts`: UIKit panels.
 - `Assets/GeneratedMeshes/`: five GLB models (Seiryu stone, spider wood,
   Monte Carlo carpet, Cryptocoryne bush, Rotala stems) generated with
@@ -57,8 +69,9 @@ as a pinch. No SPECS glasses are needed.
 
 ## Tests
 
-Six LEAF scenarios in `Assets/Tests/` (one per done criterion in the brief,
-plus an IK reachability check of the palette) run from the LEAF panel in
+Seven LEAF scenarios in `Assets/Tests/` (one per done criterion in the
+brief, an IK reachability check of the palette, and a v2 scenario for style
+scoring, rotate, lean and the front-gap check) run from the LEAF panel in
 Lens Studio and all pass in the preview. `LeafIndex.ts` registers them.
 
 ## Run it

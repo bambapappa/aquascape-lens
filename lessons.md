@@ -8,3 +8,6 @@
 - `RunAndCollectLogsTool` reported no errors while the Lens was actually crashing in `onAwake`; the Lens Studio log file (`~/Library/Preferences/Snap/Lens Studio/logs/`) had the stack traces.
 - The preview pauses itself when it crashes five frames in a row; after a fix, `PreviewPanelTool refresh` then `resume` brings it back.
 - The standalone `claude` CLI can lose its OAuth session while a desktop-app session is running (the app owns refresh); plan for `claude auth login` before headless runs.
+- A UIKit BackPlate sized from `onLayoutComplete` can end up narrower than its widest row; set `backPlate.size` explicitly to the panel width, on both `onLayoutComplete` and `backPlate.onInitialized`.
+- A tilted tray on the table needs its bottom row above the table top: three rows of 4.4 cm at a 50 degree tilt need the panel centre about 18 cm above the table.
+- Rotating a fitted GLB about its bounds centre needs a pivot SceneObject between the wrapper and the prefab instance; rotating the instance itself rotates about the GLB's own origin.

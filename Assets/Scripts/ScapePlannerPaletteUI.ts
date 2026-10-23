@@ -112,10 +112,12 @@ export class ScapePlannerPaletteUI extends BaseScriptComponent {
     flex.paddingBottom = this.paddingCm;
     flex.paddingLeft = this.paddingCm;
     flex.paddingRight = this.paddingCm;
-    flex.onLayoutComplete.add((r) => {
-      // Full panel width: the measured container width can be narrower than the widest row.
-      backPlate.size = new vec2(this.widthCm, r.containerHeight);
-    });
+    // Full panel width: the measured container width can be narrower than the widest row, and the
+    // plate may initialise after the first layout pass, so apply the size on both events.
+    let plateHeight = 16;
+    const applyPlate = () => { backPlate.size = new vec2(this.widthCm, plateHeight); };
+    flex.onLayoutComplete.add((r) => { plateHeight = r.containerHeight; applyPlate(); });
+    backPlate.onInitialized.add(applyPlate);
 
     const items: FlexItem[] = [];
     items.push(this.addHeader(content, this.titleText));

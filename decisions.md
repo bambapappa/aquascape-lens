@@ -7,3 +7,5 @@
 - 2026-10-23: Palette is a tilted tray on the table in front of the tank, not a floating column beside it: fits the narrow FOV and keeps its interaction volume out of the line of sight into the tank.
 - 2026-10-23: Coach rules as a pure module (ScapePlannerRules.ts) so they can be read and changed without the scene.
 - 2026-10-23: Repo created private during the build; owner flips it public before submission.
+- 2026-10-23 (v2): style rules kept pure and weighted; a rule that cannot be judged yet is excluded from the score instead of counting as a failure, so an empty tank shows 'place pieces' rather than 0%.
+- 2026-10-23 (v2): rotation and lean are explicit buttons on the selected piece, not SIK rotation, because single-pinch mouse manipulation cannot rotate.
