@@ -15,7 +15,7 @@ export class ScapePlannerReachScenario extends Scenario {
     await sleep(1500);
     await helper.tapButton("Button_clear");
     const before = helper.countPieces();
-    const stoneButton = findInteractableByName("Button_stone");
+    const stoneButton = findInteractableByName("Button_seiryu");
     expect(stoneButton).toBeTruthy();
     await this.ik.trigger(stoneButton);
     await sleep(600);

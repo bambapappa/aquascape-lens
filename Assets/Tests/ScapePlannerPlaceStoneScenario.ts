@@ -12,10 +12,10 @@ export class ScapePlannerPlaceStoneScenario extends Scenario {
     await interactor.tapButton("Button_clear");
     const before = interactor.countPieces();
 
-    await interactor.tapButton("Button_stone");
+    await interactor.tapButton("Button_seiryu");
     expect(interactor.countPieces()).toBe(before + 1);
 
-    const stone = findSceneObjectsByName("Piece_Stone")[0];
+    const stone = findSceneObjectsByName("Piece_Seiryu")[0];
     expect(stone).toBeTruthy();
     // Collider box height equals the stone height from the brief (22 cm).
     const collider = stone.getComponent("Physics.ColliderComponent") as ColliderComponent;
@@ -23,18 +23,18 @@ export class ScapePlannerPlaceStoneScenario extends Scenario {
     const shape = collider.shape as BoxShape;
     expect(shape.size.y).toBeCloseTo(22, 1);
     // The wrapper centre sits half a stone above the substrate (about 4.5 cm at the spawn point).
-    const start = interactor.pieceLocal("Piece_Stone");
+    const start = interactor.pieceLocal("Piece_Seiryu");
     expect(start.y).toBeGreaterThan(14);
     expect(start.y).toBeLessThan(18);
 
     // Drag it 8 cm to the left; it moves.
-    await interactor.dragPiece("Piece_Stone", new vec3(-8, 0, 0)); // a strong pull to the left (per-update vector)
-    const moved = interactor.pieceLocal("Piece_Stone");
+    await interactor.dragPiece("Piece_Seiryu", new vec3(-8, 0, 0)); // a strong pull to the left (per-update vector)
+    const moved = interactor.pieceLocal("Piece_Seiryu");
     expect(moved.x).toBeLessThan(start.x - 3);
 
     // Drag it hard toward the front glass; it stays inside the tank (half depth 15 cm).
-    await interactor.dragPiece("Piece_Stone", new vec3(0, 0, 60)); // far more than the tank depth: must clamp
-    const clamped = interactor.pieceLocal("Piece_Stone");
+    await interactor.dragPiece("Piece_Seiryu", new vec3(0, 0, 60)); // far more than the tank depth: must clamp
+    const clamped = interactor.pieceLocal("Piece_Seiryu");
     expect(clamped.z).toBeLessThan(15);
     expect(clamped.z).toBeGreaterThan(5);
     // And it still rests on the substrate.

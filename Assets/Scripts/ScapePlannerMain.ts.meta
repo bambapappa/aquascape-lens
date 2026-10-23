@@ -28,18 +28,23 @@
   ExportUid: 00000000-0000-0000-0000-000000000000
   PackagePolicy: CanBeUnpacked
   ScriptInputsHidden:
-    bushPrefab: false
-    carpetPrefab: false
     coach: false
-    debugColliders: false
     distanceCm: false
     dropBelowEyesCm: false
     palette: false
     placeOnStart: false
-    stemsPrefab: false
-    stonePrefab: false
+    prefabAnubias: false
+    prefabBush: false
+    prefabCarpet: false
+    prefabDragon: false
+    prefabHairgrass: false
+    prefabLudwigia: false
+    prefabManzanita: false
+    prefabSeiryu: false
+    prefabSpiderwood: false
+    prefabStems: false
+    startStyleIndex: false
     tank: false
-    woodPrefab: false
   ScriptTypesHidden:
     {}
   ReadMe: !<reference> 00000000-0000-0000-0000-000000000000
@@ -52,15 +57,20 @@
     - tank: !<MappingBased.AssignableType_1> 00000000-0000-0000-0000-000000000000
       palette: !<MappingBased.AssignableType_2> 00000000-0000-0000-0000-000000000000
       coach: !<MappingBased.AssignableType_3> 00000000-0000-0000-0000-000000000000
-      stonePrefab: !<reference.ObjectPrefab> 00000000-0000-0000-0000-000000000000
-      woodPrefab: !<reference.ObjectPrefab> 00000000-0000-0000-0000-000000000000
-      carpetPrefab: !<reference.ObjectPrefab> 00000000-0000-0000-0000-000000000000
-      bushPrefab: !<reference.ObjectPrefab> 00000000-0000-0000-0000-000000000000
-      stemsPrefab: !<reference.ObjectPrefab> 00000000-0000-0000-0000-000000000000
+      prefabSeiryu: !<reference.ObjectPrefab> 00000000-0000-0000-0000-000000000000
+      prefabDragon: !<reference.ObjectPrefab> 00000000-0000-0000-0000-000000000000
+      prefabSpiderwood: !<reference.ObjectPrefab> 00000000-0000-0000-0000-000000000000
+      prefabManzanita: !<reference.ObjectPrefab> 00000000-0000-0000-0000-000000000000
+      prefabCarpet: !<reference.ObjectPrefab> 00000000-0000-0000-0000-000000000000
+      prefabHairgrass: !<reference.ObjectPrefab> 00000000-0000-0000-0000-000000000000
+      prefabBush: !<reference.ObjectPrefab> 00000000-0000-0000-0000-000000000000
+      prefabAnubias: !<reference.ObjectPrefab> 00000000-0000-0000-0000-000000000000
+      prefabStems: !<reference.ObjectPrefab> 00000000-0000-0000-0000-000000000000
+      prefabLudwigia: !<reference.ObjectPrefab> 00000000-0000-0000-0000-000000000000
       distanceCm: !<float> 100.000000
       dropBelowEyesCm: !<float> 90.000000
       placeOnStart: true
-      debugColliders: false
+      startStyleIndex: !<float> 0.000000
   ScriptTypes:
     -
       {}
@@ -69,14 +79,19 @@
     - '// @input AssignableType_1 tank {"hint":"The virtual tank component"}'
     - '// @input AssignableType_2 palette {"hint":"The palette of pinch buttons"}'
     - '// @input AssignableType_3 coach {"hint":"The coach card"}'
-    - '// @ui {"widget":"label", "label":"Piece prefabs (GLB imports)"}'
-    - // @input Asset.ObjectPrefab stonePrefab
-    - // @input Asset.ObjectPrefab woodPrefab
-    - // @input Asset.ObjectPrefab carpetPrefab
-    - // @input Asset.ObjectPrefab bushPrefab
-    - // @input Asset.ObjectPrefab stemsPrefab
+    - '// @ui {"widget":"label", "label":"Piece prefabs (GLB imports), one per catalogue id"}'
+    - // @input Asset.ObjectPrefab prefabSeiryu
+    - // @input Asset.ObjectPrefab prefabDragon
+    - // @input Asset.ObjectPrefab prefabSpiderwood
+    - // @input Asset.ObjectPrefab prefabManzanita
+    - // @input Asset.ObjectPrefab prefabCarpet
+    - // @input Asset.ObjectPrefab prefabHairgrass
+    - // @input Asset.ObjectPrefab prefabBush
+    - // @input Asset.ObjectPrefab prefabAnubias
+    - // @input Asset.ObjectPrefab prefabStems
+    - // @input Asset.ObjectPrefab prefabLudwigia
     - '// @ui {"widget":"label", "label":"Placement"}'
     - '// @input float distanceCm = 100 {"hint":"How far in front of the user the tank is placed, in cm"}'
     - '// @input float dropBelowEyesCm = 85 {"hint":"How far below eye level the tank floor sits, in cm (eye height minus table height)"}'
     - '// @input bool placeOnStart = true {"hint":"Place the tank in front of the user when the Lens starts"}'
-    - '// @input bool debugColliders {"hint":"Render colliders as wireframes for debugging"}'
+    - '// @input float startStyleIndex {"hint":"Style shown first: 0 Iwagumi, 1 Nature, 2 Dutch, 3 Jungle"}'

@@ -18,22 +18,22 @@ export class ScapePlannerFocalPointScenario extends Scenario {
     await interactor.tapButton("Button_clear");
 
     // A fresh stone spawns 6 cm left of centre: 40 percent of the width from the left, a third.
-    await interactor.tapButton("Button_stone");
-    const spawnX = interactor.pieceLocal("Piece_Stone").x;
+    await interactor.tapButton("Button_seiryu");
+    const spawnX = interactor.pieceLocal("Piece_Seiryu").x;
     expect(spawnX).toBeLessThan(-3);
     expect(spawnX).toBeGreaterThan(-14);
     expect(interactor.coachMessage(0).includes("sits on a third")).toBe(true);
 
     // A weak pull to the right carries it to the centre: the focal check turns amber.
-    await interactor.dragPiece("Piece_Stone", new vec3(0.15, 0, 0), 300);
-    const centreX = interactor.pieceLocal("Piece_Stone").x;
+    await interactor.dragPiece("Piece_Seiryu", new vec3(0.15, 0, 0), 300);
+    const centreX = interactor.pieceLocal("Piece_Seiryu").x;
     print("[ScapeLeaf] after pull to centre: x=" + centreX.toFixed(1));
     expect(Math.abs(centreX)).toBeLessThan(4);
     expect(interactor.coachMessage(0).includes("move it to a third")).toBe(true);
 
     // Take it away and place a new main stone on a third: the check turns green again.
     await interactor.tapButton("Button_undo");
-    await interactor.tapButton("Button_stone");
+    await interactor.tapButton("Button_seiryu");
     expect(interactor.coachMessage(0).includes("sits on a third")).toBe(true);
   }
 }

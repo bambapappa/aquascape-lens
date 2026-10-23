@@ -28,15 +28,17 @@ function applyTextRole(t: Text, role: TextRole, distanceCm: number = 110): void 
 }
 
 const LAYOUT_Z_LIFT = 0.02;
-const ROW_COUNT = 5;
-const ROW_TITLES = ["Focal point", "Odd count", "Front gap", "Height", "Plant zones"];
+const GENERAL_ROWS = 5;
+const STYLE_ROWS = 3;
+const ROW_TITLES = ["Focal point", "Odd count", "Front gap", "Height", "Plant zones", "Style rule", "Style rule", "Style rule"];
+const STYLE_HEADER_INDEX = GENERAL_ROWS;
 
 @component
 export class ScapePlannerCoachUI extends BaseScriptComponent {
   @ui.label("Panel")
   @input
   @hint("Panel width in cm")
-  widthCm: number = 34;
+  widthCm: number = 36;
   @input
   @hint("Padding inside the panel in cm")
   paddingCm: number = 1.4;
@@ -64,6 +66,7 @@ export class ScapePlannerCoachUI extends BaseScriptComponent {
   textColor: vec4 = new vec4(0.95, 0.97, 1.0, 1);
 
   private titleTextComp!: Text;
+  private styleTitle!: Text;
   private dots: Text[] = [];
   private messages: Text[] = [];
   private titles: Text[] = [];
@@ -101,8 +104,12 @@ export class ScapePlannerCoachUI extends BaseScriptComponent {
 
     const items: FlexItem[] = [];
     items.push(this.addHeader(content));
-    for (let i = 0; i < ROW_COUNT; i++) {
+    for (let i = 0; i < GENERAL_ROWS; i++) {
       items.push(this.addRow(content, i));
+    }
+    items.push(this.addStyleHeader(content));
+    for (let i = 0; i < STYLE_ROWS; i++) {
+      items.push(this.addRow(content, GENERAL_ROWS + i));
     }
     flex.addItems(items);
 
@@ -115,6 +122,18 @@ export class ScapePlannerCoachUI extends BaseScriptComponent {
     if (index < 0 || index >= this.dots.length) return;
     this.dots[index].textFill.color = this.colorFor(state);
     this.messages[index].text = message;
+  }
+
+  /** Update the style header: name and 0-100 score; applicable = how many rules could be judged. */
+  setStyle(name: string, score: number, applicable: number): void {
+    if (!this.styleTitle) return;
+    this.styleTitle.text = applicable > 0 ? "Style: " + name + "  " + score + "%" : "Style: " + name + "  (place pieces)";
+    this.styleTitle.textFill.color = applicable === 0 ? this.neutralColor : score >= 70 ? this.okColor : score >= 40 ? this.warnColor : this.textColor;
+  }
+
+  /** Update one of the style rule rows (index 0..2) below the style header. */
+  setStyleRule(index: number, state: CheckState, message: string): void {
+    this.setCheck(GENERAL_ROWS + index, state, message);
   }
 
   /** Highlight the title for speakUpSeconds, as the card speaking up after a change. */
@@ -161,6 +180,19 @@ export class ScapePlannerCoachUI extends BaseScriptComponent {
     item.overrideWidth = innerW;
     item.overrideHeight = h;
     item.marginBottom = 0.4;
+    item.alignSelf = FlexAlignSelf.Stretch;
+    return item;
+  }
+
+  private addStyleHeader(parent: SceneObject): FlexItem {
+    const innerW = this.widthCm - this.paddingCm * 2;
+    const h = 2.6;
+    this.styleTitle = this.makeText(parent, "StyleHeader", "Style", "Subheadline", innerW, h, HorizontalAlignment.Left);
+    const item = this.styleTitle.getSceneObject().createComponent(FlexItem.getTypeName()) as FlexItem;
+    item.flexShrink = 0;
+    item.overrideWidth = innerW;
+    item.overrideHeight = h;
+    item.marginTop = 0.6;
     item.alignSelf = FlexAlignSelf.Stretch;
     return item;
   }

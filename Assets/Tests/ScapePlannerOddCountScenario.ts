@@ -11,13 +11,13 @@ export class ScapePlannerOddCountScenario extends Scenario {
     await sleep(1500);
     await interactor.tapButton("Button_clear");
 
-    await interactor.tapButton("Button_stone");
+    await interactor.tapButton("Button_seiryu");
     expect(interactor.coachMessage(1).includes("(1)")).toBe(true);
 
-    await interactor.tapButton("Button_stone");
+    await interactor.tapButton("Button_seiryu");
     expect(interactor.coachMessage(1).includes("add one or remove one")).toBe(true);
 
-    await interactor.tapButton("Button_stone");
+    await interactor.tapButton("Button_seiryu");
     expect(interactor.coachMessage(1).includes("(3)")).toBe(true);
   }
 }

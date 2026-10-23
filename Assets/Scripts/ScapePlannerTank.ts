@@ -195,7 +195,7 @@ export class ScapePlannerTank extends BaseScriptComponent {
     const d = this.depthCm - 0.4;
     const hAvg = (this.substrateFrontCm + this.substrateBackCm) / 2;
     const slope = Math.atan((this.substrateBackCm - this.substrateFrontCm) / this.depthCm);
-    const soil = new vec4(0.16, 0.11, 0.07, 1);
+    const soil = new vec4(0.42, 0.3, 0.2, 1); // mid-tone: near-black reads as transparent on the additive display
     // A box tilted around x so its top runs from substrateFront at the front to substrateBack at the back.
     this.box(g, "Soil", this.solidMaterial, new vec3(0, hAvg / 2, 0), new vec3(w, hAvg, d), soil,
       quat.angleAxis(slope, new vec3(1, 0, 0)));

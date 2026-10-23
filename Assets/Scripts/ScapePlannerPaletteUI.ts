@@ -9,6 +9,7 @@ import { BackPlate } from "SpectaclesUIKit.lspkg/Scripts/BackPlate";
 import { Button } from "SpectaclesUIKit.lspkg/Scripts/Components/Button/Button";
 import { Billboard } from "SpectaclesInteractionKit.lspkg/Components/Interaction/Billboard/Billboard";
 import Event, { PublicApi } from "SpectaclesInteractionKit.lspkg/Utils/Event";
+import { CATALOG, isHardscapeKind } from "./ScapePlannerCatalog";
 
 // ── Typography: single source of truth for text size + weight (Snap Specs type scale at 110 cm) ──
 const FONT_SIZE_SCALE = 1.0;
@@ -28,24 +29,27 @@ function applyTextRole(t: Text, role: TextRole, distanceCm: number = 110): void 
   (t as Text & { weight?: number }).weight = TYPE_SCALE[role].weight;
 }
 
-export type PaletteAction = "stone" | "wood" | "carpet" | "bush" | "stems" | "undo" | "clear" | "guides" | "place";
+/** A catalogue id, or one of the tool actions. */
+export type PaletteAction = string;
 
 interface ButtonSpec {
   id: PaletteAction;
   label: string;
 }
 
-const BUTTONS: ButtonSpec[] = [
-  { id: "stone", label: "Stone" },
-  { id: "wood", label: "Wood" },
-  { id: "carpet", label: "Carpet" },
-  { id: "bush", label: "Bush" },
-  { id: "stems", label: "Stems" },
+const TOOL_BUTTONS: ButtonSpec[] = [
+  { id: "rotate", label: "Rotate" },
+  { id: "lean", label: "Lean" },
+  { id: "size", label: "Size" },
   { id: "undo", label: "Undo" },
   { id: "clear", label: "Clear" },
   { id: "guides", label: "Guides" },
+  { id: "style", label: "Style" },
   { id: "place", label: "Place tank" },
 ];
+
+const HARDSCAPE_BUTTONS: ButtonSpec[] = CATALOG.filter((e) => isHardscapeKind(e.kind)).map((e) => ({ id: e.id, label: e.label }));
+const PLANT_BUTTONS: ButtonSpec[] = CATALOG.filter((e) => e.kind === "plant").map((e) => ({ id: e.id, label: e.label }));
 
 const BUTTON_LABEL_Z = 0.08;
 const LAYOUT_Z_LIFT = 0.02;
@@ -55,19 +59,19 @@ export class ScapePlannerPaletteUI extends BaseScriptComponent {
   @ui.label("Panel")
   @input
   @hint("Panel width in cm")
-  widthCm: number = 56;
+  widthCm: number = 62;
   @input
   @hint("Padding inside the panel in cm")
   paddingCm: number = 1.6;
   @input
   @hint("Gap between buttons in cm")
-  gapCm: number = 0.9;
+  gapCm: number = 0.6;
   @input
   @hint("Button height in cm")
-  buttonHeightCm: number = 5;
+  buttonHeightCm: number = 4.4;
   @input
   @hint("Button width in cm")
-  buttonWidthCm: number = 10;
+  buttonWidthCm: number = 6.6;
   @input
   @hint("Title shown above the buttons")
   titleText: string = "Scape Planner";
@@ -109,13 +113,15 @@ export class ScapePlannerPaletteUI extends BaseScriptComponent {
     flex.paddingLeft = this.paddingCm;
     flex.paddingRight = this.paddingCm;
     flex.onLayoutComplete.add((r) => {
-      backPlate.size = new vec2(r.containerWidth, r.containerHeight);
+      // Full panel width: the measured container width can be narrower than the widest row.
+      backPlate.size = new vec2(this.widthCm, r.containerHeight);
     });
 
     const items: FlexItem[] = [];
     items.push(this.addHeader(content, this.titleText));
-    items.push(this.addRow(content, BUTTONS.slice(0, 5)));
-    items.push(this.addRow(content, BUTTONS.slice(5)));
+    items.push(this.addRow(content, HARDSCAPE_BUTTONS));
+    items.push(this.addRow(content, PLANT_BUTTONS));
+    items.push(this.addRow(content, TOOL_BUTTONS));
     flex.addItems(items);
   }
 

@@ -7,6 +7,7 @@ import { ScapePlannerFocalPointScenario } from "./ScapePlannerFocalPointScenario
 import { ScapePlannerOddCountScenario } from "./ScapePlannerOddCountScenario";
 import { ScapePlannerUndoClearScenario } from "./ScapePlannerUndoClearScenario";
 import { ScapePlannerReachScenario } from "./ScapePlannerReachScenario";
+import { ScapePlannerStyleAnglesScenario } from "./ScapePlannerStyleAnglesScenario";
 
 @component
 export class LeafIndex extends BaseScriptComponent {
@@ -18,5 +19,6 @@ export class LeafIndex extends BaseScriptComponent {
     { id: "scape-4-odd-count", typename: ScapePlannerOddCountScenario.getTypeName() },
     { id: "scape-5-undo-clear", typename: ScapePlannerUndoClearScenario.getTypeName() },
     { id: "scape-6-reach-ik", typename: ScapePlannerReachScenario.getTypeName() },
+    { id: "scape-7-style-and-angles", typename: ScapePlannerStyleAnglesScenario.getTypeName() },
   ];
 }

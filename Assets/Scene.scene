@@ -1777,7 +1777,7 @@
   ScriptInputsDefault:
     distanceCm: true
     placeOnStart: true
-    debugColliders: true
+    startStyleIndex: true
   ScriptTypesDefault:
     {}
   ScriptInputs:
@@ -1785,15 +1785,20 @@
       tank: !<MappingBased.AssignableType_1> fd630fa3-e0cd-4963-8f90-60b1c4aeb786
       palette: !<MappingBased.AssignableType_2> 1917c044-d7b2-4e12-8933-021ab72cd552
       coach: !<MappingBased.AssignableType_3> eec3a736-a21d-4d97-8a42-9cf40bbb997c
-      stonePrefab: !<reference.ObjectPrefab> 1b372a58-f7c9-4c47-93ff-9da88df669c5
-      woodPrefab: !<reference.ObjectPrefab> fdc4631b-e30d-4587-8831-f85cd7ae37f2
-      carpetPrefab: !<reference.ObjectPrefab> 4c54ca4f-e8a1-479b-a231-35ef744e899c
-      bushPrefab: !<reference.ObjectPrefab> de9217d0-9c59-4af0-ab02-9036eabf56d8
-      stemsPrefab: !<reference.ObjectPrefab> 77d8553c-ad5f-4f8f-9fd3-99a743ca1b66
+      prefabSeiryu: !<reference.ObjectPrefab> 1b372a58-f7c9-4c47-93ff-9da88df669c5
+      prefabDragon: !<reference.ObjectPrefab> 9f3898c6-5a78-45c2-b376-c4bdfc618e40
+      prefabSpiderwood: !<reference.ObjectPrefab> fdc4631b-e30d-4587-8831-f85cd7ae37f2
+      prefabManzanita: !<reference.ObjectPrefab> 5f245b12-473a-403e-ba91-cc868781613b
+      prefabCarpet: !<reference.ObjectPrefab> 4c54ca4f-e8a1-479b-a231-35ef744e899c
+      prefabHairgrass: !<reference.ObjectPrefab> af9ee676-f52e-4736-84d6-2f5be9a0120d
+      prefabBush: !<reference.ObjectPrefab> de9217d0-9c59-4af0-ab02-9036eabf56d8
+      prefabAnubias: !<reference.ObjectPrefab> 94bd09fd-4b83-4f78-aa3c-0ce019cb4550
+      prefabStems: !<reference.ObjectPrefab> 77d8553c-ad5f-4f8f-9fd3-99a743ca1b66
+      prefabLudwigia: !<reference.ObjectPrefab> 8fab846d-9777-4c70-9421-9174ef70f3ce
       distanceCm: !<float> 100.000000
       dropBelowEyesCm: !<float> 85.000000
       placeOnStart: true
-      debugColliders: false
+      startStyleIndex: !<float> 0.000000
   ScriptTypes:
     "":
       {}
@@ -1954,7 +1959,7 @@
   Enabled: true
   Layers: 1
   LocalTransform: !<TransformEntity>
-    Position: {x: 0.000000, y: 9.000000, z: 24.000000}
+    Position: {x: 0.000000, y: 15.000000, z: 27.000000}
     Rotation: {x: -55.000000, y: 0.000000, z: 0.000000}
     Scale: {x: 1.000000, y: 1.000000, z: 1.000000}
     HasSegmentScaleCompensation: false

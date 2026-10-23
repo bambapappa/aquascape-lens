@@ -10,12 +10,14 @@ export class ScapePlannerUndoClearScenario extends Scenario {
     const interactor = new ScapePlannerLeafInteractor();
     await sleep(1500);
     await interactor.tapButton("Button_clear");
-    await interactor.tapButton("Button_stone");
-    await interactor.tapButton("Button_wood");
+    await interactor.tapButton("Button_seiryu");
+    await interactor.tapButton("Button_spiderwood");
     await interactor.tapButton("Button_stems");
     const n = interactor.countPieces();
     expect(n).toBe(3);
-    // Stems placed near the centre sit in the midground, so the zone check speaks up.
+    // Stems spawn in the background zone, so the zone check is green; pulled to the front it speaks up.
+    expect(interactor.coachMessage(4).includes("Plants sit in their zones")).toBe(true);
+    await interactor.dragPiece("Piece_Rotala", new vec3(0, 0, 60));
     expect(interactor.coachMessage(4).includes("Rotala belongs in the background")).toBe(true);
 
     await interactor.tapButton("Button_undo");

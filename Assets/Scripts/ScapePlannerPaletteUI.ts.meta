@@ -56,10 +56,10 @@
       {}
   InputLines:
     - '// @ui {"widget":"label", "label":"Panel"}'
-    - '// @input float widthCm = 56 {"hint":"Panel width in cm"}'
+    - '// @input float widthCm = 62 {"hint":"Panel width in cm"}'
     - '// @input float paddingCm = 1.6 {"hint":"Padding inside the panel in cm"}'
-    - '// @input float gapCm = 0.9 {"hint":"Gap between buttons in cm"}'
-    - '// @input float buttonHeightCm = 5 {"hint":"Button height in cm"}'
-    - '// @input float buttonWidthCm = 10 {"hint":"Button width in cm"}'
+    - '// @input float gapCm = 0.6 {"hint":"Gap between buttons in cm"}'
+    - '// @input float buttonHeightCm = 4.4 {"hint":"Button height in cm"}'
+    - '// @input float buttonWidthCm = 6.6 {"hint":"Button width in cm"}'
     - '// @input string titleText = "Scape Planner" {"hint":"Title shown above the buttons"}'
     - '// @input bool faceUser {"hint":"Turn the panel toward the user (off: keep the authored tilt, e.g. lying on the table)"}'

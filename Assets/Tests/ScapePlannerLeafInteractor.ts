@@ -2,11 +2,12 @@
 import { DefaultLeafInteractor } from "Leaf.lspkg/Interactors/interactor/DefaultLeafInteractor";
 import { findInteractablesByName } from "Leaf.lspkg/Interactors/InteractableUtils";
 import { findSceneObjectsByName, sleep } from "Leaf.lspkg/Utils/common/Utils";
+import { CATALOG, pieceObjectName } from "../Scripts/ScapePlannerCatalog";
 
-export const PIECE_NAMES = ["Piece_Stone", "Piece_Wood", "Piece_Carpet", "Piece_Bush", "Piece_Stems"];
+export const PIECE_NAMES: string[] = CATALOG.map((e) => pieceObjectName(e));
 
 export class ScapePlannerLeafInteractor extends DefaultLeafInteractor {
-  /** Pinch a palette button by its scene-object name, e.g. "Button_stone". */
+  /** Pinch a palette button by its scene-object name, e.g. "Button_seiryu". */
   async tapButton(buttonName: string): Promise<void> {
     const button = findInteractablesByName(buttonName, undefined, true)[0];
     if (!button) {
@@ -40,7 +41,25 @@ export class ScapePlannerLeafInteractor extends DefaultLeafInteractor {
     return objs[0].getTransform().getLocalPosition();
   }
 
-  /** Text of coach row `index` (0 focal, 1 odd count, 2 front gap, 3 height, 4 zones). */
+  /** Text of the style header on the coach card, e.g. "Style: Iwagumi  72%". */
+  styleHeader(): string {
+    const objs = findSceneObjectsByName("StyleHeader");
+    if (objs.length === 0) throw new Error("Style header not found");
+    const text = objs[0].getComponent("Component.Text") as Text;
+    return text ? text.text : "";
+  }
+
+  /** Local rotation (yaw about y, degrees) of the first piece's pivot, read back from the scene. */
+  pieceYawDeg(pieceName: string): number {
+    const objs = findSceneObjectsByName(pieceName);
+    if (objs.length === 0) throw new Error('Piece "' + pieceName + '" not found');
+    const pivot = this.findDescendant(objs[0], "Pivot");
+    if (!pivot) throw new Error("Pivot not found under " + pieceName);
+    const e = pivot.getTransform().getLocalRotation().toEulerAngles();
+    return (e.y * 180) / Math.PI;
+  }
+
+  /** Text of coach row `index` (0 focal, 1 odd count, 2 front gap, 3 height, 4 zones, 5-7 style rules). */
   coachMessage(index: number): string {
     const rows = findSceneObjectsByName("Row_" + index);
     if (rows.length === 0) throw new Error("Coach row " + index + " not found");
