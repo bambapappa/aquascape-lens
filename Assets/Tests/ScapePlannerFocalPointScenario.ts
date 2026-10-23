@@ -18,7 +18,7 @@ export class ScapePlannerFocalPointScenario extends Scenario {
     await interactor.tapButton("Button_clear");
 
     // A fresh stone spawns 6 cm left of centre: 40 percent of the width from the left, a third.
-    await interactor.tapButton("Button_seiryu");
+    await interactor.tapPiece("seiryu");
     const spawnX = interactor.pieceLocal("Piece_Seiryu").x;
     expect(spawnX).toBeLessThan(-3);
     expect(spawnX).toBeGreaterThan(-14);
@@ -33,7 +33,7 @@ export class ScapePlannerFocalPointScenario extends Scenario {
 
     // Take it away and place a new main stone on a third: the check turns green again.
     await interactor.tapButton("Button_undo");
-    await interactor.tapButton("Button_seiryu");
+    await interactor.tapPiece("seiryu");
     expect(interactor.coachMessage(0).includes("sits on a third")).toBe(true);
   }
 }

@@ -11,3 +11,6 @@
 - A UIKit BackPlate sized from `onLayoutComplete` can end up narrower than its widest row; set `backPlate.size` explicitly to the panel width, on both `onLayoutComplete` and `backPlate.onInitialized`.
 - A tilted tray on the table needs its bottom row above the table top: three rows of 4.4 cm at a 50 degree tilt need the panel centre about 18 cm above the table.
 - Rotating a fitted GLB about its bounds centre needs a pivot SceneObject between the wrapper and the prefab instance; rotating the instance itself rotates about the GLB's own origin.
+- `PreviewInteractTool` gets stuck once a Pinch times out (every later pinch fails with "Timed out waiting for onTriggerStart"); a `PreviewPanelTool refresh` + `resume` clears it. The LEAF path (`trigger(interactable)`) is unaffected.
+- A GLB dropped into `Assets/` is only imported (`.glb.meta` written, prefab id assigned) when Lens Studio rescans, which can lag minutes behind the copy; wait for the `.meta` before wiring the prefab input, and read the prefab id from the meta's `PrimaryAsset` line.
+- Prefab inputs are wired with VirtualScene `modify` on `components.ScriptComponent.<input>` = `@id:<PrimaryAsset id from the .glb.meta>`.

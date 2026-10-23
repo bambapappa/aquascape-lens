@@ -17,9 +17,9 @@ export class ScapePlannerStyleAnglesScenario extends Scenario {
     expect(interactor.styleHeader().includes("place pieces")).toBe(true);
 
     // Three Seiryu stones: Iwagumi rules become applicable and a percentage appears.
-    await interactor.tapButton("Button_seiryu");
-    await interactor.tapButton("Button_seiryu");
-    await interactor.tapButton("Button_seiryu");
+    await interactor.tapPiece("seiryu");
+    await interactor.tapPiece("seiryu");
+    await interactor.tapPiece("seiryu");
     expect(interactor.styleHeader().includes("%")).toBe(true);
     const iwagumi = interactor.styleHeader();
 
@@ -36,7 +36,7 @@ export class ScapePlannerStyleAnglesScenario extends Scenario {
 
     // Rotate turns the selected (last placed) stone by 15 degrees of yaw.
     await interactor.tapButton("Button_clear");
-    await interactor.tapButton("Button_seiryu");
+    await interactor.tapPiece("seiryu");
     const yaw0 = interactor.pieceYawDeg("Piece_Seiryu");
     await interactor.tapButton("Button_rotate");
     const yaw1 = interactor.pieceYawDeg("Piece_Seiryu");
@@ -49,7 +49,7 @@ export class ScapePlannerStyleAnglesScenario extends Scenario {
     expect(rows.some((r) => r.length > 0)).toBe(true);
 
     // A wood piece pushed against the front glass trips the front-gap check.
-    await interactor.tapButton("Button_spiderwood");
+    await interactor.tapPiece("spiderwood");
     await interactor.dragPiece("Piece_Spider", new vec3(0, 0, 60)); // strong pull to the front, clamped at the glass
     expect(interactor.coachMessage(2).includes("Pull hardscape")).toBe(true);
   }

@@ -34,15 +34,31 @@
     palette: false
     placeOnStart: false
     prefabAnubias: false
+    prefabBlyxa: false
+    prefabBonsai: false
+    prefabBuce: false
     prefabBush: false
     prefabCarpet: false
+    prefabDownoi: false
     prefabDragon: false
+    prefabElephant: false
+    prefabFrodo: false
     prefabHairgrass: false
+    prefabJavafern: false
+    prefabLava: false
+    prefabLotus: false
     prefabLudwigia: false
     prefabManzanita: false
+    prefabMopani: false
+    prefabMoss: false
+    prefabPagoda: false
+    prefabRedmoor: false
     prefabSeiryu: false
     prefabSpiderwood: false
+    prefabStaurogyne: false
     prefabStems: false
+    prefabSword: false
+    prefabVallisneria: false
     startStyleIndex: false
     tank: false
   ScriptTypesHidden:
@@ -59,14 +75,30 @@
       coach: !<MappingBased.AssignableType_3> 00000000-0000-0000-0000-000000000000
       prefabSeiryu: !<reference.ObjectPrefab> 00000000-0000-0000-0000-000000000000
       prefabDragon: !<reference.ObjectPrefab> 00000000-0000-0000-0000-000000000000
+      prefabLava: !<reference.ObjectPrefab> 00000000-0000-0000-0000-000000000000
+      prefabFrodo: !<reference.ObjectPrefab> 00000000-0000-0000-0000-000000000000
+      prefabElephant: !<reference.ObjectPrefab> 00000000-0000-0000-0000-000000000000
+      prefabPagoda: !<reference.ObjectPrefab> 00000000-0000-0000-0000-000000000000
       prefabSpiderwood: !<reference.ObjectPrefab> 00000000-0000-0000-0000-000000000000
       prefabManzanita: !<reference.ObjectPrefab> 00000000-0000-0000-0000-000000000000
+      prefabRedmoor: !<reference.ObjectPrefab> 00000000-0000-0000-0000-000000000000
+      prefabMopani: !<reference.ObjectPrefab> 00000000-0000-0000-0000-000000000000
+      prefabBonsai: !<reference.ObjectPrefab> 00000000-0000-0000-0000-000000000000
       prefabCarpet: !<reference.ObjectPrefab> 00000000-0000-0000-0000-000000000000
       prefabHairgrass: !<reference.ObjectPrefab> 00000000-0000-0000-0000-000000000000
       prefabBush: !<reference.ObjectPrefab> 00000000-0000-0000-0000-000000000000
-      prefabAnubias: !<reference.ObjectPrefab> 00000000-0000-0000-0000-000000000000
       prefabStems: !<reference.ObjectPrefab> 00000000-0000-0000-0000-000000000000
       prefabLudwigia: !<reference.ObjectPrefab> 00000000-0000-0000-0000-000000000000
+      prefabAnubias: !<reference.ObjectPrefab> 00000000-0000-0000-0000-000000000000
+      prefabJavafern: !<reference.ObjectPrefab> 00000000-0000-0000-0000-000000000000
+      prefabMoss: !<reference.ObjectPrefab> 00000000-0000-0000-0000-000000000000
+      prefabBuce: !<reference.ObjectPrefab> 00000000-0000-0000-0000-000000000000
+      prefabVallisneria: !<reference.ObjectPrefab> 00000000-0000-0000-0000-000000000000
+      prefabSword: !<reference.ObjectPrefab> 00000000-0000-0000-0000-000000000000
+      prefabBlyxa: !<reference.ObjectPrefab> 00000000-0000-0000-0000-000000000000
+      prefabDownoi: !<reference.ObjectPrefab> 00000000-0000-0000-0000-000000000000
+      prefabLotus: !<reference.ObjectPrefab> 00000000-0000-0000-0000-000000000000
+      prefabStaurogyne: !<reference.ObjectPrefab> 00000000-0000-0000-0000-000000000000
       distanceCm: !<float> 100.000000
       dropBelowEyesCm: !<float> 90.000000
       placeOnStart: true
@@ -79,17 +111,33 @@
     - '// @input AssignableType_1 tank {"hint":"The virtual tank component"}'
     - '// @input AssignableType_2 palette {"hint":"The palette of pinch buttons"}'
     - '// @input AssignableType_3 coach {"hint":"The coach card"}'
-    - '// @ui {"widget":"label", "label":"Piece prefabs (GLB imports), one per catalogue id"}'
+    - '// @ui {"widget":"label", "label":"Piece prefabs (GLB imports), one per catalogue mesh key"}'
     - // @input Asset.ObjectPrefab prefabSeiryu
     - // @input Asset.ObjectPrefab prefabDragon
+    - // @input Asset.ObjectPrefab prefabLava
+    - // @input Asset.ObjectPrefab prefabFrodo
+    - // @input Asset.ObjectPrefab prefabElephant
+    - // @input Asset.ObjectPrefab prefabPagoda
     - // @input Asset.ObjectPrefab prefabSpiderwood
     - // @input Asset.ObjectPrefab prefabManzanita
+    - // @input Asset.ObjectPrefab prefabRedmoor
+    - // @input Asset.ObjectPrefab prefabMopani
+    - // @input Asset.ObjectPrefab prefabBonsai
     - // @input Asset.ObjectPrefab prefabCarpet
     - // @input Asset.ObjectPrefab prefabHairgrass
     - // @input Asset.ObjectPrefab prefabBush
-    - // @input Asset.ObjectPrefab prefabAnubias
     - // @input Asset.ObjectPrefab prefabStems
     - // @input Asset.ObjectPrefab prefabLudwigia
+    - // @input Asset.ObjectPrefab prefabAnubias
+    - // @input Asset.ObjectPrefab prefabJavafern
+    - // @input Asset.ObjectPrefab prefabMoss
+    - // @input Asset.ObjectPrefab prefabBuce
+    - // @input Asset.ObjectPrefab prefabVallisneria
+    - // @input Asset.ObjectPrefab prefabSword
+    - // @input Asset.ObjectPrefab prefabBlyxa
+    - // @input Asset.ObjectPrefab prefabDownoi
+    - // @input Asset.ObjectPrefab prefabLotus
+    - // @input Asset.ObjectPrefab prefabStaurogyne
     - '// @ui {"widget":"label", "label":"Placement"}'
     - '// @input float distanceCm = 100 {"hint":"How far in front of the user the tank is placed, in cm"}'
     - '// @input float dropBelowEyesCm = 85 {"hint":"How far below eye level the tank floor sits, in cm (eye height minus table height)"}'

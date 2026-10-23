@@ -63,6 +63,7 @@ export class ScapePlannerPiece {
     this.pivot.setParent(this.root);
     const visual = prefab.instantiate(this.pivot);
     this.fitVisual(visual, entry.heightCm);
+    if (entry.tint) this.applyTint(visual, entry.tint);
 
     this.collider = this.root.createComponent("Physics.ColliderComponent") as ColliderComponent;
     this.collider.shape = Shape.createBoxShape();
@@ -234,6 +235,29 @@ export class ScapePlannerPiece {
     const centre = min.add(max).uniformScale(0.5);
     const lp = t.getLocalPosition();
     t.setLocalPosition(new vec3(lp.x - centre.x * factor, lp.y - centre.y * factor, lp.z - centre.z * factor));
+  }
+
+  /** Multiply the GLB material's base colour by a tint (per-instance clones), for species variants that share a mesh. */
+  private applyTint(visual: SceneObject, tint: vec4): void {
+    const visuals: RenderMeshVisual[] = [];
+    this.collectVisuals(visual, visuals);
+    for (const v of visuals) {
+      const count = v.getMaterialsCount();
+      const clones: Material[] = [];
+      for (let i = 0; i < count; i++) clones.push(v.getMaterial(i).clone());
+      v.clearMaterials();
+      for (const m of clones) {
+        const pass = m.mainPass;
+        if (pass.baseColorFactor !== undefined) {
+          const c = pass.baseColorFactor as vec4;
+          pass.baseColorFactor = new vec4(c.x * tint.x, c.y * tint.y, c.z * tint.z, c.w * tint.w);
+        } else if (pass.baseColor !== undefined) {
+          const c = pass.baseColor as vec4;
+          pass.baseColor = new vec4(c.x * tint.x, c.y * tint.y, c.z * tint.z, c.w * tint.w);
+        }
+        v.addMaterial(m);
+      }
+    }
   }
 
   private collectVisuals(obj: SceneObject, out: RenderMeshVisual[]): void {

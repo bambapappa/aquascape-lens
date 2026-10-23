@@ -7,6 +7,23 @@
 // Local frame: origin at the centre of the tank floor (inside the glass),
 // +x to the right, +y up, +z toward the front glass (toward the user).
 
+export interface TankSize {
+  id: string;
+  widthCm: number;
+  depthCm: number;
+  heightCm: number;
+}
+
+/** Common standard tanks (ADA-style names): width x depth x height in cm. */
+export const TANK_SIZES: TankSize[] = [
+  { id: "30C", widthCm: 30, depthCm: 30, heightCm: 30 },
+  { id: "45P", widthCm: 45, depthCm: 27, heightCm: 30 },
+  { id: "60P", widthCm: 60, depthCm: 30, heightCm: 36 },
+  { id: "75P", widthCm: 75, depthCm: 45, heightCm: 45 },
+  { id: "90P", widthCm: 90, depthCm: 45, heightCm: 45 },
+  { id: "120P", widthCm: 120, depthCm: 45, heightCm: 45 },
+];
+
 @component
 export class ScapePlannerTank extends BaseScriptComponent {
   @ui.label("Tank size (cm)")
@@ -51,6 +68,8 @@ export class ScapePlannerTank extends BaseScriptComponent {
   private guidesRoot!: SceneObject;
   private boxSizeCm: vec3 = new vec3(1, 1, 1);
   private built = false;
+  private builtGroups: SceneObject[] = [];
+  private sizeIndex = 2;
 
   onAwake(): void {
     if (!this.boxMesh || !this.glassMaterial || !this.lineMaterial || !this.solidMaterial) {
@@ -58,11 +77,53 @@ export class ScapePlannerTank extends BaseScriptComponent {
       return;
     }
     this.measureBoxMesh();
+    this.sizeIndex = this.findSizeIndex();
+    this.rebuild();
+  }
+
+  /** Tear down and rebuild every visual for the current dimensions. */
+  rebuild(): void {
+    const guidesWereVisible = this.guidesRoot ? this.guidesRoot.enabled : true;
+    for (const g of this.builtGroups) g.destroy();
+    this.builtGroups = [];
     this.buildTable();
     this.buildGlass();
     this.buildSubstrate();
     this.buildGuides();
+    this.guidesRoot.enabled = guidesWereVisible;
     this.built = true;
+  }
+
+  /** Switch to a standard size by index into TANK_SIZES and rebuild. */
+  setSize(index: number): void {
+    const size = TANK_SIZES[((index % TANK_SIZES.length) + TANK_SIZES.length) % TANK_SIZES.length];
+    this.sizeIndex = TANK_SIZES.indexOf(size);
+    this.widthCm = size.widthCm;
+    this.depthCm = size.depthCm;
+    this.heightCm = size.heightCm;
+    // Substrate slope scales with depth: 4 to 7 cm on a 30 cm deep tank.
+    this.substrateFrontCm = 4;
+    this.substrateBackCm = 4 + 3 * (size.depthCm / 30);
+    this.tableWidthCm = Math.max(80, size.widthCm + 30);
+    this.tableDepthCm = Math.max(50, size.depthCm + 20);
+    this.rebuild();
+  }
+
+  nextSize(): TankSize {
+    this.setSize(this.sizeIndex + 1);
+    return TANK_SIZES[this.sizeIndex];
+  }
+
+  get sizeLabel(): string {
+    return TANK_SIZES[this.sizeIndex].id;
+  }
+
+  private findSizeIndex(): number {
+    for (let i = 0; i < TANK_SIZES.length; i++) {
+      const t = TANK_SIZES[i];
+      if (t.widthCm === this.widthCm && t.depthCm === this.depthCm && t.heightCm === this.heightCm) return i;
+    }
+    return 2;
   }
 
   // ── Public API used by the main script ──────────────────────────────────
@@ -135,6 +196,7 @@ export class ScapePlannerTank extends BaseScriptComponent {
   private group(name: string, parent?: SceneObject): SceneObject {
     const so = global.scene.createSceneObject(name);
     so.setParent(parent ? parent : this.sceneObject);
+    if (!parent) this.builtGroups.push(so);
     return so;
   }
 

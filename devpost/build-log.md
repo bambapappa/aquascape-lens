@@ -101,8 +101,32 @@ display, spawn spots that avoid overlaps. The research for the rules and
 the catalogue was done by four parallel agents; the design and the code
 were done by hand afterwards. Seven LEAF scenarios pass.
 
-Not generated yet (Meshy credits): lava rock, Redmoor, Java fern,
-Vallisneria, moss, Staurogyne.
+## Version 3 (2026-10-23, night)
+
+Asked for: far more plants, a choice of hardscape materials, and standard
+tank sizes. Done inline (no research agents this time, to keep token use
+down):
+
+- Sixteen more Meshy models (meshy-6-lite preview plus PBR refine, about
+  15 credits each): lava rock, Frodo stone, Elephant skin, Pagoda stone,
+  Redmoor, Mopani, bonsai wood, Java fern, moss cushion, Bucephalandra,
+  Vallisneria, Amazon sword, Blyxa, Downoi, red lotus, Staurogyne. 26
+  models in all.
+- A catalogue of 38 pieces: 11 hardscape, 27 plants. Species that share a
+  growth form reuse a model with a material tint (`applyTint` clones the
+  prefab materials and scales `baseColorFactor`), and are marked as
+  variants so the honest answer is "same shape, different colour".
+- The palette became a tabbed tray (Stone, Wood, Carpet, Mid, Back, Epi):
+  one tool row, one tab row, two rows of eight item slots that are renamed
+  when a tab is chosen. LEAF taps the tab first, then the item.
+- Six standard tank sizes (30C, 45P, 60P, 75P, 90P, 120P). The tank
+  rebuilds its glass, substrate and guides, the table grows with it, the
+  palette and coach move with it, and the rules read the live dimensions.
+- One test broke for a good reason: the zone message now names the full
+  species ("Rotala rotundifolia belongs in the background"), so scenario 5
+  was updated. All eight LEAF scenarios pass.
+
+Meshy spend for the whole project: about 240 credits of the monthly 1016.
 
 ## Credits
 

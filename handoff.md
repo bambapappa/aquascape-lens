@@ -1,10 +1,14 @@
 # Handoff
 
-State 2026-10-23 evening (after the v2 improvements):
+State 2026-10-23 night (after v3):
 
-- Lens builds, runs in the Lens Studio 5.24.1 preview, and all seven LEAF
-  scenarios in `Assets/Tests/` pass. v2 adds ten pieces, style scoring
-  (Iwagumi, Nature, Dutch, Jungle), rotate/lean/size. Project saved, main pushed.
+- Lens builds, runs in the Lens Studio 5.24.1 preview, and all eight LEAF
+  scenarios in `Assets/Tests/` pass. v3 adds a tabbed palette with 38
+  pieces (11 hardscape, 27 plants, 26 Meshy models), six standard tank
+  sizes (Tank button) and species tints. v2 added style scoring (Iwagumi,
+  Nature, Dutch, Jungle) and rotate/lean/size. Project saved, main pushed.
+- Known cosmetic issue: the palette back plate renders a little narrower
+  than the button rows; buttons work.
 - `devpost/` holds the design brief (approved), interview answers, research
   notes, build log, video storyboard and submission text.
 - A captioned stop-motion draft of the demo was assembled from preview

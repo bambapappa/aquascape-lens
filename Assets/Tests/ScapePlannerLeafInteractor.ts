@@ -2,7 +2,7 @@
 import { DefaultLeafInteractor } from "Leaf.lspkg/Interactors/interactor/DefaultLeafInteractor";
 import { findInteractablesByName } from "Leaf.lspkg/Interactors/InteractableUtils";
 import { findSceneObjectsByName, sleep } from "Leaf.lspkg/Utils/common/Utils";
-import { CATALOG, pieceObjectName } from "../Scripts/ScapePlannerCatalog";
+import { CATALOG, catalogEntry, pieceObjectName } from "../Scripts/ScapePlannerCatalog";
 
 export const PIECE_NAMES: string[] = CATALOG.map((e) => pieceObjectName(e));
 
@@ -15,6 +15,14 @@ export class ScapePlannerLeafInteractor extends DefaultLeafInteractor {
     }
     await this.trigger(button);
     await sleep(400);
+  }
+
+  /** Place a catalogue piece: open its palette tab first, then pinch its button. */
+  async tapPiece(id: string): Promise<void> {
+    const entry = catalogEntry(id);
+    if (!entry) throw new Error('Catalogue id "' + id + '" not found');
+    await this.tapButton("Tab_" + entry.tab);
+    await this.tapButton("Button_" + id);
   }
 
   /** Grab the first piece with this name and drag it by a world-space delta (cm). */

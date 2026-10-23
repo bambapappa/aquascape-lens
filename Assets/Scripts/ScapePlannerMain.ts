@@ -33,17 +33,33 @@ export class ScapePlannerMain extends BaseScriptComponent {
   @hint("The coach card")
   coach!: ScapePlannerCoachUI;
 
-  @ui.label("Piece prefabs (GLB imports), one per catalogue id")
+  @ui.label("Piece prefabs (GLB imports), one per catalogue mesh key")
   @input prefabSeiryu!: ObjectPrefab;
   @input prefabDragon!: ObjectPrefab;
+  @input prefabLava!: ObjectPrefab;
+  @input prefabFrodo!: ObjectPrefab;
+  @input prefabElephant!: ObjectPrefab;
+  @input prefabPagoda!: ObjectPrefab;
   @input prefabSpiderwood!: ObjectPrefab;
   @input prefabManzanita!: ObjectPrefab;
+  @input prefabRedmoor!: ObjectPrefab;
+  @input prefabMopani!: ObjectPrefab;
+  @input prefabBonsai!: ObjectPrefab;
   @input prefabCarpet!: ObjectPrefab;
   @input prefabHairgrass!: ObjectPrefab;
   @input prefabBush!: ObjectPrefab;
-  @input prefabAnubias!: ObjectPrefab;
   @input prefabStems!: ObjectPrefab;
   @input prefabLudwigia!: ObjectPrefab;
+  @input prefabAnubias!: ObjectPrefab;
+  @input prefabJavafern!: ObjectPrefab;
+  @input prefabMoss!: ObjectPrefab;
+  @input prefabBuce!: ObjectPrefab;
+  @input prefabVallisneria!: ObjectPrefab;
+  @input prefabSword!: ObjectPrefab;
+  @input prefabBlyxa!: ObjectPrefab;
+  @input prefabDownoi!: ObjectPrefab;
+  @input prefabLotus!: ObjectPrefab;
+  @input prefabStaurogyne!: ObjectPrefab;
 
   @ui.label("Placement")
   @input
@@ -69,7 +85,7 @@ export class ScapePlannerMain extends BaseScriptComponent {
       return;
     }
     for (const e of CATALOG) {
-      if (!this.prefabFor(e.id)) print("ScapePlannerMain: prefab @input missing for catalogue id " + e.id);
+      if (!this.prefabFor(e.mesh)) print("ScapePlannerMain: prefab @input missing for mesh " + e.mesh + " (" + e.id + ")");
     }
     this.styleIndex = Math.max(0, Math.min(STYLES.length - 1, Math.floor(this.startStyleIndex)));
     this.createEvent("OnStartEvent").bind(() => this.onStart());
@@ -102,12 +118,13 @@ export class ScapePlannerMain extends BaseScriptComponent {
         this.palette.setGuidesOn(this.tank.guidesVisible);
         break;
       case "style": this.nextStyle(); break;
+      case "tank": this.nextTankSize(); break;
       case "place": this.placeInFrontOfUser(); break;
     }
   }
 
   addPiece(entry: CatalogEntry): void {
-    const prefab = this.prefabFor(entry.id);
+    const prefab = this.prefabFor(entry.mesh);
     if (!prefab) return;
     const sameKind = this.pieces.filter((p) => p.entry.id === entry.id).length;
     const sizeScale = entry.sizeLadder[sameKind % entry.sizeLadder.length];
@@ -164,6 +181,24 @@ export class ScapePlannerMain extends BaseScriptComponent {
     this.styleIndex = (this.styleIndex + 1) % STYLES.length;
     this.refreshCoach(true);
   }
+
+  /** Cycle the tank through the standard sizes; pieces are cleared and the panels follow the new tank. */
+  nextTankSize(): void {
+    this.clear();
+    this.tank.nextSize();
+    this.layoutPanels();
+    this.refreshCoach(true);
+  }
+
+  /** Put the palette tray in front of the tank and the coach card above it, for the current size. */
+  private layoutPanels(): void {
+    const d = this.tank.depthCm;
+    const h = this.tank.heightCm;
+    this.palette.getSceneObject().getTransform().setLocalPosition(new vec3(0, 18, d / 2 + 13));
+    this.coach.getSceneObject().getTransform().setLocalPosition(new vec3(0, h + 26, 6));
+  }
+
+  get tankSizeLabel(): string { return this.tank.sizeLabel; }
 
   /** Move the whole planner (tank, palette, coach) to distanceCm in front of the user, facing them. */
   placeInFrontOfUser(): void {
@@ -238,18 +273,34 @@ export class ScapePlannerMain extends BaseScriptComponent {
   get currentStyleName(): string { return STYLES[this.styleIndex].name; }
   get hardscapeCount(): number { return this.pieces.filter((p) => isHardscapeKind(p.kind)).length; }
 
-  private prefabFor(id: string): ObjectPrefab | null {
-    switch (id) {
+  private prefabFor(mesh: string): ObjectPrefab | null {
+    switch (mesh) {
       case "seiryu": return this.prefabSeiryu;
       case "dragon": return this.prefabDragon;
+      case "lava": return this.prefabLava;
+      case "frodo": return this.prefabFrodo;
+      case "elephant": return this.prefabElephant;
+      case "pagoda": return this.prefabPagoda;
       case "spiderwood": return this.prefabSpiderwood;
       case "manzanita": return this.prefabManzanita;
+      case "redmoor": return this.prefabRedmoor;
+      case "mopani": return this.prefabMopani;
+      case "bonsai": return this.prefabBonsai;
       case "carpet": return this.prefabCarpet;
       case "hairgrass": return this.prefabHairgrass;
       case "bush": return this.prefabBush;
-      case "anubias": return this.prefabAnubias;
       case "stems": return this.prefabStems;
       case "ludwigia": return this.prefabLudwigia;
+      case "anubias": return this.prefabAnubias;
+      case "javafern": return this.prefabJavafern;
+      case "moss": return this.prefabMoss;
+      case "buce": return this.prefabBuce;
+      case "vallisneria": return this.prefabVallisneria;
+      case "sword": return this.prefabSword;
+      case "blyxa": return this.prefabBlyxa;
+      case "downoi": return this.prefabDownoi;
+      case "lotus": return this.prefabLotus;
+      case "staurogyne": return this.prefabStaurogyne;
     }
     return null;
   }

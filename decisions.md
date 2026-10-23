@@ -9,3 +9,6 @@
 - 2026-10-23: Repo created private during the build; owner flips it public before submission.
 - 2026-10-23 (v2): style rules kept pure and weighted; a rule that cannot be judged yet is excluded from the score instead of counting as a failure, so an empty tank shows 'place pieces' rather than 0%.
 - 2026-10-23 (v2): rotation and lean are explicit buttons on the selected piece, not SIK rotation, because single-pinch mouse manipulation cannot rotate.
+- 2026-10-23 (v3): species that share a growth form reuse one Meshy model with a material tint instead of a model each (Meshy credits and preview load); the catalogue marks them as variants so the docs do not overclaim.
+- 2026-10-23 (v3): tank sizes are a fixed list of six standard sizes (30C to 120P) chosen with a cycle button, not free dimensions; changing size clears the layout because pieces are placed relative to the tank.
+- 2026-10-23 (v3): coach messages name the full species so two Rotala variants are distinguishable; tests match the full name.

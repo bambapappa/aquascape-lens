@@ -9,7 +9,7 @@ import { BackPlate } from "SpectaclesUIKit.lspkg/Scripts/BackPlate";
 import { Button } from "SpectaclesUIKit.lspkg/Scripts/Components/Button/Button";
 import { Billboard } from "SpectaclesInteractionKit.lspkg/Components/Interaction/Billboard/Billboard";
 import Event, { PublicApi } from "SpectaclesInteractionKit.lspkg/Utils/Event";
-import { CATALOG, isHardscapeKind } from "./ScapePlannerCatalog";
+import { Tab, entriesForTab } from "./ScapePlannerCatalog";
 
 // ── Typography: single source of truth for text size + weight (Snap Specs type scale at 110 cm) ──
 const FONT_SIZE_SCALE = 1.0;
@@ -45,11 +45,26 @@ const TOOL_BUTTONS: ButtonSpec[] = [
   { id: "clear", label: "Clear" },
   { id: "guides", label: "Guides" },
   { id: "style", label: "Style" },
-  { id: "place", label: "Place tank" },
+  { id: "tank", label: "Tank" },
+  { id: "place", label: "Place" },
 ];
 
-const HARDSCAPE_BUTTONS: ButtonSpec[] = CATALOG.filter((e) => isHardscapeKind(e.kind)).map((e) => ({ id: e.id, label: e.label }));
-const PLANT_BUTTONS: ButtonSpec[] = CATALOG.filter((e) => e.kind === "plant").map((e) => ({ id: e.id, label: e.label }));
+interface TabSpec {
+  tab: Tab;
+  label: string;
+}
+
+const TABS: TabSpec[] = [
+  { tab: "stone", label: "Stones" },
+  { tab: "wood", label: "Wood" },
+  { tab: "carpet", label: "Carpets" },
+  { tab: "mid", label: "Mid" },
+  { tab: "back", label: "Back" },
+  { tab: "epi", label: "On wood" },
+];
+
+/** Items per row of the catalogue area; two rows are shown per tab. */
+const ITEMS_PER_ROW = 8;
 
 const BUTTON_LABEL_Z = 0.08;
 const LAYOUT_Z_LIFT = 0.02;
@@ -59,7 +74,7 @@ export class ScapePlannerPaletteUI extends BaseScriptComponent {
   @ui.label("Panel")
   @input
   @hint("Panel width in cm")
-  widthCm: number = 62;
+  widthCm: number = 64;
   @input
   @hint("Padding inside the panel in cm")
   paddingCm: number = 1.6;
@@ -71,7 +86,7 @@ export class ScapePlannerPaletteUI extends BaseScriptComponent {
   buttonHeightCm: number = 4.4;
   @input
   @hint("Button width in cm")
-  buttonWidthCm: number = 6.6;
+  buttonWidthCm: number = 6.2;
   @input
   @hint("Title shown above the buttons")
   titleText: string = "Scape Planner";
@@ -85,6 +100,9 @@ export class ScapePlannerPaletteUI extends BaseScriptComponent {
   }
 
   private buttons: { [id: string]: Button } = {};
+  private tabButtons: { [tab: string]: Button } = {};
+  private itemRows: SceneObject[] = [];
+  private currentTab: Tab = "stone";
 
   onAwake(): void {
     this.sceneObject.createComponent("Component.Canvas");
@@ -121,11 +139,41 @@ export class ScapePlannerPaletteUI extends BaseScriptComponent {
 
     const items: FlexItem[] = [];
     items.push(this.addHeader(content, this.titleText));
-    items.push(this.addRow(content, HARDSCAPE_BUTTONS));
-    items.push(this.addRow(content, PLANT_BUTTONS));
+    items.push(this.addTabRow(content));
+    this.itemRows = [this.addItemRow(content, items), this.addItemRow(content, items)];
     items.push(this.addRow(content, TOOL_BUTTONS));
     flex.addItems(items);
+    this.showTab(this.currentTab);
   }
+
+  /** Show the catalogue entries of one tab in the two item rows. */
+  showTab(tab: Tab): void {
+    this.currentTab = tab;
+    for (const t of TABS) {
+      const b = this.tabButtons[t.tab];
+      if (b) b.isOn = t.tab === tab;
+    }
+    const entries = entriesForTab(tab);
+    for (let r = 0; r < this.itemRows.length; r++) {
+      const row = this.itemRows[r];
+      for (let i = 0; i < ITEMS_PER_ROW; i++) {
+        const slot = row.getChild(i);
+        const entry = entries[r * ITEMS_PER_ROW + i];
+        slot.enabled = !!entry;
+        if (!entry) continue;
+        slot.name = "Button_" + entry.id;
+        const label = this.findDescendant(slot, "ButtonLabel");
+        if (label) (label.getComponent("Component.Text") as Text).text = entry.label;
+        this.slotAction[slot.name] = entry.id;
+      }
+    }
+  }
+
+  get activeTab(): Tab {
+    return this.currentTab;
+  }
+
+  private slotAction: { [slotName: string]: string } = {};
 
   /** Visual toggle state for the Guides button. */
   setGuidesOn(on: boolean): void {
@@ -157,6 +205,76 @@ export class ScapePlannerPaletteUI extends BaseScriptComponent {
     return item;
   }
 
+  private addTabRow(parent: SceneObject): FlexItem {
+    const innerW = this.widthCm - this.paddingCm * 2;
+    const row = this.makeRow(parent, innerW, this.buttonHeightCm - 1);
+    const items: FlexItem[] = [];
+    for (const t of TABS) {
+      const so = global.scene.createSceneObject("Tab_" + t.tab);
+      so.setParent(row);
+      so.getTransform().setLocalPosition(new vec3(0, 0, LAYOUT_Z_LIFT));
+      const w = this.buttonWidthCm + 1.5;
+      const h = this.buttonHeightCm - 1;
+      const btn = so.createComponent(Button.getTypeName()) as Button;
+      btn.size = new vec3(w, h, 1);
+      btn.setIsToggleable(true);
+      btn.onInitialized.add(() => { btn.size = new vec3(w, h, 1); });
+      this.addButtonLabel(so, t.label, w - 0.5);
+      const item = so.createComponent(FlexItem.getTypeName()) as FlexItem;
+      item.flexShrink = 0;
+      item.overrideWidth = w;
+      item.overrideHeight = h;
+      btn.onTriggerUp.add(() => this.showTab(t.tab));
+      this.tabButtons[t.tab] = btn;
+      items.push(item);
+    }
+    (row.getComponent(FlexLayout.getTypeName()) as FlexLayout).addItems(items);
+    return row.getComponent(FlexItem.getTypeName()) as FlexItem;
+  }
+
+  /** A row of ITEMS_PER_ROW reusable item slots; showTab fills labels and actions. */
+  private addItemRow(parent: SceneObject, outer: FlexItem[]): SceneObject {
+    const innerW = this.widthCm - this.paddingCm * 2;
+    const row = this.makeRow(parent, innerW, this.buttonHeightCm);
+    const items: FlexItem[] = [];
+    for (let i = 0; i < ITEMS_PER_ROW; i++) {
+      const spec: ButtonSpec = { id: "slot" + i, label: "" };
+      items.push(this.addButton(row, spec, (so) => this._onAction.invoke(this.slotAction[so.name] || "")));
+    }
+    (row.getComponent(FlexLayout.getTypeName()) as FlexLayout).addItems(items);
+    outer.push(row.getComponent(FlexItem.getTypeName()) as FlexItem);
+    return row;
+  }
+
+  private makeRow(parent: SceneObject, width: number, height: number): SceneObject {
+    const row = global.scene.createSceneObject("Row");
+    row.setParent(parent);
+    row.getTransform().setLocalPosition(new vec3(0, 0, LAYOUT_Z_LIFT));
+    const rowItem = row.createComponent(FlexItem.getTypeName()) as FlexItem;
+    rowItem.flexShrink = 0;
+    rowItem.overrideWidth = width;
+    rowItem.overrideHeight = height;
+    const flex = row.createComponent(FlexLayout.getTypeName()) as FlexLayout;
+    flex.autoDiscoverItemsOnStart = false;
+    flex.width = width;
+    flex.height = height;
+    flex.direction = FlexDirection.Row;
+    flex.alignItems = FlexAlign.Center;
+    flex.justifyContent = FlexJustify.Center;
+    flex.columnGap = this.gapCm;
+    return row;
+  }
+
+  private findDescendant(obj: SceneObject, name: string): SceneObject | null {
+    for (let i = 0; i < obj.getChildrenCount(); i++) {
+      const c = obj.getChild(i);
+      if (c.name === name) return c;
+      const d = this.findDescendant(c, name);
+      if (d) return d;
+    }
+    return null;
+  }
+
   private addRow(parent: SceneObject, specs: ButtonSpec[]): FlexItem {
     const innerW = this.widthCm - this.paddingCm * 2;
     const row = global.scene.createSceneObject("Row");
@@ -180,7 +298,7 @@ export class ScapePlannerPaletteUI extends BaseScriptComponent {
     return rowItem;
   }
 
-  private addButton(parent: SceneObject, spec: ButtonSpec): FlexItem {
+  private addButton(parent: SceneObject, spec: ButtonSpec, onPress?: (so: SceneObject) => void): FlexItem {
     const sizeX = this.buttonWidthCm;
     const sizeY = this.buttonHeightCm;
     const so = global.scene.createSceneObject("Button_" + spec.id);
@@ -202,7 +320,7 @@ export class ScapePlannerPaletteUI extends BaseScriptComponent {
     item.flexShrink = 0;
     item.overrideWidth = sizeX;
     item.overrideHeight = sizeY;
-    btn.onTriggerUp.add(() => this._onAction.invoke(spec.id));
+    btn.onTriggerUp.add(() => (onPress ? onPress(so) : this._onAction.invoke(spec.id)));
     this.buttons[spec.id] = btn;
     return item;
   }

@@ -11,13 +11,22 @@ Built for **Learn AR with SPECS** (Devpost Learn, sponsor Snap), October 2026.
 
 ## What it does
 
-- A virtual 60 x 30 x 36 cm tank on a 75 cm table appears about 1 m in front
-  of you (the stand-in for your real tank, which the preview cannot see).
-- Pinch a piece in the palette tray to place it at real size on the
-  substrate: Seiryu and Dragon stone, spider wood and Manzanita, and six
-  plants (Monte Carlo carpet, dwarf hairgrass, Cryptocoryne, Anubias nana,
-  Rotala, red Ludwigia). Grab and drag it; it stays on the substrate and
-  inside the glass.
+- A virtual tank on a 75 cm table appears about 1 m in front of you (the
+  stand-in for your real tank, which the preview cannot see). **Tank**
+  cycles six standard sizes: 30C, 45P, 60P (the default, 60 x 30 x 36 cm),
+  75P, 90P and 120P. Guides, zones and the palette follow the size.
+- The palette tray has six tabs: Stone, Wood, Carpet, Mid, Back and Epi
+  (plants tied to hardscape). Pinch a piece to place it at real size on the
+  substrate. Hardscape: Seiryu, Dragon, lava, Frodo, Elephant skin and
+  Pagoda stone; spider wood, Manzanita, Redmoor, Mopani and bonsai wood.
+  Plants: 27 species across the four plant tabs (Monte Carlo, HC Cuba,
+  Glossostigma, hairgrass, Lilaeopsis; Cryptocoryne in three colours,
+  Staurogyne, Blyxa, Downoi, red lotus; Rotala, Limnophila, Ludwigia,
+  Alternanthera, Hygrophila, Bacopa, Vallisneria, Cyperus, Amazon sword;
+  Anubias in three sizes, Java fern, mosses, Riccia, Bucephalandra).
+  Each species carries its real footprint, height and mature height, so
+  the coach can judge zones and style rules. Grab and drag a piece; it
+  stays on the substrate and inside the glass.
 - **Rotate** turns the selected piece 15 degrees, **Lean** tilts it toward
   you in 10 degree steps (Iwagumi wants the main stone at 10 to 20), **Size**
   cycles a stone through the Oyaishi, Fukuishi and Soeishi sizes. The
@@ -52,16 +61,20 @@ as a pinch. No SPECS glasses are needed.
 - `Assets/Scripts/`: the Lens code.
   - `ScapePlannerMain.ts`: orchestration, layout state, palette actions,
     coach updates, place-in-front-of-user.
-  - `ScapePlannerTank.ts`: the virtual tank, table, substrate and guides.
+  - `ScapePlannerTank.ts`: the virtual tank, table, substrate and guides,
+    rebuilt for each of the six standard sizes.
   - `ScapePlannerPiece.ts`: one placed piece: prefab scaling, collider,
     SIK grab, clamped to the tank.
   - `ScapePlannerRules.ts`: the composition checks as pure functions.
   - `ScapePlannerStyles.ts`: the style-fit rules and scoring (pure).
-  - `ScapePlannerCatalog.ts`: the ten placeable pieces with sizes and zones.
+  - `ScapePlannerCatalog.ts`: the 38 placeable pieces (11 hardscape, 27
+    plants) with sizes, zones, tabs and tints.
   - `ScapePlannerPaletteUI.ts`, `ScapePlannerCoachUI.ts`: UIKit panels.
-- `Assets/GeneratedMeshes/`: five GLB models (Seiryu stone, spider wood,
-  Monte Carlo carpet, Cryptocoryne bush, Rotala stems) generated with
-  Meshy under the author's paid plan.
+- `Assets/GeneratedMeshes/`: 26 GLB models (11 stones and woods, 15 plant
+  forms) generated with Meshy under the author's paid plan. Species that
+  share a growth form reuse a model with a colour tint (for example the
+  three Cryptocoryne colours, or Hygrophila and Bacopa on the Ludwigia
+  stem model); the catalogue marks these as variants.
 - `Assets/ScapePlanner/`: the box mesh and the three materials the tank is
   built from.
 - `Packages/`: Spectacles Interaction Kit and UI Kit (from Snap's Specs
@@ -69,10 +82,11 @@ as a pinch. No SPECS glasses are needed.
 
 ## Tests
 
-Seven LEAF scenarios in `Assets/Tests/` (one per done criterion in the
-brief, an IK reachability check of the palette, and a v2 scenario for style
-scoring, rotate, lean and the front-gap check) run from the LEAF panel in
-Lens Studio and all pass in the preview. `LeafIndex.ts` registers them.
+Eight LEAF scenarios in `Assets/Tests/` (one per done criterion in the
+brief, an IK reachability check of the palette, a v2 scenario for style
+scoring, rotate, lean and the front-gap check, and a v3 scenario for the
+palette tabs and tank sizes) run from the LEAF panel in Lens Studio and all
+pass in the preview. `LeafIndex.ts` registers them.
 
 ## Run it
 

@@ -12,7 +12,7 @@ export class ScapePlannerPlaceStoneScenario extends Scenario {
     await interactor.tapButton("Button_clear");
     const before = interactor.countPieces();
 
-    await interactor.tapButton("Button_seiryu");
+    await interactor.tapPiece("seiryu");
     expect(interactor.countPieces()).toBe(before + 1);
 
     const stone = findSceneObjectsByName("Piece_Seiryu")[0];
