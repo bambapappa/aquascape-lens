@@ -37,7 +37,7 @@ export function seededRandom(seed: number): () => number {
  * groundAt(x, z) returns the surface height in the tile's local frame (tile centre at x = z = 0).
  */
 export function buildCarpetMesh(builder: MeshBuilder, spec: CarpetSpec, widthCm: number, depthCm: number, seed: number,
-  groundAt: (x: number, z: number) => number): void {
+  groundAt: (x: number, z: number) => number, blocked: (x: number, z: number) => boolean = () => false): void {
   const rand = seededRandom(seed);
   const verts: number[] = [];
   const idx: number[] = [];
@@ -48,6 +48,7 @@ export function buildCarpetMesh(builder: MeshBuilder, spec: CarpetSpec, widthCm:
     // Thin out the frayed margin so a lone tile has a soft edge.
     const edge = Math.max(Math.abs(x) / (widthCm / 2), Math.abs(z) / (depthCm / 2));
     if (edge > 1 && rand() < (edge - 1) / FRAY) continue;
+    if (blocked(x, z)) continue;
     const y = groundAt(x, z) - 0.15;
     if (spec.style === "blades") addBlade(verts, idx, spec, x, y, z, rand);
     else addLeaf(verts, idx, spec, x, y, z, rand);

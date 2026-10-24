@@ -14,6 +14,8 @@ import { Mound, SubstrateField, buildSubstrateMesh } from "./ScapePlannerSubstra
 
 /** Gap between the substrate mesh and the glass, in cm. */
 const SUBSTRATE_INSET_CM = 0.2;
+/** Cell size of the grass-free zone around stones and wood; one cell of margin is added all round. */
+const GRASS_CELL_CM = 1.0;
 
 export interface TankSize {
   id: string;
@@ -85,6 +87,7 @@ export class ScapePlannerTank extends BaseScriptComponent {
   private mounds: Mound[] = [];
   private substrateGroup: SceneObject | null = null;
   private zoneTintOn = true;
+  private grassBlockers: Set<string> = new Set<string>();
 
   onAwake(): void {
     if (!this.boxMesh || !this.glassMaterial || !this.lineMaterial || !this.solidMaterial) {
@@ -161,6 +164,22 @@ export class ScapePlannerTank extends BaseScriptComponent {
   /** Height of the substrate surface, mounds included, at a local (x, z). */
   surfaceAt(xLocal: number, zLocal: number): number {
     return this.field.heightAt(xLocal, zLocal);
+  }
+
+  /** Cells (GRASS_CELL_CM) where stone or wood meets the substrate: carpets leave them bare. */
+  setGrassBlockers(points: vec2[]): void {
+    const cells = new Set<string>();
+    for (const p of points) {
+      const i = Math.floor(p.x / GRASS_CELL_CM);
+      const j = Math.floor(p.y / GRASS_CELL_CM);
+      for (let di = -1; di <= 1; di++) for (let dj = -1; dj <= 1; dj++) cells.add((i + di) + "," + (j + dj));
+    }
+    this.grassBlockers = cells;
+  }
+
+  isGrassBlocked(xLocal: number, zLocal: number): boolean {
+    if (this.grassBlockers.size === 0) return false;
+    return this.grassBlockers.has(Math.floor(xLocal / GRASS_CELL_CM) + "," + Math.floor(zLocal / GRASS_CELL_CM));
   }
 
   /** Replace the soil and sand mounds and rebuild the substrate mesh. */

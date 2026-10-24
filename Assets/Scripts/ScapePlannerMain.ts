@@ -28,6 +28,8 @@ const PALETTE_DROP_CM = -14;
 const PALETTE_FRONT_CM = 16;
 /** Candidate x positions for a new piece, nearest the golden thirds first. */
 const SPAWN_X_CM = [-6, 6, -14, 14, -20, 20, 0];
+/** Depth offsets tried, in order, when the zone's own row is full. */
+const SPAWN_Z_OFFSETS_CM = [0, 7, -7, 11];
 const SPAWN_Z_BY_ZONE: { [zone: string]: number } = { foreground: 8, midground: 0, background: -8, anywhere: 2, "on-hardscape": 0 };
 
 @component
@@ -341,22 +343,28 @@ export class ScapePlannerMain extends BaseScriptComponent {
   private freeSpawnSpot(entry: CatalogEntry, sizeScale: number): { x: number; z: number } {
     const w = entry.widthCm * sizeScale;
     const d = entry.depthCm * sizeScale;
-    const z = SPAWN_Z_BY_ZONE[entry.zone] !== undefined ? SPAWN_Z_BY_ZONE[entry.zone] : 0;
+    const zoneZ = SPAWN_Z_BY_ZONE[entry.zone] !== undefined ? SPAWN_Z_BY_ZONE[entry.zone] : 0;
+    const maxZ = Math.max(0, this.tank.halfDepth - d / 2 - 0.6);
     const isMound = entry.render === "mound";
-    const infos = this.pieces.filter((p) => (p.entry.render === "mound") === isMound && !p.host).map((p) => p.info());
-    for (const x of SPAWN_X_CM) {
-      let free = true;
-      for (const p of infos) {
-        // Mounds may overlap by half so they merge into one ridge; other pieces keep clear.
-        const reach = isMound ? 0.25 : 0.5;
-        const overlapX = Math.abs(p.x - x) < (p.width + w) * reach;
-        const overlapZ = Math.abs(p.z - z) < (p.depth + d) * reach;
-        if (overlapX && overlapZ) { free = false; break; }
+    const infos = this.pieces.filter((p) => (p.entry.render === "mound") === isMound && !p.host && p.entry.render !== "carpet").map((p) => p.info());
+    // Rows: the zone's own depth first, then in front of it, then behind it.
+    for (const dz of SPAWN_Z_OFFSETS_CM) {
+      const z = Math.max(-maxZ, Math.min(maxZ, zoneZ + dz));
+      for (const x of SPAWN_X_CM) {
+        let free = true;
+        for (const p of infos) {
+          // Mounds may overlap by half so they merge into one ridge; other pieces keep clear.
+          const reach = isMound ? 0.25 : 0.5;
+          const overlapX = Math.abs(p.x - x) < (p.width + w) * reach;
+          const overlapZ = Math.abs(p.z - z) < (p.depth + d) * reach;
+          if (overlapX && overlapZ) { free = false; break; }
+        }
+        if (free) return { x, z };
       }
-      if (free) return { x, z };
     }
-    return { x: SPAWN_X_CM[SPAWN_X_CM.length - 1], z };
+    return { x: SPAWN_X_CM[SPAWN_X_CM.length - 1], z: zoneZ };
   }
+
 
   // ── Coach ───────────────────────────────────────────────────────────────
 
@@ -369,7 +377,29 @@ export class ScapePlannerMain extends BaseScriptComponent {
     return { widthCm: this.tank.widthCm, depthCm: this.tank.depthCm, heightCm: this.tank.heightCm };
   }
 
+  private hardscapeKey = "";
+
+  /** True when any stone or wood moved, turned, leant, scaled or was added or removed since the last check. */
+  private hardscapeChanged(): boolean {
+    const key = this.pieces.filter((p) => p.isHardscape).map((p) => {
+      const l = p.tankLocal;
+      return [l.x, l.y, l.z, p.yawDeg, p.leanDeg, p.scale, p.mirrored ? 1 : 0].map((v) => v.toFixed(1)).join(",");
+    }).join("|") + "#" + this.tank.sizeLabel;
+    if (key === this.hardscapeKey) return false;
+    this.hardscapeKey = key;
+    return true;
+  }
+
+  /** Keep carpets clear of every stone and wood foot, and re-lay the tiles. */
+  private refreshCarpets(): void {
+    const feet: vec2[] = [];
+    for (const p of this.pieces) if (p.isHardscape) for (const f of p.footprint()) feet.push(f);
+    this.tank.setGrassBlockers(feet);
+    for (const p of this.pieces) if (p.entry.render === "carpet") p.reseat();
+  }
+
   private refreshCoach(speakUp: boolean): void {
+    if (this.hardscapeChanged()) this.refreshCarpets();
     const infos = this.layoutInfo();
     const tank = this.tankDims();
     const results = evaluateLayout(infos, tank);

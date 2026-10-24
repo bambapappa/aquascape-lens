@@ -54,13 +54,13 @@ export class ScapePlannerAdaScenario extends Scenario {
     await this.tap("Button_lean", 3);
     // Small stones (Soeishi and Suteishi) at their feet.
     await this.place("seiryu");
-    await this.tap("Button_smaller", 2);
+    await this.tap("Button_smaller", 1);
     await this.tap("Button_rotate", 3);
     await this.place("seiryu");
-    await this.tap("Button_smaller", 3);
+    await this.tap("Button_smaller", 1);
     await this.tap("Button_mirror");
     await this.place("seiryu");
-    await this.tap("Button_smaller", 4);
+    await this.tap("Button_smaller", 2);
     await this.tap("Button_rotate", 8);
 
     // Dwarf hairgrass over the whole floor, row by row from the front glass.

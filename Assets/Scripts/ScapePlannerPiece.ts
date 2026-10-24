@@ -23,8 +23,10 @@ const DEG = Math.PI / 180;
 const RING_COLOR = new vec4(0.3, 0.95, 1.0, 0.9);
 export const MAX_LEAN_DEG = 40;
 /** Hardscape sinks this share of its height into the substrate (capped), so it looks set, not perched. */
-const EMBED_SHARE = 0.08;
-const EMBED_MAX_CM = 1.5;
+const EMBED_SHARE = 0.2;
+const EMBED_MAX_CM = 5;
+/** Surface points this close above the substrate count as the piece's foot (keeps grass out). */
+const FOOT_HEIGHT_CM = 2.5;
 /** Most surface points kept per hardscape piece for epiphyte placement. */
 const MAX_SURFACE_POINTS = 1500;
 /** Epiphytes look for host surface points within this radius (cm, host space) of the drop point. */
@@ -209,6 +211,19 @@ export class ScapePlannerPiece {
     return best;
   }
 
+  /** Tank-local (x, z) of the surface points that touch the substrate: where no carpet may grow. */
+  footprint(): vec2[] {
+    if (this.surfacePoints.length === 0) return [];
+    const toTank = this.tank.getTransform().getInvertedWorldTransform();
+    const pivotWorld = this.pivot.getTransform().getWorldTransform();
+    const out: vec2[] = [];
+    for (const p of this.surfacePoints) {
+      const q = toTank.multiplyPoint(pivotWorld.multiplyPoint(p));
+      if (q.y < this.tank.surfaceAt(q.x, q.z) + FOOT_HEIGHT_CM) out.push(new vec2(q.x, q.z));
+    }
+    return out;
+  }
+
   /** The highest point near the top-front of the piece, for a fresh epiphyte. */
   defaultAttachPoint(): vec3 | null {
     if (this.surfacePoints.length === 0) return null;
@@ -311,7 +326,8 @@ export class ScapePlannerPiece {
     ]);
     builder.topology = MeshTopology.Triangles;
     builder.indexType = MeshIndexType.UInt16;
-    buildCarpetMesh(builder, spec, w, d, this.seed, (x, z) => this.tank.surfaceAt(lp.x + x, lp.z + z) - lp.y);
+    buildCarpetMesh(builder, spec, w, d, this.seed, (x, z) => this.tank.surfaceAt(lp.x + x, lp.z + z) - lp.y,
+      (x, z) => this.tank.isGrassBlocked(lp.x + x, lp.z + z));
     if (!builder.isValid()) return;
     builder.updateMesh();
     const so = global.scene.createSceneObject("Carpet");

@@ -22,10 +22,11 @@ export class ScapePlannerPlaceStoneScenario extends Scenario {
     expect(collider).toBeTruthy();
     const shape = collider.shape as BoxShape;
     expect(shape.size.y).toBeCloseTo(22, 1);
-    // The wrapper centre sits half a stone above the substrate (about 4.5 cm at the spawn point).
+    // The wrapper centre sits half a stone above the substrate (about 6 cm at the spawn point),
+    // less the 20% the stone is sunk into the soil: about 6 + 11 - 4.4 = 12.6 cm.
     const start = interactor.pieceLocal("Piece_Seiryu");
-    expect(start.y).toBeGreaterThan(14);
-    expect(start.y).toBeLessThan(18);
+    expect(start.y).toBeGreaterThan(10);
+    expect(start.y).toBeLessThan(15);
 
     // Drag it 8 cm to the left; it moves.
     await interactor.dragPiece("Piece_Seiryu", new vec3(-8, 0, 0)); // a strong pull to the left (per-update vector)
@@ -37,8 +38,8 @@ export class ScapePlannerPlaceStoneScenario extends Scenario {
     const clamped = interactor.pieceLocal("Piece_Seiryu");
     expect(clamped.z).toBeLessThan(15);
     expect(clamped.z).toBeGreaterThan(5);
-    // And it still rests on the substrate.
-    expect(clamped.y).toBeGreaterThan(13);
-    expect(clamped.y).toBeLessThan(18);
+    // And it still rests in the substrate (lower at the front, where the substrate is thinner).
+    expect(clamped.y).toBeGreaterThan(9);
+    expect(clamped.y).toBeLessThan(15);
   }
 }
