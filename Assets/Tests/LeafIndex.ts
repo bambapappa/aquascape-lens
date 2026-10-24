@@ -9,6 +9,7 @@ import { ScapePlannerUndoClearScenario } from "./ScapePlannerUndoClearScenario";
 import { ScapePlannerReachScenario } from "./ScapePlannerReachScenario";
 import { ScapePlannerStyleAnglesScenario } from "./ScapePlannerStyleAnglesScenario";
 import { ScapePlannerTabsTankScenario } from "./ScapePlannerTabsTankScenario";
+import { ScapePlannerDemoScenario } from "./ScapePlannerDemoScenario";
 
 @component
 export class LeafIndex extends BaseScriptComponent {
@@ -22,5 +23,6 @@ export class LeafIndex extends BaseScriptComponent {
     { id: "scape-6-reach-ik", typename: ScapePlannerReachScenario.getTypeName() },
     { id: "scape-7-style-and-angles", typename: ScapePlannerStyleAnglesScenario.getTypeName() },
     { id: "scape-8-tabs-and-tank-sizes", typename: ScapePlannerTabsTankScenario.getTypeName() },
+    { id: "scape-9-demo", typename: ScapePlannerDemoScenario.getTypeName() },
   ];
 }

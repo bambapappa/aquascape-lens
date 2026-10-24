@@ -17,6 +17,9 @@ const YAW_STEP_DEG = 15;
 const LEAN_STEPS_DEG = [0, 10, 20, 30];
 const STYLE_RULE_ROWS = 3;
 /** Candidate x positions for a new piece, nearest the golden thirds first. */
+/** Palette tray offset from the tank origin: below the table top and out in front of it. */
+const PALETTE_DROP_CM = -14;
+const PALETTE_FRONT_CM = 16;
 const SPAWN_X_CM = [-6, 6, -14, 14, -20, 20, 0];
 const SPAWN_Z_BY_ZONE: { [zone: string]: number } = { foreground: 8, midground: 0, background: -8, anywhere: 2, "on-hardscape": 0 };
 
@@ -94,6 +97,7 @@ export class ScapePlannerMain extends BaseScriptComponent {
   private onStart(): void {
     this.palette.onAction.add((action) => this.handleAction(action));
     if (this.placeOnStart) this.placeInFrontOfUser();
+    this.layoutPanels();
     this.tank.setGuidesVisible(true);
     this.palette.setGuidesOn(true);
     this.refreshCoach(false);
@@ -190,11 +194,14 @@ export class ScapePlannerMain extends BaseScriptComponent {
     this.refreshCoach(true);
   }
 
-  /** Put the palette tray in front of the tank and the coach card above it, for the current size. */
+  /**
+   * Put the palette tray in front of the table, below the user's line of sight into the
+   * tank (so it never covers the layout), and the coach card above the tank.
+   */
   private layoutPanels(): void {
     const d = this.tank.depthCm;
     const h = this.tank.heightCm;
-    this.palette.getSceneObject().getTransform().setLocalPosition(new vec3(0, 18, d / 2 + 13));
+    this.palette.getSceneObject().getTransform().setLocalPosition(new vec3(0, PALETTE_DROP_CM, d / 2 + PALETTE_FRONT_CM));
     this.coach.getSceneObject().getTransform().setLocalPosition(new vec3(0, h + 26, 6));
   }
 
