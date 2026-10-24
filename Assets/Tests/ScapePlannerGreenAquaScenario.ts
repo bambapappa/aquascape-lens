@@ -35,8 +35,9 @@ const ROOTS: Root[] = [
 ];
 
 const EPIPHYTES = ["moss", "javamoss", "buce", "moss", "anubpetite", "moss", "buce", "javamoss", "moss", "anubias"];
-const BACK_ROW = ["rotalagreen", "vallisneria", "limnophila", "stems", "hygrophila", "rotalagreen", "ludwigia", "vallisneria",
-  "bacopa", "alternanth", "rotalagreen", "vallisneria", "limnophila", "hygrophila"];
+/** The back wall is one fine green stem species, with a couple of red accents. */
+const BACK_X = [-55, -48, -41, -34, -27, -20, -13, -6, 1, 8, 15, 22, 29, 36, 43, 50, 56];
+const RED_ACCENTS = [5, 12];
 
 @component
 export class ScapePlannerGreenAquaScenario extends Scenario {
@@ -95,12 +96,13 @@ export class ScapePlannerGreenAquaScenario extends Scenario {
     for (const x of [-45, -20, 5, 30, 52]) await this.put("soil", x, -15);
     for (const x of [-52, -35, -18, 0, 18, 35, 52]) await this.put("sand", x, 17, 1);
 
-    await this.put("slate", -46, 2, 0, 3);
-    await this.put("slate", -24, 3, -1, 9);
-    await this.put("slate", -6, 1, 1, 14, 0, true);
-    await this.put("slate", 16, 2, 0, 20);
-    await this.put("slate", 40, 0, 1, 6, 0, true);
-    await this.put("slate", 54, 6, -1, 11);
+    const stones: number[] = [];
+    stones.push(await this.put("slate", -46, 2, 0, 3));
+    stones.push(await this.put("slate", -24, 3, -1, 9));
+    stones.push(await this.put("slate", -6, 1, 1, 14, 0, true));
+    stones.push(await this.put("slate", 16, 2, 0, 20));
+    stones.push(await this.put("slate", 40, 0, 1, 6, 0, true));
+    stones.push(await this.put("slate", 54, 6, -1, 11));
     await this.put("seiryu", -30, 8, -2, 4);
     await this.put("seiryu", 6, 9, -2, 12, 0, true);
     await this.put("seiryu", 30, 7, -2, 8);
@@ -123,19 +125,23 @@ export class ScapePlannerGreenAquaScenario extends Scenario {
       if (i % 3 !== 2) await this.hang(roots[i], i % 2 === 0 ? "anubpetite" : "buce");
     }
 
-    await this.put("bush", -38, 4);
-    await this.put("cryptbrown", -12, 4);
-    await this.put("cryptgreen", 22, 3);
-    await this.put("staurogyne", -52, 9);
-    await this.put("staurogyne", -2, 10);
-    await this.put("staurogyne", 44, 10);
-    await this.put("lotus", 32, -1, -1);
-    await this.put("downoi", -20, 9);
+    // Anubias and Bucephalandra on the stones at the root feet.
+    for (let i = 0; i < stones.length; i++) await this.hang(stones[i], i % 2 === 0 ? "anubpetite" : "buce");
 
-    for (let i = 0; i < BACK_ROW.length; i++) await this.put(BACK_ROW[i], -54 + i * 8.3, -18 + (i % 2) * 2);
+    // Midground: brown Cryptocoryne and round green Staurogyne at the root feet, mostly left.
+    await this.put("cryptbrown", -40, 5, -1);
+    await this.put("cryptbrown", -14, 4, -1);
+    await this.put("staurogyne", -50, 8);
+    await this.put("staurogyne", -30, 3);
+    await this.put("staurogyne", 22, 4);
 
-    await this.put("carpet", -50, 17);
-    await this.put("carpet", 50, 17);
+    // Background: a dense wall of one green stem plant in two rows, with two red accents.
+    for (let i = 0; i < BACK_X.length; i++) {
+      const id = RED_ACCENTS.indexOf(i) >= 0 ? "ludwigia" : "greenstems";
+      await this.put(id, BACK_X[i], -19, 1);
+      if (i % 2 === 0) await this.put("greenstems", BACK_X[i] + 3.5, -15);
+    }
+
     print("[DEMO] cam:after");
     print("[GA] planted, pieces " + this.main.pieceCount);
     await sleep(3000);

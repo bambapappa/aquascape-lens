@@ -12,7 +12,7 @@ import { Interactable } from "SpectaclesInteractionKit.lspkg/Components/Interact
 import { InteractableManipulation } from "SpectaclesInteractionKit.lspkg/Components/Interaction/InteractableManipulation/InteractableManipulation";
 import Event from "SpectaclesInteractionKit.lspkg/Utils/Event";
 import { CatalogEntry, pieceObjectName } from "./ScapePlannerCatalog";
-import { buildCarpetMesh } from "./ScapePlannerCarpet";
+import { buildCarpetMesh, seededRandom } from "./ScapePlannerCarpet";
 import { PieceInfo } from "./ScapePlannerRules";
 import { Mound } from "./ScapePlannerSubstrate";
 import { ScapePlannerTank } from "./ScapePlannerTank";
@@ -211,6 +211,29 @@ export class ScapePlannerPiece {
     return best;
   }
 
+  /**
+   * A surface point (pivot space) within a height band of this piece, as seen in the tank
+   * (0 = foot, 1 = top), on the side facing the front glass. pick varies the choice so
+   * several epiphytes on one host land in different places.
+   */
+  attachPointInBand(lo: number, hi: number, pick: number): vec3 | null {
+    if (this.surfacePoints.length === 0) return null;
+    const toTank = this.tank.getTransform().getInvertedWorldTransform();
+    const pivotWorld = this.pivot.getTransform().getWorldTransform();
+    const pts = this.surfacePoints.map((p) => ({ p, q: toTank.multiplyPoint(pivotWorld.multiplyPoint(p)) }));
+    let minY = Infinity;
+    let maxY = -Infinity;
+    for (const e of pts) { minY = Math.min(minY, e.q.y); maxY = Math.max(maxY, e.q.y); }
+    const h = maxY - minY;
+    const band = pts.filter((e) => e.q.y >= minY + lo * h && e.q.y <= minY + hi * h);
+    if (band.length === 0) return null;
+    // Front-facing: the third of the band nearest the front glass.
+    band.sort((a, b) => b.q.z - a.q.z);
+    const front = band.slice(0, Math.max(1, Math.ceil(band.length / 3)));
+    const i = Math.floor(Math.abs(Math.sin(pick * 12.9898 + 78.233) * 43758.5453) % 1 * front.length);
+    return front[Math.min(front.length - 1, i)].p;
+  }
+
   /** Tank-local (x, z) of the surface points that touch the substrate: where no carpet may grow. */
   footprint(): vec2[] {
     if (this.surfacePoints.length === 0) return [];
@@ -242,6 +265,19 @@ export class ScapePlannerPiece {
     return best;
   }
 
+  /** Host surface points (pivot space) within radiusCm (world cm) of a pivot-space point. */
+  surfacePointsNear(point: vec3, radiusCm: number): vec3[] {
+    const r = radiusCm / Math.max(0.01, this.sizeScale);
+    return this.surfacePoints.filter((p) => p.distance(point) < r);
+  }
+
+  /** Centre line of the host at a height (pivot space): moss leaves point away from it. */
+  axisAt(y: number): vec3 {
+    let sx = 0, sz = 0, n = 0;
+    for (const p of this.surfacePoints) if (Math.abs(p.y - y) < 1.5) { sx += p.x; sz += p.z; n++; }
+    return n > 0 ? new vec3(sx / n, y, sz / n) : new vec3(0, y, 0);
+  }
+
   /** Hang this piece on a host at a pivot-space point of the host; its size is kept. */
   attachTo(host: ScapePlannerPiece, pointOnHost: vec3): void {
     this._host = host;
@@ -252,7 +288,75 @@ export class ScapePlannerPiece {
     t.setLocalRotation(quat.quatIdentity());
     // Sit on top of the point: half the piece height above it, in host pivot units.
     const e = this.extents;
+    if (this.entry.render === "moss") {
+      t.setLocalPosition(pointOnHost);
+      this.buildMoss(host, pointOnHost);
+      return;
+    }
     t.setLocalPosition(new vec3(pointOnHost.x, pointOnHost.y + (e.y * 0.35) / hs, pointOnHost.z));
+  }
+
+  /**
+   * Lay moss as small leaves over the host's surface around a point: a thin green skin that
+   * follows the wood or stone instead of a lump sitting on it.
+   */
+  private buildMoss(host: ScapePlannerPiece, centre: vec3): void {
+    if (!this.tank.vertexColorMaterial) return;
+    if (this.carpetObject) this.carpetObject.destroy();
+    const radius = (this.entry.widthCm / 2) * this.sizeScale;
+    const pts = host.surfacePointsNear(centre, radius);
+    const hs = host.scale;
+    const rand = seededRandom(this.seed);
+    const verts: number[] = [];
+    const idx: number[] = [];
+    const base = this.entry.id === "riccia" ? [0.3, 0.6, 0.15] : this.entry.id === "javamoss" ? [0.12, 0.3, 0.08] : [0.16, 0.38, 0.1];
+    const tip = this.entry.id === "riccia" ? [0.6, 0.9, 0.35] : this.entry.id === "javamoss" ? [0.3, 0.55, 0.18] : [0.38, 0.65, 0.22];
+    for (const p of pts) {
+      const axis = host.axisAt(p.y);
+      let out = new vec3(p.x - axis.x, 0.6, p.z - axis.z);
+      out = out.length > 0.0001 ? out.normalize() : new vec3(0, 1, 0);
+      const fall = 1 - p.distance(centre) / Math.max(0.01, radius / hs);
+      const leaves = 4 + Math.floor(8 * fall);
+      for (let k = 0; k < leaves; k++) {
+        // Child-local cm: pivot units times the host scale.
+        const lift = (0.1 + 0.5 * rand()) / hs;
+        const c = p.add(out.uniformScale(lift)).add(new vec3((rand() - 0.5) * 0.6, (rand() - 0.5) * 0.6, (rand() - 0.5) * 0.6).uniformScale(1 / hs));
+        const x = (c.x - centre.x) * hs, y = (c.y - centre.y) * hs, z = (c.z - centre.z) * hs;
+        const r = 0.12 + 0.12 * rand();
+        const t = rand();
+        const col = [0, 1, 2].map((i) => base[i] + (tip[i] - base[i]) * t);
+        const start = verts.length / 10;
+        verts.push(x, y, z, 0, 1, 0, col[0], col[1], col[2], 1);
+        const yaw = rand() * Math.PI * 2;
+        for (let s = 0; s < 4; s++) {
+          const a = yaw + (s / 4) * Math.PI * 2;
+          verts.push(x + Math.cos(a) * r, y + (rand() - 0.5) * r, z + Math.sin(a) * r, 0, 1, 0, col[0] * 0.85, col[1] * 0.85, col[2] * 0.85, 1);
+        }
+        for (let s = 0; s < 4; s++) idx.push(start, start + 1 + ((s + 1) % 4), start + 1 + s);
+        if (verts.length / 10 > 60000) break;
+      }
+    }
+    if (idx.length === 0) return;
+    const builder = new MeshBuilder([
+      { name: "position", components: 3 },
+      { name: "normal", components: 3, normalized: true },
+      { name: "color", components: 4 },
+    ]);
+    builder.topology = MeshTopology.Triangles;
+    builder.indexType = MeshIndexType.UInt16;
+    builder.appendVerticesInterleaved(verts);
+    builder.appendIndices(idx);
+    if (!builder.isValid()) return;
+    builder.updateMesh();
+    const so = global.scene.createSceneObject("Moss");
+    so.setParent(this.root);
+    const rmv = so.createComponent("Component.RenderMeshVisual") as RenderMeshVisual;
+    rmv.mesh = builder.getMesh();
+    const mat = this.tank.vertexColorMaterial.clone();
+    mat.mainPass.twoSided = true;
+    rmv.clearMaterials();
+    rmv.addMaterial(mat);
+    this.carpetObject = so;
   }
 
   /** Leave the host and stand on the substrate at the current spot. */

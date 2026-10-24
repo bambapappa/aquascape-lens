@@ -14,7 +14,7 @@ export type Zone = "foreground" | "midground" | "background" | "anywhere" | "on-
 /** Palette tab a piece is listed under. */
 export type Tab = "base" | "stone" | "wood" | "carpet" | "mid" | "back" | "epi";
 /** How a piece is drawn: a GLB prefab, a procedural carpet tile, or a mound in the substrate. */
-export type RenderKind = "mesh" | "carpet" | "mound";
+export type RenderKind = "mesh" | "carpet" | "mound" | "moss";
 
 export interface CatalogEntry {
   id: string;
@@ -46,31 +46,38 @@ export interface CatalogEntry {
   carpet: CarpetSpec | null;
   /** Soil or sand, for substrate mounds. */
   moundMaterial: MoundMaterial | null;
+  /** Epiphytes: the height band on the host where they attach, as fractions of the host height (0 = foot, 1 = top). */
+  attachBand: number[] | null;
 }
 
 export const STONE_LADDER = [1.0, 0.6, 0.4];
 const ONE = [1.0];
 
 function stone(id: string, label: string, species: string, mesh: string, w: number, h: number, d: number, tint: vec4 | null = null, variantOf: string | null = null): CatalogEntry {
-  return { id, label, kind: "stone", form: "none", tab: "stone", species, mesh, tint, widthCm: w, heightCm: h, depthCm: d, matureHeightCm: h, zone: "anywhere", broadLeaf: false, red: false, sizeLadder: STONE_LADDER, variantOf, render: "mesh", carpet: null, moundMaterial: null };
+  return { id, label, kind: "stone", form: "none", tab: "stone", species, mesh, tint, widthCm: w, heightCm: h, depthCm: d, matureHeightCm: h, zone: "anywhere", broadLeaf: false, red: false, sizeLadder: STONE_LADDER, variantOf, render: "mesh", carpet: null, moundMaterial: null, attachBand: null };
 }
 function wood(id: string, label: string, species: string, mesh: string, w: number, h: number, d: number, tint: vec4 | null = null, variantOf: string | null = null): CatalogEntry {
-  return { id, label, kind: "wood", form: "none", tab: "wood", species, mesh, tint, widthCm: w, heightCm: h, depthCm: d, matureHeightCm: h, zone: "anywhere", broadLeaf: false, red: false, sizeLadder: [1.0, 0.7], variantOf, render: "mesh", carpet: null, moundMaterial: null };
+  return { id, label, kind: "wood", form: "none", tab: "wood", species, mesh, tint, widthCm: w, heightCm: h, depthCm: d, matureHeightCm: h, zone: "anywhere", broadLeaf: false, red: false, sizeLadder: [1.0, 0.7], variantOf, render: "mesh", carpet: null, moundMaterial: null, attachBand: null };
 }
-function plant(id: string, label: string, species: string, mesh: string, form: PlantForm, tab: Tab, zone: Zone, w: number, h: number, d: number, mature: number, opts: { tint?: vec4; broad?: boolean; red?: boolean; variantOf?: string } = {}): CatalogEntry {
-  return { id, label, kind: "plant", form, tab, species, mesh, tint: opts.tint || null, widthCm: w, heightCm: h, depthCm: d, matureHeightCm: mature, zone, broadLeaf: !!opts.broad, red: !!opts.red, sizeLadder: ONE, variantOf: opts.variantOf || null, render: "mesh", carpet: null, moundMaterial: null };
+function plant(id: string, label: string, species: string, mesh: string, form: PlantForm, tab: Tab, zone: Zone, w: number, h: number, d: number, mature: number, opts: { tint?: vec4; broad?: boolean; red?: boolean; variantOf?: string; band?: number[] } = {}): CatalogEntry {
+  return { id, label, kind: "plant", form, tab, species, mesh, tint: opts.tint || null, widthCm: w, heightCm: h, depthCm: d, matureHeightCm: mature, zone, broadLeaf: !!opts.broad, red: !!opts.red, sizeLadder: ONE, variantOf: opts.variantOf || null, render: "mesh", carpet: null, moundMaterial: null, attachBand: opts.band || null };
 }
 
 /** A carpet tile: tiles of tileCm x tileCm that the user lays edge to edge or overlapping. */
 function carpet(id: string, label: string, species: string, tileCm: number, spec: CarpetSpec, mature: number): CatalogEntry {
   return { id, label, kind: "plant", form: "carpet", tab: "carpet", species, mesh: "", tint: null, widthCm: tileCm, heightCm: spec.heightCm, depthCm: tileCm,
-    matureHeightCm: mature, zone: "foreground", broadLeaf: false, red: false, sizeLadder: ONE, variantOf: null, render: "carpet", carpet: spec, moundMaterial: null };
+    matureHeightCm: mature, zone: "foreground", broadLeaf: false, red: false, sizeLadder: ONE, variantOf: null, render: "carpet", carpet: spec, moundMaterial: null, attachBand: null };
 }
 /** A mound of soil or sand that raises the substrate; Bigger and Smaller scale it. */
 function mound(id: string, label: string, material: MoundMaterial, radiusCm: number, heightCm: number, zone: Zone): CatalogEntry {
   return { id, label, kind: "substrate", form: "none", tab: "base", species: material === "sand" ? "Sand" : "Aqua soil", mesh: "", tint: null,
     widthCm: radiusCm * 2, heightCm, depthCm: radiusCm * 2, matureHeightCm: heightCm, zone, broadLeaf: false, red: false,
-    sizeLadder: ONE, variantOf: null, render: "mound", carpet: null, moundMaterial: material };
+    sizeLadder: ONE, variantOf: null, render: "mound", carpet: null, moundMaterial: material, attachBand: null };
+}
+
+/** Moss is drawn as small leaves laid over the host's surface, not as a mesh. */
+function mossOf(e: CatalogEntry): CatalogEntry {
+  return { ...e, mesh: "", render: "moss", tint: null, widthCm: 8, depthCm: 8, heightCm: 1 };
 }
 
 const GREEN_LIGHT = new vec4(1.15, 1.2, 0.9, 1);
@@ -117,21 +124,22 @@ export const CATALOG: CatalogEntry[] = [
   plant("limnophila", "Limnoph", "Limnophila", "stems", "background", "back", "background", 10, 28, 10, 40, { tint: GREEN_DARK, variantOf: "stems" }),
   plant("ludwigia", "Ludwigia", "Ludwigia red", "ludwigia", "background", "back", "background", 8, 22, 8, 30, { red: true }),
   plant("alternanth", "Altern", "Alternanthera", "ludwigia", "background", "back", "background", 9, 24, 9, 35, { tint: RED_DEEP, red: true, variantOf: "ludwigia" }),
-  plant("hygrophila", "Hygro", "Hygrophila", "ludwigia", "background", "back", "background", 12, 28, 12, 40, { tint: GREEN_LIGHT, broad: true, variantOf: "ludwigia" }),
+  plant("hygrophila", "Hygro", "Hygrophila", "ludwigia", "background", "back", "background", 12, 28, 12, 40, { tint: new vec4(0.55, 1.45, 0.55, 1), broad: true, variantOf: "ludwigia" }),
   plant("bacopa", "Bacopa", "Bacopa", "ludwigia", "background", "back", "background", 8, 20, 8, 30, { tint: GREEN_DARK, variantOf: "ludwigia" }),
+  plant("greenstems", "GreenStem", "Rotala green bush", "greenstems", "background", "back", "background", 12, 26, 12, 40),
   plant("vallisneria", "Vallis", "Vallisneria", "vallisneria", "background", "back", "background", 10, 30, 8, 45),
   plant("cyperus", "Cyperus", "Cyperus helferi", "vallisneria", "background", "back", "background", 12, 28, 10, 40, { tint: GREEN_DARK, variantOf: "vallisneria" }),
   plant("sword", "Sword", "Amazon sword", "sword", "background", "back", "background", 22, 26, 20, 40, { broad: true }),
   plant("swordred", "Red sword", "Echinodorus red", "sword", "background", "back", "background", 18, 22, 16, 35, { tint: RED_DEEP, broad: true, red: true, variantOf: "sword" }),
   // ── epiphytes and moss (on hardscape) ──
-  plant("anubias", "Anubias", "Anubias nana", "anubias", "epiphyte", "epi", "on-hardscape", 6, 4, 5, 6, { broad: true }),
-  plant("anubpetite", "AnubPetit", "Anubias petite", "anubias", "epiphyte", "epi", "on-hardscape", 4, 2.5, 3, 4, { tint: GREEN_DARK, broad: true, variantOf: "anubias" }),
-  plant("anubbarteri", "AnubBart", "Anubias barteri", "anubias", "epiphyte", "epi", "on-hardscape", 10, 7, 8, 12, { broad: true, variantOf: "anubias" }),
-  plant("javafern", "Java fern", "Java fern", "javafern", "epiphyte", "epi", "on-hardscape", 16, 20, 12, 25, { broad: true }),
-  plant("moss", "Xmas moss", "Christmas moss", "moss", "epiphyte", "epi", "on-hardscape", 4, 1.5, 3, 2, { tint: new vec4(0.55, 0.85, 0.5, 1) }),
-  plant("javamoss", "Java moss", "Java moss", "moss", "epiphyte", "epi", "on-hardscape", 4, 1.5, 3, 2, { tint: GREEN_DARK, variantOf: "moss" }),
-  plant("riccia", "Riccia", "Riccia", "moss", "epiphyte", "epi", "on-hardscape", 4, 1.5, 3, 2, { tint: GREEN_LIGHT, variantOf: "moss" }),
-  plant("buce", "Buce", "Bucephalandra", "buce", "epiphyte", "epi", "on-hardscape", 5, 3, 4, 4, { broad: true }),
+  plant("anubias", "Anubias", "Anubias nana", "anubias", "epiphyte", "epi", "on-hardscape", 6, 4, 5, 6, { band: [0.02, 0.3], broad: true }),
+  plant("anubpetite", "AnubPetit", "Anubias petite", "anubias", "epiphyte", "epi", "on-hardscape", 4, 2.5, 3, 4, { band: [0.02, 0.3], tint: GREEN_DARK, broad: true, variantOf: "anubias" }),
+  plant("anubbarteri", "AnubBart", "Anubias barteri", "anubias", "epiphyte", "epi", "on-hardscape", 10, 7, 8, 12, { band: [0.02, 0.3], broad: true, variantOf: "anubias" }),
+  plant("javafern", "Java fern", "Java fern", "javafern", "epiphyte", "epi", "on-hardscape", 16, 20, 12, 25, { band: [0.05, 0.4], broad: true }),
+  mossOf(plant("moss", "Xmas moss", "Christmas moss", "moss", "epiphyte", "epi", "on-hardscape", 4, 1.5, 3, 2, { band: [0.3, 0.65], tint: new vec4(0.55, 0.85, 0.5, 1) })),
+  mossOf(plant("javamoss", "Java moss", "Java moss", "moss", "epiphyte", "epi", "on-hardscape", 4, 1.5, 3, 2, { band: [0.3, 0.65], tint: GREEN_DARK, variantOf: "moss" })),
+  mossOf(plant("riccia", "Riccia", "Riccia", "moss", "epiphyte", "epi", "on-hardscape", 4, 1.5, 3, 2, { band: [0.3, 0.65], tint: GREEN_LIGHT, variantOf: "moss" })),
+  plant("buce", "Buce", "Bucephalandra", "buce", "epiphyte", "epi", "on-hardscape", 5, 3, 4, 4, { band: [0.02, 0.3], broad: true }),
 ];
 
 export function catalogEntry(id: string): CatalogEntry | null {

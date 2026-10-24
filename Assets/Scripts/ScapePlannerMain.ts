@@ -74,6 +74,7 @@ export class ScapePlannerMain extends BaseScriptComponent {
   @input prefabStaurogyne!: ObjectPrefab;
   @input prefabSlate!: ObjectPrefab;
   @input prefabTallroot!: ObjectPrefab;
+  @input prefabGreenstems!: ObjectPrefab;
 
   @ui.label("Placement")
   @input
@@ -90,6 +91,8 @@ export class ScapePlannerMain extends BaseScriptComponent {
   startStyleIndex: number = 0;
 
   private pieces: ScapePlannerPiece[] = [];
+  /** Counts epiphyte attachments so each lands on a different spot of its host. */
+  private attachCount = 0;
   private selected: ScapePlannerPiece | null = null;
   private styleIndex = 0;
 
@@ -151,7 +154,9 @@ export class ScapePlannerMain extends BaseScriptComponent {
     const piece = new ScapePlannerPiece(prefab, entry, sizeScale, this.tank, spot.x, spot.z,
       { ringMesh: this.tank.boxMesh, ringMaterial: this.tank.lineMaterial });
     if (host) {
-      const point = host.defaultAttachPoint();
+      const band = entry.attachBand;
+      this.attachCount++;
+      const point = band ? host.attachPointInBand(band[0], band[1], this.attachCount) : host.defaultAttachPoint();
       if (point) piece.attachTo(host, point);
     }
     piece.bindEvents();
@@ -492,6 +497,7 @@ export class ScapePlannerMain extends BaseScriptComponent {
       case "staurogyne": return this.prefabStaurogyne;
       case "slate": return this.prefabSlate;
       case "tallroot": return this.prefabTallroot;
+      case "greenstems": return this.prefabGreenstems;
     }
     return null;
   }
