@@ -1828,6 +1828,7 @@
       prefabLotus: !<reference.ObjectPrefab> cdf65456-8acd-4d10-aa63-ab22299b5615
       prefabStaurogyne: !<reference.ObjectPrefab> 97c15e92-7d8e-4812-84b4-3b9a20a1b30e
       prefabSlate: !<reference.ObjectPrefab> 8a1b0d32-e055-4c90-95eb-940ee0ff6620
+      prefabTallroot: !<reference.ObjectPrefab> 6cc24c3c-56f4-4a65-b254-840601198cc2
       distanceCm: !<float> 100.000000
       dropBelowEyesCm: !<float> 85.000000
       placeOnStart: true

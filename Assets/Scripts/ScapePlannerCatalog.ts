@@ -81,7 +81,7 @@ const BRONZE = new vec4(1.1, 0.9, 0.7, 1);
 export const CATALOG: CatalogEntry[] = [
   // ── substrate ──
   mound("soil", "Soil", "soil", 13, 6, "background"),
-  mound("sand", "Sand", "sand", 9, 1.5, "foreground"),
+  mound("sand", "Sand", "sand", 11, 1.0, "foreground"),
   // ── stones ──
   stone("seiryu", "Seiryu", "Seiryu stone", "seiryu", 12.5, 22, 6.8, new vec4(0.38, 0.43, 0.5, 1)),
   stone("dragon", "Dragon", "Dragon stone", "dragon", 20, 17, 12),
@@ -96,6 +96,7 @@ export const CATALOG: CatalogEntry[] = [
   wood("redmoor", "Redmoor", "Redmoor root", "redmoor", 26, 22, 20),
   wood("mopani", "Mopani", "Mopani wood", "mopani", 24, 12, 14),
   wood("bonsai", "Bonsai", "Bonsai driftwood", "bonsai", 24, 28, 18),
+  wood("tallroot", "Tall root", "Redmoor root, tall", "tallroot", 14, 40, 12, new vec4(0.46, 0.3, 0.24, 1)),
   // ── carpets (foreground) ──
   carpet("carpet", "MonteCarl", "Monte Carlo", 10, { style: "leaves", heightCm: 2.2, density: 2.2, baseRgb: [0.16, 0.42, 0.12], tipRgb: [0.45, 0.8, 0.3] }, 3),
   carpet("hccuba", "HC Cuba", "Hemianthus Cuba", 10, { style: "leaves", heightCm: 1.6, density: 3.2, baseRgb: [0.2, 0.5, 0.14], tipRgb: [0.55, 0.9, 0.35] }, 2.5),
@@ -123,14 +124,14 @@ export const CATALOG: CatalogEntry[] = [
   plant("sword", "Sword", "Amazon sword", "sword", "background", "back", "background", 22, 26, 20, 40, { broad: true }),
   plant("swordred", "Red sword", "Echinodorus red", "sword", "background", "back", "background", 18, 22, 16, 35, { tint: RED_DEEP, broad: true, red: true, variantOf: "sword" }),
   // ── epiphytes and moss (on hardscape) ──
-  plant("anubias", "Anubias", "Anubias nana", "anubias", "epiphyte", "epi", "on-hardscape", 12, 8, 10, 10, { broad: true }),
-  plant("anubpetite", "AnubPetit", "Anubias petite", "anubias", "epiphyte", "epi", "on-hardscape", 7, 5, 6, 6, { tint: GREEN_DARK, broad: true, variantOf: "anubias" }),
-  plant("anubbarteri", "AnubBart", "Anubias barteri", "anubias", "epiphyte", "epi", "on-hardscape", 20, 14, 16, 18, { broad: true, variantOf: "anubias" }),
+  plant("anubias", "Anubias", "Anubias nana", "anubias", "epiphyte", "epi", "on-hardscape", 6, 4, 5, 6, { broad: true }),
+  plant("anubpetite", "AnubPetit", "Anubias petite", "anubias", "epiphyte", "epi", "on-hardscape", 4, 2.5, 3, 4, { tint: GREEN_DARK, broad: true, variantOf: "anubias" }),
+  plant("anubbarteri", "AnubBart", "Anubias barteri", "anubias", "epiphyte", "epi", "on-hardscape", 10, 7, 8, 12, { broad: true, variantOf: "anubias" }),
   plant("javafern", "Java fern", "Java fern", "javafern", "epiphyte", "epi", "on-hardscape", 16, 20, 12, 25, { broad: true }),
-  plant("moss", "Xmas moss", "Christmas moss", "moss", "epiphyte", "epi", "on-hardscape", 10, 3, 8, 4, { tint: new vec4(0.55, 0.85, 0.5, 1) }),
-  plant("javamoss", "Java moss", "Java moss", "moss", "epiphyte", "epi", "on-hardscape", 10, 3, 8, 4, { tint: GREEN_DARK, variantOf: "moss" }),
-  plant("riccia", "Riccia", "Riccia", "moss", "epiphyte", "epi", "on-hardscape", 10, 3, 8, 4, { tint: GREEN_LIGHT, variantOf: "moss" }),
-  plant("buce", "Buce", "Bucephalandra", "buce", "epiphyte", "epi", "on-hardscape", 10, 5, 8, 6, { broad: true }),
+  plant("moss", "Xmas moss", "Christmas moss", "moss", "epiphyte", "epi", "on-hardscape", 4, 1.5, 3, 2, { tint: new vec4(0.55, 0.85, 0.5, 1) }),
+  plant("javamoss", "Java moss", "Java moss", "moss", "epiphyte", "epi", "on-hardscape", 4, 1.5, 3, 2, { tint: GREEN_DARK, variantOf: "moss" }),
+  plant("riccia", "Riccia", "Riccia", "moss", "epiphyte", "epi", "on-hardscape", 4, 1.5, 3, 2, { tint: GREEN_LIGHT, variantOf: "moss" }),
+  plant("buce", "Buce", "Bucephalandra", "buce", "epiphyte", "epi", "on-hardscape", 5, 3, 4, 4, { broad: true }),
 ];
 
 export function catalogEntry(id: string): CatalogEntry | null {

@@ -59,6 +59,7 @@
     prefabStaurogyne: false
     prefabStems: false
     prefabSword: false
+    prefabTallroot: false
     prefabVallisneria: false
     startStyleIndex: false
     tank: false
@@ -101,6 +102,7 @@
       prefabLotus: !<reference.ObjectPrefab> 00000000-0000-0000-0000-000000000000
       prefabStaurogyne: !<reference.ObjectPrefab> 00000000-0000-0000-0000-000000000000
       prefabSlate: !<reference.ObjectPrefab> 00000000-0000-0000-0000-000000000000
+      prefabTallroot: !<reference.ObjectPrefab> 00000000-0000-0000-0000-000000000000
       distanceCm: !<float> 100.000000
       dropBelowEyesCm: !<float> 90.000000
       placeOnStart: true
@@ -141,6 +143,7 @@
     - // @input Asset.ObjectPrefab prefabLotus
     - // @input Asset.ObjectPrefab prefabStaurogyne
     - // @input Asset.ObjectPrefab prefabSlate
+    - // @input Asset.ObjectPrefab prefabTallroot
     - '// @ui {"widget":"label", "label":"Placement"}'
     - '// @input float distanceCm = 100 {"hint":"How far in front of the user the tank is placed, in cm"}'
     - '// @input float dropBelowEyesCm = 85 {"hint":"How far below eye level the tank floor sits, in cm (eye height minus table height)"}'

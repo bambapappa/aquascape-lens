@@ -73,6 +73,7 @@ export class ScapePlannerMain extends BaseScriptComponent {
   @input prefabLotus!: ObjectPrefab;
   @input prefabStaurogyne!: ObjectPrefab;
   @input prefabSlate!: ObjectPrefab;
+  @input prefabTallroot!: ObjectPrefab;
 
   @ui.label("Placement")
   @input
@@ -199,6 +200,12 @@ export class ScapePlannerMain extends BaseScriptComponent {
     }
     this.tank.setMounds(mounds);
     for (const p of this.pieces) if (p.entry.render !== "mound") p.reseat();
+  }
+
+  /** Select the piece placed index-th (0 = first). Used by scripted layouts to hang epiphytes on a chosen host. */
+  selectIndex(index: number): void {
+    const piece = this.pieces[index];
+    if (piece) this.select(piece);
   }
 
   /**
@@ -484,6 +491,7 @@ export class ScapePlannerMain extends BaseScriptComponent {
       case "lotus": return this.prefabLotus;
       case "staurogyne": return this.prefabStaurogyne;
       case "slate": return this.prefabSlate;
+      case "tallroot": return this.prefabTallroot;
     }
     return null;
   }
