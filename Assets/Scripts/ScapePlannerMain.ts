@@ -75,6 +75,7 @@ export class ScapePlannerMain extends BaseScriptComponent {
   @input prefabSlate!: ObjectPrefab;
   @input prefabTallroot!: ObjectPrefab;
   @input prefabGreenstems!: ObjectPrefab;
+  @input prefabRootcluster!: ObjectPrefab;
 
   @ui.label("Placement")
   @input
@@ -498,6 +499,7 @@ export class ScapePlannerMain extends BaseScriptComponent {
       case "slate": return this.prefabSlate;
       case "tallroot": return this.prefabTallroot;
       case "greenstems": return this.prefabGreenstems;
+      case "rootcluster": return this.prefabRootcluster;
     }
     return null;
   }

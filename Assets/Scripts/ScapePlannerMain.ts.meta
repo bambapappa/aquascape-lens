@@ -54,6 +54,7 @@
     prefabMoss: false
     prefabPagoda: false
     prefabRedmoor: false
+    prefabRootcluster: false
     prefabSeiryu: false
     prefabSlate: false
     prefabSpiderwood: false
@@ -105,6 +106,7 @@
       prefabSlate: !<reference.ObjectPrefab> 00000000-0000-0000-0000-000000000000
       prefabTallroot: !<reference.ObjectPrefab> 00000000-0000-0000-0000-000000000000
       prefabGreenstems: !<reference.ObjectPrefab> 00000000-0000-0000-0000-000000000000
+      prefabRootcluster: !<reference.ObjectPrefab> 00000000-0000-0000-0000-000000000000
       distanceCm: !<float> 100.000000
       dropBelowEyesCm: !<float> 90.000000
       placeOnStart: true
@@ -147,6 +149,7 @@
     - // @input Asset.ObjectPrefab prefabSlate
     - // @input Asset.ObjectPrefab prefabTallroot
     - // @input Asset.ObjectPrefab prefabGreenstems
+    - // @input Asset.ObjectPrefab prefabRootcluster
     - '// @ui {"widget":"label", "label":"Placement"}'
     - '// @input float distanceCm = 100 {"hint":"How far in front of the user the tank is placed, in cm"}'
     - '// @input float dropBelowEyesCm = 85 {"hint":"How far below eye level the tank floor sits, in cm (eye height minus table height)"}'

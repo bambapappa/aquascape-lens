@@ -8,21 +8,21 @@ export const PIECE_NAMES: string[] = CATALOG.map((e) => pieceObjectName(e));
 
 export class ScapePlannerLeafInteractor extends DefaultLeafInteractor {
   /** Pinch a palette button by its scene-object name, e.g. "Button_seiryu". */
-  async tapButton(buttonName: string): Promise<void> {
+  async tapButton(buttonName: string, settleMs: number = 400): Promise<void> {
     const button = findInteractablesByName(buttonName, undefined, true)[0];
     if (!button) {
       throw new Error('Button "' + buttonName + '" not found or not enabled');
     }
     await this.trigger(button);
-    await sleep(400);
+    await sleep(settleMs);
   }
 
   /** Place a catalogue piece: open its palette tab first, then pinch its button. */
-  async tapPiece(id: string): Promise<void> {
+  async tapPiece(id: string, settleMs: number = 400): Promise<void> {
     const entry = catalogEntry(id);
     if (!entry) throw new Error('Catalogue id "' + id + '" not found');
-    await this.tapButton("Tab_" + entry.tab);
-    await this.tapButton("Button_" + id);
+    await this.tapButton("Tab_" + entry.tab, settleMs);
+    await this.tapButton("Button_" + id, settleMs);
   }
 
   /** Grab the first piece with this name and drag it by a world-space delta (cm). */

@@ -11,20 +11,22 @@ import { ScapePlannerLeafInteractor } from "./ScapePlannerLeafInteractor";
 
 /** Pause after the hardscape so a recording can show the before state. */
 const BEFORE_HOLD_MS = 6000;
+/** Settle time after each tap; the build has over a hundred pieces and LEAF stops a scenario at 10 minutes. */
+const FAST_MS = 100;
 
-interface Root { x: number; z: number; size: number; turns: number; lean: number; mirror: boolean }
+interface Root { x: number; z: number; size: number; turns: number; lean: number; mirror: boolean; cluster?: boolean }
 
 const ROOTS: Root[] = [
   { x: -50, z: -6, size: 0, turns: 18, lean: 2, mirror: false },
-  { x: -42, z: -2, size: 1, turns: 20, lean: 1, mirror: true },
+  { x: -42, z: -2, size: 0, turns: 20, lean: 1, mirror: true, cluster: true },
   { x: -34, z: -9, size: -1, turns: 2, lean: 1, mirror: false },
-  { x: -16, z: -5, size: 2, turns: 19, lean: 1, mirror: false },
+  { x: -16, z: -5, size: 1, turns: 19, lean: 1, mirror: false, cluster: true },
   { x: -8, z: -9, size: 2, turns: 5, lean: 1, mirror: true },
-  { x: 0, z: -4, size: 1, turns: 7, lean: 2, mirror: false },
+  { x: 0, z: -4, size: 0, turns: 7, lean: 1, mirror: false, cluster: true },
   { x: 8, z: -11, size: 0, turns: 4, lean: 3, mirror: true },
   { x: 26, z: -7, size: 0, turns: 6, lean: 2, mirror: false },
   { x: 36, z: -10, size: 1, turns: 1, lean: 1, mirror: true },
-  { x: 48, z: -5, size: 2, turns: 7, lean: 1, mirror: false },
+  { x: 46, z: -5, size: 1, turns: 7, lean: 1, mirror: false, cluster: true },
   // Thinner roots filling the clusters
   { x: -46, z: -12, size: -2, turns: 10, lean: 3, mirror: true },
   { x: -24, z: -10, size: -1, turns: 21, lean: 2, mirror: false },
@@ -47,11 +49,11 @@ export class ScapePlannerGreenAquaScenario extends Scenario {
   private async tap(name: string, times: number = 1): Promise<void> {
     for (let i = 0; i < times; i++) {
       try {
-        await this.interactor.tapButton(name);
+        await this.interactor.tapButton(name, FAST_MS);
       } catch (e) {
         print("[GA] skipped " + name + ": " + e);
       }
-      await sleep(120);
+      await sleep(20);
     }
   }
 
@@ -59,7 +61,7 @@ export class ScapePlannerGreenAquaScenario extends Scenario {
   private async put(id: string, x: number, z: number, size: number = 0, turns: number = 0, lean: number = 0, mirror: boolean = false): Promise<number> {
     const index = this.main.pieceCount;
     try {
-      await this.interactor.tapPiece(id);
+      await this.interactor.tapPiece(id, FAST_MS);
     } catch (e) {
       print("[GA] skipped " + id + ": " + e);
       return -1;
@@ -79,7 +81,7 @@ export class ScapePlannerGreenAquaScenario extends Scenario {
     if (host < 0) return;
     this.main.selectIndex(host);
     try {
-      await this.interactor.tapPiece(id);
+      await this.interactor.tapPiece(id, FAST_MS);
     } catch (e) {
       print("[GA] skipped " + id + ": " + e);
     }
@@ -108,7 +110,7 @@ export class ScapePlannerGreenAquaScenario extends Scenario {
     await this.put("seiryu", 30, 7, -2, 8);
 
     const roots: number[] = [];
-    for (const r of ROOTS) roots.push(await this.put("tallroot", r.x, r.z, r.size, r.turns, r.lean, r.mirror));
+    for (const r of ROOTS) roots.push(await this.put(r.cluster ? "rootcluster" : "tallroot", r.x, r.z, r.size, r.turns, r.lean, r.mirror));
     await this.put("spiderwood", -26, 6, -1, 3);
     await this.put("spiderwood", 14, 7, -1, 17, 0, true);
     await this.put("spiderwood", -44, 6, -1, 9);

@@ -103,6 +103,7 @@ export const CATALOG: CatalogEntry[] = [
   wood("redmoor", "Redmoor", "Redmoor root", "redmoor", 26, 22, 20),
   wood("mopani", "Mopani", "Mopani wood", "mopani", 24, 12, 14),
   wood("bonsai", "Bonsai", "Bonsai driftwood", "bonsai", 24, 28, 18),
+  wood("rootcluster", "RootClust", "Redmoor root cluster", "rootcluster", 24, 40, 20),
   wood("tallroot", "Tall root", "Redmoor root, tall", "tallroot", 14, 40, 12, new vec4(0.46, 0.3, 0.24, 1)),
   // ── carpets (foreground) ──
   carpet("carpet", "MonteCarl", "Monte Carlo", 10, { style: "leaves", heightCm: 2.2, density: 2.2, baseRgb: [0.16, 0.42, 0.12], tipRgb: [0.45, 0.8, 0.3] }, 3),

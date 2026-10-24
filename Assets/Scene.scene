@@ -1830,6 +1830,7 @@
       prefabSlate: !<reference.ObjectPrefab> 8a1b0d32-e055-4c90-95eb-940ee0ff6620
       prefabTallroot: !<reference.ObjectPrefab> 6cc24c3c-56f4-4a65-b254-840601198cc2
       prefabGreenstems: !<reference.ObjectPrefab> 03699140-a96a-4076-8989-eedb5bc8d7fa
+      prefabRootcluster: !<reference.ObjectPrefab> 0d6572c4-ed09-4057-938b-8316a42a520a
       distanceCm: !<float> 100.000000
       dropBelowEyesCm: !<float> 85.000000
       placeOnStart: true
