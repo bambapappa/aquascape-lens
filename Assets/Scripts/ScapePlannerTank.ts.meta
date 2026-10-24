@@ -39,6 +39,7 @@
     tableDepthCm: false
     tableHeightCm: false
     tableWidthCm: false
+    vertexColorMaterial: false
     widthCm: false
   ScriptTypesHidden:
     {}
@@ -61,6 +62,7 @@
       glassMaterial: !<reference.Material> 00000000-0000-0000-0000-000000000000
       lineMaterial: !<reference.Material> 00000000-0000-0000-0000-000000000000
       solidMaterial: !<reference.Material> 00000000-0000-0000-0000-000000000000
+      vertexColorMaterial: !<reference.Material> 00000000-0000-0000-0000-000000000000
   ScriptTypes:
     -
       {}
@@ -81,3 +83,4 @@
     - '// @input Asset.Material glassMaterial {"hint":"Translucent material for the glass panes"}'
     - '// @input Asset.Material lineMaterial {"hint":"Unlit material for guide lines and zone bands (cloned and tinted per element)"}'
     - '// @input Asset.Material solidMaterial {"hint":"Lit material for substrate and table (cloned and tinted per element)"}'
+    - '// @input Asset.Material vertexColorMaterial {"hint":"Vertex colour material for the substrate height field and carpet tiles"}'

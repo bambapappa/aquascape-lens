@@ -118,11 +118,12 @@ export function checkHeight(pieces: PieceInfo[], tank: TankDims): CheckResult {
     : { id: "height", state: "warn", message: "Hardscape too low: the top stays empty" };
 }
 
-const FORM_ZONE: { [form: string]: Zone3 } = { carpet: "foreground", midground: "midground", background: "background" };
+// Carpets may cover the whole floor (an Iwagumi lawn runs to the back glass), so only bushes and stems are zoned.
+const FORM_ZONE: { [form: string]: Zone3 } = { midground: "midground", background: "background" };
 
 export function checkZones(pieces: PieceInfo[], tank: TankDims): CheckResult {
   const list = plants(pieces).filter((p) => FORM_ZONE[p.form] !== undefined);
-  if (list.length === 0) return { id: "zones", state: "neutral", message: "Carpet front, bush middle, stems back" };
+  if (list.length === 0) return { id: "zones", state: "neutral", message: "Bushes in the middle, stems at the back" };
   for (const p of list) {
     const wanted = FORM_ZONE[p.form];
     if (zoneOf(p, tank) !== wanted) return { id: "zones", state: "warn", message: p.species + " belongs in the " + wanted };

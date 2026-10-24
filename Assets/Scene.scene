@@ -2908,6 +2908,7 @@
       glassMaterial: !<reference.Material> 2d590bed-5d9d-4a9b-9143-b8b209e672af
       lineMaterial: !<reference.Material> d19969a9-d894-4c40-b071-0d5c66ddf8b1
       solidMaterial: !<reference.Material> 1893f371-0ddb-440d-b8bb-a293c91a7e1f
+      vertexColorMaterial: !<reference.Material> 70d03593-c7b4-410a-ae5c-75cb82ee32dc
   ScriptTypes:
     "":
       {}

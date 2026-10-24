@@ -14,3 +14,7 @@
 - `PreviewInteractTool` gets stuck once a Pinch times out (every later pinch fails with "Timed out waiting for onTriggerStart"); a `PreviewPanelTool refresh` + `resume` clears it. The LEAF path (`trigger(interactable)`) is unaffected.
 - A GLB dropped into `Assets/` is only imported (`.glb.meta` written, prefab id assigned) when Lens Studio rescans, which can lag minutes behind the copy; wait for the `.meta` before wiring the prefab input, and read the prefab id from the meta's `PrimaryAsset` line.
 - Prefab inputs are wired with VirtualScene `modify` on `components.ScriptComponent.<input>` = `@id:<PrimaryAsset id from the .glb.meta>`.
+- `PreviewInteractTool` pinches are unreliable for long sequences (one timeout locks it); drive demos and checks through LEAF scenarios instead, which never got stuck. The preview camera can be moved over MCP while a scenario runs.
+- Screen recording from the Claude app needs its Screen Recording permission; without it `screencapture` silently returns only the wallpaper. The screensaver also blanks recordings: run `caffeinate -u -t 1` every 20 s while recording. `CapturePanelScreenshotTool` works even when the screen is locked.
+- Use `h264_videotoolbox` for ffmpeg screen capture; libx264 load slowed the preview enough to time out interactions.
+- Meshy plant models often come with a pot or a base; a horizontal bisect in headless Blender (`bmesh.ops.bisect_plane`, `clear_inner`) removes it, and Lens Studio keeps the prefab id when the GLB is overwritten in place.

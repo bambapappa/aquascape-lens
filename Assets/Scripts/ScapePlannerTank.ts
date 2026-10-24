@@ -4,8 +4,16 @@
 // substrate). Everything is built from one box mesh and three materials
 // that the bootstrap wires in as @inputs, so a human can swap them.
 //
+// The substrate is a height field (ScapePlannerSubstrate) built with MeshBuilder,
+// so soil and sand mounds can reshape it; pieces ask surfaceAt(x, z) where to sit.
+//
 // Local frame: origin at the centre of the tank floor (inside the glass),
 // +x to the right, +y up, +z toward the front glass (toward the user).
+
+import { Mound, SubstrateField, buildSubstrateMesh } from "./ScapePlannerSubstrate";
+
+/** Gap between the substrate mesh and the glass, in cm. */
+const SUBSTRATE_INSET_CM = 0.2;
 
 export interface TankSize {
   id: string;
@@ -64,12 +72,19 @@ export class ScapePlannerTank extends BaseScriptComponent {
   @input
   @hint("Lit material for substrate and table (cloned and tinted per element)")
   solidMaterial!: Material;
+  @input
+  @hint("Vertex colour material for the substrate height field and carpet tiles")
+  vertexColorMaterial!: Material;
 
   private guidesRoot!: SceneObject;
   private boxSizeCm: vec3 = new vec3(1, 1, 1);
   private built = false;
   private builtGroups: SceneObject[] = [];
   private sizeIndex = 2;
+  private field: SubstrateField = new SubstrateField(60, 30, 4, 7);
+  private mounds: Mound[] = [];
+  private substrateGroup: SceneObject | null = null;
+  private zoneTintOn = true;
 
   onAwake(): void {
     if (!this.boxMesh || !this.glassMaterial || !this.lineMaterial || !this.solidMaterial) {
@@ -86,6 +101,7 @@ export class ScapePlannerTank extends BaseScriptComponent {
     const guidesWereVisible = this.guidesRoot ? this.guidesRoot.enabled : true;
     for (const g of this.builtGroups) g.destroy();
     this.builtGroups = [];
+    this.substrateGroup = null;
     this.buildTable();
     this.buildGlass();
     this.buildSubstrate();
@@ -106,6 +122,7 @@ export class ScapePlannerTank extends BaseScriptComponent {
     this.substrateBackCm = 4 + 3 * (size.depthCm / 30);
     this.tableWidthCm = Math.max(80, size.widthCm + 30);
     this.tableDepthCm = Math.max(50, size.depthCm + 20);
+    this.mounds = [];
     this.rebuild();
   }
 
@@ -136,14 +153,29 @@ export class ScapePlannerTank extends BaseScriptComponent {
     return this.depthCm / 2;
   }
 
-  /** Height of the substrate surface above the tank floor at a local z. */
+  /** Height of the sloped base (without mounds) above the tank floor at a local z. */
   substrateTopAt(zLocal: number): number {
-    const t = (this.halfDepth - zLocal) / this.depthCm; // 0 at the front glass, 1 at the back
-    return this.substrateFrontCm + (this.substrateBackCm - this.substrateFrontCm) * t;
+    return this.field.baseAt(zLocal);
+  }
+
+  /** Height of the substrate surface, mounds included, at a local (x, z). */
+  surfaceAt(xLocal: number, zLocal: number): number {
+    return this.field.heightAt(xLocal, zLocal);
+  }
+
+  /** Replace the soil and sand mounds and rebuild the substrate mesh. */
+  setMounds(mounds: Mound[]): void {
+    this.mounds = mounds.slice();
+    this.field.setMounds(this.mounds);
+    this.buildSubstrate();
   }
 
   setGuidesVisible(visible: boolean): void {
     if (this.guidesRoot) this.guidesRoot.enabled = visible;
+    if (this.zoneTintOn !== visible) {
+      this.zoneTintOn = visible;
+      if (this.built) this.buildSubstrate();
+    }
   }
 
   get guidesVisible(): boolean {
@@ -252,13 +284,49 @@ export class ScapePlannerTank extends BaseScriptComponent {
   }
 
   private buildSubstrate(): void {
+    this.field = new SubstrateField(this.widthCm, this.depthCm, this.substrateFrontCm, this.substrateBackCm);
+    this.field.setMounds(this.mounds);
+    if (this.substrateGroup) {
+      this.builtGroups = this.builtGroups.filter((g) => g !== this.substrateGroup);
+      this.substrateGroup.destroy();
+    }
     const g = this.group("Substrate");
+    this.substrateGroup = g;
+    if (!this.vertexColorMaterial) {
+      this.buildBoxSubstrate(g);
+      return;
+    }
+    const builder = new MeshBuilder([
+      { name: "position", components: 3 },
+      { name: "normal", components: 3, normalized: true },
+      { name: "color", components: 4 },
+    ]);
+    builder.topology = MeshTopology.Triangles;
+    builder.indexType = MeshIndexType.UInt16;
+    buildSubstrateMesh(builder, this.field, SUBSTRATE_INSET_CM, this.zoneTintOn);
+    if (!builder.isValid()) {
+      print("ScapePlannerTank: substrate mesh is invalid, falling back to a box");
+      this.buildBoxSubstrate(g);
+      return;
+    }
+    builder.updateMesh();
+    const so = global.scene.createSceneObject("Soil");
+    so.setParent(g);
+    const rmv = so.createComponent("Component.RenderMeshVisual") as RenderMeshVisual;
+    rmv.mesh = builder.getMesh();
+    const mat = this.vertexColorMaterial.clone();
+    mat.mainPass.twoSided = true;
+    rmv.clearMaterials();
+    rmv.addMaterial(mat);
+  }
+
+  /** Fallback when the vertex colour material is not wired: the old tilted box. */
+  private buildBoxSubstrate(g: SceneObject): void {
     const w = this.widthCm - 0.4;
     const d = this.depthCm - 0.4;
     const hAvg = (this.substrateFrontCm + this.substrateBackCm) / 2;
     const slope = Math.atan((this.substrateBackCm - this.substrateFrontCm) / this.depthCm);
-    const soil = new vec4(0.42, 0.3, 0.2, 1); // mid-tone: near-black reads as transparent on the additive display
-    // A box tilted around x so its top runs from substrateFront at the front to substrateBack at the back.
+    const soil = new vec4(0.42, 0.3, 0.2, 1);
     this.box(g, "Soil", this.solidMaterial, new vec3(0, hAvg / 2, 0), new vec3(w, hAvg, d), soil,
       quat.angleAxis(slope, new vec3(1, 0, 0)));
   }
@@ -275,7 +343,9 @@ export class ScapePlannerTank extends BaseScriptComponent {
     this.box(this.guidesRoot, "ThirdLeft", this.lineMaterial, new vec3(-w / 6, h / 2, zFront), new vec3(line, h, line), cyan);
     this.box(this.guidesRoot, "ThirdRight", this.lineMaterial, new vec3(w / 6, h / 2, zFront), new vec3(line, h, line), cyan);
     this.box(this.guidesRoot, "ThirdHorizontal", this.lineMaterial, new vec3(0, h * 2 / 3, zFront), new vec3(w, line, line), cyan);
-    // Zone bands on the substrate: foreground (front), midground, background (back).
+    // Zone bands: with the height-field substrate the zones are a tint in the surface itself
+    // (see buildSubstrate); only the box fallback draws flat bands.
+    if (this.vertexColorMaterial) return;
     const zones = [
       { name: "Foreground", z: d / 3, tint: new vec4(0.4, 1.0, 0.5, 0.28) },
       { name: "Midground", z: 0, tint: new vec4(1.0, 0.9, 0.3, 0.22) },

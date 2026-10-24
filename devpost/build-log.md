@@ -128,6 +128,32 @@ down):
 
 Meshy spend for the whole project: about 240 credits of the monthly 1016.
 
+## Version 4 (2026-10-24)
+
+Feedback after the first recording: plants must not stand in pots or look like
+cushions, a carpet must be laid tile by tile, epiphytes must sit on stone and
+wood, and the substrate must be built up with soil and sand. Done:
+
+- Pots and bases cut off five Meshy plant models in headless Blender (a
+  horizontal bisect per model; originals kept outside the repo).
+- Carpets are procedural tiles (MeshBuilder): blades for hairgrass and
+  Lilaeopsis, small round leaves for Monte Carlo, HC Cuba and Glossostigma.
+  Repeated taps lay tiles row by row from the front glass with a small
+  overlap; every blade stands on the substrate under it.
+- The substrate is a height field with grain. Soil and sand mounds (Base tab)
+  pile on the sloped base, merge into ridges and can be dragged and resized;
+  everything else re-seats on the new surface. Zones are a tint in the surface.
+- Moss, Anubias, Buce and Java fern hang on the selected (or last) stone or
+  wood at a real surface point (read from the mesh vertices), follow it when
+  it moves, and re-hang where they are dropped.
+- Stones: Bigger, Smaller and Mirror replace the three-step Size button; lean
+  goes to 40 degrees and turns with the yaw, so stones can lean any way.
+- The palette moved below the line of sight into the tank; the preview uses
+  the empty Plane scene.
+- New LEAF scenarios: v4 checks (mounds, carpet row, moss follows the stone,
+  mirror and bigger) and an ADA-style 60P Iwagumi built with the palette
+  alone (devpost/ada-60p-preview.png). All ten pass.
+
 ## Credits
 
 Composition rules from Green Aqua. 3D models generated with Meshy. Built on

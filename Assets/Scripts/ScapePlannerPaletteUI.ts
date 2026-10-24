@@ -40,7 +40,9 @@ interface ButtonSpec {
 const TOOL_BUTTONS: ButtonSpec[] = [
   { id: "rotate", label: "Rotate" },
   { id: "lean", label: "Lean" },
-  { id: "size", label: "Size" },
+  { id: "bigger", label: "Bigger" },
+  { id: "smaller", label: "Smaller" },
+  { id: "mirror", label: "Mirror" },
   { id: "undo", label: "Undo" },
   { id: "clear", label: "Clear" },
   { id: "guides", label: "Guides" },
@@ -55,6 +57,7 @@ interface TabSpec {
 }
 
 const TABS: TabSpec[] = [
+  { tab: "base", label: "Base" },
   { tab: "stone", label: "Stones" },
   { tab: "wood", label: "Wood" },
   { tab: "carpet", label: "Carpets" },
@@ -62,6 +65,9 @@ const TABS: TabSpec[] = [
   { tab: "back", label: "Back" },
   { tab: "epi", label: "On wood" },
 ];
+
+/** Tool buttons are narrower than catalogue buttons so eleven fit in one row. */
+const TOOL_BUTTON_WIDTH_CM = 5.0;
 
 /** Items per row of the catalogue area; two rows are shown per tab. */
 const ITEMS_PER_ROW = 8;
@@ -293,13 +299,13 @@ export class ScapePlannerPaletteUI extends BaseScriptComponent {
     flex.justifyContent = FlexJustify.Center;
     flex.columnGap = this.gapCm;
     const items: FlexItem[] = [];
-    for (const spec of specs) items.push(this.addButton(row, spec));
+    for (const spec of specs) items.push(this.addButton(row, spec, undefined, TOOL_BUTTON_WIDTH_CM));
     flex.addItems(items);
     return rowItem;
   }
 
-  private addButton(parent: SceneObject, spec: ButtonSpec, onPress?: (so: SceneObject) => void): FlexItem {
-    const sizeX = this.buttonWidthCm;
+  private addButton(parent: SceneObject, spec: ButtonSpec, onPress?: (so: SceneObject) => void, widthCm?: number): FlexItem {
+    const sizeX = widthCm !== undefined ? widthCm : this.buttonWidthCm;
     const sizeY = this.buttonHeightCm;
     const so = global.scene.createSceneObject("Button_" + spec.id);
     so.setParent(parent);
