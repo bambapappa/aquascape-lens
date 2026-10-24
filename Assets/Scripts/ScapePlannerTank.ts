@@ -172,7 +172,7 @@ export class ScapePlannerTank extends BaseScriptComponent {
     for (const p of points) {
       const i = Math.floor(p.x / GRASS_CELL_CM);
       const j = Math.floor(p.y / GRASS_CELL_CM);
-      for (let di = -1; di <= 1; di++) for (let dj = -1; dj <= 1; dj++) cells.add((i + di) + "," + (j + dj));
+      cells.add(i + "," + j);
     }
     this.grassBlockers = cells;
   }

@@ -365,6 +365,12 @@ export class ScapePlannerPiece {
   }
 
   private clampXZ(x: number, z: number, e: vec3): { x: number; z: number } {
+    if (this.entry.render === "mound") {
+      // A mound may run into the glass; only its centre stays inside.
+      const mx = this.tank.halfWidth - 1;
+      const mz = this.tank.halfDepth - 1;
+      return { x: Math.max(-mx, Math.min(mx, x)), z: Math.max(-mz, Math.min(mz, z)) };
+    }
     const maxX = Math.max(0, this.tank.halfWidth - e.x / 2 - WALL_MARGIN_CM);
     const maxZ = Math.max(0, this.tank.halfDepth - e.z / 2 - WALL_MARGIN_CM);
     return { x: Math.max(-maxX, Math.min(maxX, x)), z: Math.max(-maxZ, Math.min(maxZ, z)) };

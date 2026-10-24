@@ -17,7 +17,7 @@ export interface Mound {
   material: MoundMaterial;
 }
 
-const SOIL_RGB = [0.42, 0.3, 0.2];
+const SOIL_RGB = [0.27, 0.19, 0.13];
 const SAND_RGB = [0.86, 0.78, 0.6];
 /** Below this much sand on top, a vertex reads as soil. */
 const SAND_VISIBLE_CM = 0.25;

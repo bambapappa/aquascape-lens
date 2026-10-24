@@ -83,12 +83,13 @@ export const CATALOG: CatalogEntry[] = [
   mound("soil", "Soil", "soil", 13, 6, "background"),
   mound("sand", "Sand", "sand", 9, 1.5, "foreground"),
   // ── stones ──
-  stone("seiryu", "Seiryu", "Seiryu stone", "seiryu", 12.5, 22, 6.8, new vec4(0.62, 0.68, 0.75, 1)),
+  stone("seiryu", "Seiryu", "Seiryu stone", "seiryu", 12.5, 22, 6.8, new vec4(0.38, 0.43, 0.5, 1)),
   stone("dragon", "Dragon", "Dragon stone", "dragon", 20, 17, 12),
   stone("lava", "Lava", "Lava rock", "lava", 14, 12, 12),
   stone("frodo", "Frodo", "Frodo stone", "frodo", 16, 18, 12),
   stone("elephant", "Elephant", "Elephant skin", "elephant", 20, 14, 14),
   stone("pagoda", "Pagoda", "Pagoda stone", "pagoda", 16, 18, 12),
+  stone("slate", "Slate", "Dark slate (flat)", "slate", 16, 6, 10, new vec4(0.45, 0.48, 0.55, 1)),
   // ── wood ──
   wood("spiderwood", "Spider", "Spider wood", "spiderwood", 28, 18, 22),
   wood("manzanita", "Manzanita", "Manzanita", "manzanita", 30, 20, 14),
@@ -99,7 +100,7 @@ export const CATALOG: CatalogEntry[] = [
   carpet("carpet", "MonteCarl", "Monte Carlo", 10, { style: "leaves", heightCm: 2.2, density: 2.2, baseRgb: [0.16, 0.42, 0.12], tipRgb: [0.45, 0.8, 0.3] }, 3),
   carpet("hccuba", "HC Cuba", "Hemianthus Cuba", 10, { style: "leaves", heightCm: 1.6, density: 3.2, baseRgb: [0.2, 0.5, 0.14], tipRgb: [0.55, 0.9, 0.35] }, 2.5),
   carpet("glosso", "Glosso", "Glossostigma", 10, { style: "leaves", heightCm: 2.5, density: 1.8, baseRgb: [0.12, 0.38, 0.12], tipRgb: [0.4, 0.72, 0.3] }, 4),
-  carpet("hairgrass", "Hairgrass", "Dwarf hairgrass", 10, { style: "blades", heightCm: 4.5, density: 6, baseRgb: [0.08, 0.3, 0.06], tipRgb: [0.38, 0.78, 0.2] }, 6),
+  carpet("hairgrass", "Hairgrass", "Dwarf hairgrass", 10, { style: "blades", heightCm: 3.2, density: 11, baseRgb: [0.2, 0.46, 0.08], tipRgb: [0.6, 0.92, 0.28] }, 6),
   carpet("lilaeopsis", "Lilaeops", "Lilaeopsis", 10, { style: "blades", heightCm: 3.5, density: 4.5, baseRgb: [0.1, 0.32, 0.1], tipRgb: [0.42, 0.75, 0.28] }, 5),
   // ── midground ──
   plant("bush", "Crypt", "Cryptocoryne wendtii", "bush", "midground", "mid", "midground", 12, 12, 12, 15, { broad: true }),

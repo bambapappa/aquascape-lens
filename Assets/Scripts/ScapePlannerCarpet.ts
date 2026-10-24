@@ -18,7 +18,7 @@ export interface CarpetSpec {
 
 /** How far blades may stand outside the tile, as a fraction of the tile size. */
 const FRAY = 0.12;
-const BLADE_SEGMENTS = 3;
+const BLADE_SEGMENTS = 2;
 
 /** Small deterministic PRNG (mulberry32). */
 export function seededRandom(seed: number): () => number {
@@ -59,16 +59,16 @@ export function buildCarpetMesh(builder: MeshBuilder, spec: CarpetSpec, widthCm:
 }
 
 function addBlade(verts: number[], idx: number[], spec: CarpetSpec, x: number, y: number, z: number, rand: () => number): void {
-  const h = spec.heightCm * (0.55 + 0.6 * rand());
-  const width = 0.14 + 0.1 * rand();
+  const h = spec.heightCm * (0.75 + 0.4 * rand());
+  const width = 0.08 + 0.06 * rand();
   const dir = rand() * Math.PI * 2;
-  const bend = (0.15 + 0.35 * rand()) * h;
+  const bend = (0.05 + 0.2 * rand()) * h;
   const bx = Math.cos(dir);
   const bz = Math.sin(dir);
   // The blade's flat side faces sideways to the bend so it reads from most angles.
   const px = -bz;
   const pz = bx;
-  const shade = 0.75 + 0.3 * rand();
+  const shade = 0.85 + 0.25 * rand();
   const start = verts.length / 10;
   for (let s = 0; s <= BLADE_SEGMENTS; s++) {
     const t = s / BLADE_SEGMENTS;

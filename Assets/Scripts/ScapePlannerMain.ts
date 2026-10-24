@@ -72,6 +72,7 @@ export class ScapePlannerMain extends BaseScriptComponent {
   @input prefabDownoi!: ObjectPrefab;
   @input prefabLotus!: ObjectPrefab;
   @input prefabStaurogyne!: ObjectPrefab;
+  @input prefabSlate!: ObjectPrefab;
 
   @ui.label("Placement")
   @input
@@ -198,6 +199,18 @@ export class ScapePlannerMain extends BaseScriptComponent {
     }
     this.tank.setMounds(mounds);
     for (const p of this.pieces) if (p.entry.render !== "mound") p.reseat();
+  }
+
+  /**
+   * Put the selected piece at tank-local (x, z) and finish it like a drag release. Used by
+   * scripted layouts (LEAF showcases), where a precise drag is not possible.
+   */
+  moveSelectedTo(x: number, z: number): void {
+    const piece = this.selected;
+    if (!piece) return;
+    if (piece.host) piece.detach();
+    piece.setLocal(x, z);
+    this.pieceMoved(piece);
   }
 
   scaleSelected(factor: number): void {
@@ -347,22 +360,30 @@ export class ScapePlannerMain extends BaseScriptComponent {
     const maxZ = Math.max(0, this.tank.halfDepth - d / 2 - 0.6);
     const isMound = entry.render === "mound";
     const infos = this.pieces.filter((p) => (p.entry.render === "mound") === isMound && !p.host && p.entry.render !== "carpet").map((p) => p.info());
-    // Rows: the zone's own depth first, then in front of it, then behind it.
+    // Rows: the zone's own depth first, then in front of it, then behind it. If nothing is
+    // free, the spot with the least overlap wins.
+    let fallback = { x: SPAWN_X_CM[SPAWN_X_CM.length - 1], z: zoneZ };
+    let leastOverlap = Infinity;
     for (const dz of SPAWN_Z_OFFSETS_CM) {
       const z = Math.max(-maxZ, Math.min(maxZ, zoneZ + dz));
       for (const x of SPAWN_X_CM) {
         let free = true;
+        let overlapArea = 0;
         for (const p of infos) {
           // Mounds may overlap by half so they merge into one ridge; other pieces keep clear.
           const reach = isMound ? 0.25 : 0.5;
           const overlapX = Math.abs(p.x - x) < (p.width + w) * reach;
           const overlapZ = Math.abs(p.z - z) < (p.depth + d) * reach;
-          if (overlapX && overlapZ) { free = false; break; }
+          if (overlapX && overlapZ) {
+            free = false;
+            overlapArea += ((p.width + w) * reach - Math.abs(p.x - x)) * ((p.depth + d) * reach - Math.abs(p.z - z));
+          }
         }
         if (free) return { x, z };
+        if (overlapArea < leastOverlap) { leastOverlap = overlapArea; fallback = { x, z }; }
       }
     }
-    return { x: SPAWN_X_CM[SPAWN_X_CM.length - 1], z: zoneZ };
+    return fallback;
   }
 
 
@@ -449,6 +470,7 @@ export class ScapePlannerMain extends BaseScriptComponent {
       case "downoi": return this.prefabDownoi;
       case "lotus": return this.prefabLotus;
       case "staurogyne": return this.prefabStaurogyne;
+      case "slate": return this.prefabSlate;
     }
     return null;
   }
