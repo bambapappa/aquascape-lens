@@ -21,7 +21,7 @@ const SIZE_STEP = 1.2;
 const MIN_SCALE = 0.25;
 const MAX_SCALE = 3;
 /** A new carpet tile overlaps its neighbour by this share of the tile, so tiles knit into one lawn. */
-const CARPET_OVERLAP = 0.15;
+const CARPET_OVERLAP = 0.25;
 const STYLE_RULE_ROWS = 3;
 /** Palette tray offset from the tank origin: below the table top and out in front of it. */
 const PALETTE_DROP_CM = -14;
@@ -419,8 +419,21 @@ export class ScapePlannerMain extends BaseScriptComponent {
     for (const p of this.pieces) if (p.entry.render === "carpet") p.reseat();
   }
 
+  private carpetKey = "";
+
+  /** Tint the substrate under carpet tiles when tiles were added, moved or removed. */
+  private refreshCarpetCover(): void {
+    const tiles = this.pieces.filter((p) => p.entry.render === "carpet" && p.entry.carpet);
+    const key = tiles.map((p) => p.xLocal.toFixed(1) + "," + p.zLocal.toFixed(1) + "," + p.scale).join("|") + "#" + this.tank.sizeLabel;
+    if (key === this.carpetKey) return;
+    this.carpetKey = key;
+    this.tank.setCarpetCover(tiles.map((p) => ({ x: p.xLocal, z: p.zLocal, w: p.entry.widthCm * p.scale, d: p.entry.depthCm * p.scale,
+      rgb: (p.entry.carpet as { baseRgb: number[] }).baseRgb })));
+  }
+
   private refreshCoach(speakUp: boolean): void {
     if (this.hardscapeChanged()) this.refreshCarpets();
+    this.refreshCarpetCover();
     const infos = this.layoutInfo();
     const tank = this.tankDims();
     const results = evaluateLayout(infos, tank);

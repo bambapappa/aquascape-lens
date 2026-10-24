@@ -26,7 +26,7 @@ export const MAX_LEAN_DEG = 40;
 const EMBED_SHARE = 0.2;
 const EMBED_MAX_CM = 5;
 /** Surface points this close above the substrate count as the piece's foot (keeps grass out). */
-const FOOT_HEIGHT_CM = 2.5;
+const FOOT_HEIGHT_CM = 1.5;
 /** Most surface points kept per hardscape piece for epiphyte placement. */
 const MAX_SURFACE_POINTS = 1500;
 /** Epiphytes look for host surface points within this radius (cm, host space) of the drop point. */
@@ -217,7 +217,12 @@ export class ScapePlannerPiece {
     const toTank = this.tank.getTransform().getInvertedWorldTransform();
     const pivotWorld = this.pivot.getTransform().getWorldTransform();
     const out: vec2[] = [];
+    // Only the stone's own foot counts (its lowest quarter before lean), not a leaning body near a slope.
+    let minY = Infinity;
+    for (const p of this.surfacePoints) minY = Math.min(minY, p.y);
+    const footTop = minY + 0.25 * this.entry.heightCm;
     for (const p of this.surfacePoints) {
+      if (p.y > footTop) continue;
       const q = toTank.multiplyPoint(pivotWorld.multiplyPoint(p));
       if (q.y < this.tank.surfaceAt(q.x, q.z) + FOOT_HEIGHT_CM) out.push(new vec2(q.x, q.z));
     }

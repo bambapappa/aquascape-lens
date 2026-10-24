@@ -32,18 +32,46 @@ const COLOR_GRAIN_FINE = 0.12;
 const LIGHT_DIR = normalize3([-0.35, 0.85, 0.4]);
 const AMBIENT = 0.45;
 
+/** A carpet tile's footprint: the substrate under it turns dense green, like the runners under a lawn. */
+export interface CoverRect {
+  x: number;
+  z: number;
+  w: number;
+  d: number;
+  rgb: number[];
+}
+
+/** How strongly the substrate under a carpet takes the carpet's base colour. */
+const COVER_SHARE = 0.85;
+
 export class SubstrateField {
   readonly widthCm: number;
   readonly depthCm: number;
   readonly frontCm: number;
   readonly backCm: number;
   private mounds: Mound[] = [];
+  private cover: CoverRect[] = [];
 
   constructor(widthCm: number, depthCm: number, frontCm: number, backCm: number) {
     this.widthCm = widthCm;
     this.depthCm = depthCm;
     this.frontCm = frontCm;
     this.backCm = backCm;
+  }
+
+  setCover(cover: CoverRect[]): void {
+    this.cover = cover.slice();
+  }
+
+  /** Carpet base colour at (x, z) with its strength (0 where no carpet lies). */
+  coverAt(x: number, z: number): { rgb: number[]; share: number } | null {
+    for (const c of this.cover) {
+      const ex = Math.abs(x - c.x) / (c.w / 2);
+      const ez = Math.abs(z - c.z) / (c.d / 2);
+      const e = Math.max(ex, ez);
+      if (e < 1.05) return { rgb: c.rgb, share: COVER_SHARE * Math.min(1, (1.05 - e) / 0.15) };
+    }
+    return null;
   }
 
   setMounds(mounds: Mound[]): void {
@@ -109,6 +137,8 @@ export function buildSubstrateMesh(builder: MeshBuilder, field: SubstrateField, 
       const e = 0.5;
       const n = normalize3([field.heightAt(x - e, z) - field.heightAt(x + e, z), 2 * e, field.heightAt(x, z - e) - field.heightAt(x, z + e)]);
       let c = surfaceColor(field.sandDepthAt(x, z), n, x, z);
+      const cov = field.coverAt(x, z);
+      if (cov) c = c.map((v, k) => v + (cov.rgb[k] * lightOf(n) - v) * cov.share);
       if (zoneTint) c = tintByZone(c, z, field.depthCm);
       verts.push(x, y, z, n[0], n[1], n[2], c[0], c[1], c[2], 1);
     }

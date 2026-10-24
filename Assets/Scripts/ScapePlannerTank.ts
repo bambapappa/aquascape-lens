@@ -10,7 +10,7 @@
 // Local frame: origin at the centre of the tank floor (inside the glass),
 // +x to the right, +y up, +z toward the front glass (toward the user).
 
-import { Mound, SubstrateField, buildSubstrateMesh } from "./ScapePlannerSubstrate";
+import { CoverRect, Mound, SubstrateField, buildSubstrateMesh } from "./ScapePlannerSubstrate";
 
 /** Gap between the substrate mesh and the glass, in cm. */
 const SUBSTRATE_INSET_CM = 0.2;
@@ -85,6 +85,7 @@ export class ScapePlannerTank extends BaseScriptComponent {
   private sizeIndex = 2;
   private field: SubstrateField = new SubstrateField(60, 30, 4, 7);
   private mounds: Mound[] = [];
+  private cover: CoverRect[] = [];
   private substrateGroup: SceneObject | null = null;
   private zoneTintOn = true;
   private grassBlockers: Set<string> = new Set<string>();
@@ -126,6 +127,7 @@ export class ScapePlannerTank extends BaseScriptComponent {
     this.tableWidthCm = Math.max(80, size.widthCm + 30);
     this.tableDepthCm = Math.max(50, size.depthCm + 20);
     this.mounds = [];
+    this.cover = [];
     this.rebuild();
   }
 
@@ -180,6 +182,12 @@ export class ScapePlannerTank extends BaseScriptComponent {
   isGrassBlocked(xLocal: number, zLocal: number): boolean {
     if (this.grassBlockers.size === 0) return false;
     return this.grassBlockers.has(Math.floor(xLocal / GRASS_CELL_CM) + "," + Math.floor(zLocal / GRASS_CELL_CM));
+  }
+
+  /** Replace the carpet footprints that tint the substrate green, and rebuild it. */
+  setCarpetCover(cover: CoverRect[]): void {
+    this.cover = cover.slice();
+    this.buildSubstrate();
   }
 
   /** Replace the soil and sand mounds and rebuild the substrate mesh. */
@@ -305,6 +313,7 @@ export class ScapePlannerTank extends BaseScriptComponent {
   private buildSubstrate(): void {
     this.field = new SubstrateField(this.widthCm, this.depthCm, this.substrateFrontCm, this.substrateBackCm);
     this.field.setMounds(this.mounds);
+    this.field.setCover(this.cover);
     if (this.substrateGroup) {
       this.builtGroups = this.builtGroups.filter((g) => g !== this.substrateGroup);
       this.substrateGroup.destroy();

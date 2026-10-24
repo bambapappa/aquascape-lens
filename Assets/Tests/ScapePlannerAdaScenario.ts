@@ -78,21 +78,21 @@ export class ScapePlannerAdaScenario extends Scenario {
     await this.moveTo("Piece_Seiryu", 8, -1);
 
     // Flat slate: a slab split off under the right stone, one at the left stone's foot.
-    await this.slate(18, 2, 1, 2, false);
-    await this.slate(-18, 4, 0, 22, false);
+    await this.slate(18, 2, 0, 2, false);
+    await this.slate(-18, 4, -1, 22, false);
     // Back stones: a rounded one at the back right, a lower one at the back left.
-    await this.slate(20, -8, 2, 5, false);
-    await this.slate(-20, -9, -1, 9, true);
+    await this.slate(20, -8, 1, 5, false);
+    await this.slate(-20, -9, -2, 9, true);
     // Edge stones, cut off by the side glass in the photo.
-    await this.slate(-28, -3, 0, 4, false);
-    await this.slate(28, -2, 0, 14, true);
+    await this.slate(-28, -3, -1, 4, false);
+    await this.slate(28, -2, -1, 14, true);
     // Chips between the two main stones.
-    await this.slate(1, 5, -4, 3, false);
-    await this.slate(4, 3, -4, 9, true);
-    await this.slate(-2, 7, -5, 15, false);
+    await this.slate(1, 5, -5, 3, false);
+    await this.slate(4, 3, -5, 9, true);
+    await this.slate(-2, 7, -6, 15, false);
 
     // Dwarf hairgrass over the whole floor, row by row from the front glass.
-    for (let i = 0; i < 21; i++) await this.place("hairgrass", 100);
+    for (let i = 0; i < 32; i++) await this.place("hairgrass", 100);
     await this.tap("Button_guides");
     print("[ADA] pieces " + this.interactor.countPieces());
   }
