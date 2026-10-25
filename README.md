@@ -1,13 +1,24 @@
-# Scape Planner: an AR aquascaping planner for SPECS
+# Scape Planner
 
-Stand at your empty aquarium and compose the substrate, the hardscape and the
-planting at real size, inside the tank, before you touch a single real stone.
-The Lens draws the classic composition guides on the tank itself (thirds
-grid, depth zones) and a coach card tells you whether the layout follows the
-rules and how well it fits a style: Iwagumi, Nature, Dutch or Jungle.
+**Plan your aquascape at real size, inside the tank, before the water goes in.**
+An augmented reality Lens for SPECS, built for the
+[Learn AR with SPECS](https://learn-specs.devpost.com) hackathon.
 
-Built for **Learn AR with SPECS** (Devpost Learn, sponsor Snap), October and
-November 2026.
+![A 60 cm Iwagumi layout in Scape Planner: two tall stones leaning apart, smaller stones at their feet, a hairgrass lawn over a soil ridge](docs/images/iwagumi-60p.jpg)
+
+Aquascapers compose a layout dry, because moving a stone after the tank is
+filled clouds the water for days. Scape Planner puts the plan in the tank
+you are standing in front of: soil and sand, stones and roots, carpets,
+moss and stem plants, all at real size. A coach card checks the classic
+composition rules and scores the layout against four styles. Your hands
+stay free for the real stones.
+
+| Hardscape | Planted | From above |
+|---|---|---|
+| ![A 120 cm tank with sand, grey stones and tall roots, before planting](docs/images/jungle-120p-hardscape.jpg) | ![The same 120 cm tank planted with moss, epiphytes and a wall of green stem plants](docs/images/jungle-120p-planted.jpg) | ![The planted 120 cm tank seen straight from above](docs/images/jungle-120p-top.jpg) |
+
+**Demo video:** linked from the Devpost submission (2:51, screen recording of the
+Lens Studio preview).
 
 ## For judges: run it in two minutes
 

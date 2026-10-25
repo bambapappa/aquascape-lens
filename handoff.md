@@ -1,18 +1,17 @@
 # Handoff
 
-State 2026-10-23 night (after v3):
+State 2026-10-25:
 
-- Lens builds, runs in the Lens Studio 5.24.1 preview, and all eight LEAF
-  scenarios in `Assets/Tests/` pass. v3 adds a tabbed palette with 38
-  pieces (11 hardscape, 27 plants, 26 Meshy models), six standard tank
-  sizes (Tank button) and species tints. v2 added style scoring (Iwagumi,
-  Nature, Dutch, Jungle) and rotate/lean/size. Project saved, main pushed.
-- Known cosmetic issue: the palette back plate renders a little narrower
-  than the button rows; buttons work.
-- `devpost/` holds the design brief (approved), interview answers, research
-  notes, build log, video storyboard and submission text.
-- A captioned stop-motion draft of the demo was assembled from preview
-  captures (sent in chat, not committed).
+- The Lens builds and runs in the Lens Studio 5.24.1 preview (Plane scene).
+  All twelve LEAF scenarios in `Assets/Tests/` pass, including the two
+  showcase layouts (`scape-11-iwagumi-60p`, `scape-12-jungle-120p`).
+- Features: soil and sand substrate, 14 hardscape pieces with rotate, lean,
+  resize and mirror, carpet tiles, epiphytes and moss on the wood, 32 plant
+  species, coach with style scoring, six tank sizes.
+- The demo video with voiceover is cut (2:51, not in git); the script is
+  `devpost/video-script.md`, the submission text `devpost/submission.md`.
+- The repo was scanned for secrets (gitleaks, trufflehog, full history):
+  nothing found.
 
 Next steps for the owner (as of 2026-10-25):
 1. Check the Git LFS quota on GitHub (about 420 MB in LFS; every clone of a
