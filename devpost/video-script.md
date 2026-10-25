@@ -91,7 +91,7 @@ top of the voiceover. Keep music royalty-free, or leave it out.
 **Voiceover**
 > The finished layout, from every side and from above. Scape Planner is for
 > hobby aquascapers trying a layout before buying stones and plants, and for
-> beginners who know the rules but can't see them yet. It shares your view,
+> beginners who know the theory but can't yet picture it in a real tank. It shares your view,
 > draws at real size in your space, and leaves both hands free for the real
 > stones. Planned with the Devpost Learn skill pack, built with CLAD and the
 > Lens Studio MCP, running in the Lens Studio preview.

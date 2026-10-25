@@ -34,8 +34,8 @@ Dutch and Jungle. A thirds grid and depth zones are drawn on the tank.
 ## Who it is for
 
 Hobby aquascapers setting up a new tank who want to try a layout before
-buying stones and plants, and beginners who know the rules on paper but
-cannot see them yet.
+buying stones and plants, and beginners who know the theory but cannot yet
+picture it in a real tank.
 
 ## How we built it
 
