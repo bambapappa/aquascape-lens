@@ -17,8 +17,8 @@ stay free for the real stones.
 |---|---|---|
 | ![A 120 cm tank with sand, grey stones and tall roots, before planting](docs/images/jungle-120p-hardscape.jpg) | ![The same 120 cm tank planted with moss, epiphytes and a wall of green stem plants](docs/images/jungle-120p-planted.jpg) | ![The planted 120 cm tank seen straight from above](docs/images/jungle-120p-top.jpg) |
 
-**Demo video:** linked from the Devpost submission (2:51, screen recording of the
-Lens Studio preview).
+**[Watch the demo video on YouTube](https://www.youtube.com/watch?v=PFoR615oTYQ)**
+(2:51, a screen recording of the Lens running in the Lens Studio preview).
 
 ## For judges: run it in two minutes
 
