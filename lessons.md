@@ -18,3 +18,6 @@
 - Screen recording from the Claude app needs its Screen Recording permission; without it `screencapture` silently returns only the wallpaper. The screensaver also blanks recordings: run `caffeinate -u -t 1` every 20 s while recording. `CapturePanelScreenshotTool` works even when the screen is locked.
 - Use `h264_videotoolbox` for ffmpeg screen capture; libx264 load slowed the preview enough to time out interactions.
 - Meshy plant models often come with a pot or a base; a horizontal bisect in headless Blender (`bmesh.ops.bisect_plane`, `clear_inner`) removes it, and Lens Studio keeps the prefab id when the GLB is overwritten in place.
+- LEAF reloads the Lens when a scenario starts, and the Lens anchors the planner 1 m in front of the camera at that moment. For recordings: reset the preview camera before `run_leaf_scenario`, wait a few seconds, read the Tank's world position with `QueryRuntimeSceneTool`, and compute every camera pose from it.
+- Specs' preview clips AR content to the glasses' field of view: a 120 cm tank needs the camera about 2.8 m away to fit; 60 cm fits at about 1.3 m.
+- A looping `caffeinate -u -t 1` does not stop the screensaver; a persistent `caffeinate -d -u -i` for the recording's duration does. Neither helps once the screen is locked (`screencapture` then says "could not create image from rect").
