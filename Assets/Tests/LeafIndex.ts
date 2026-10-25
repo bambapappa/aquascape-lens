@@ -11,8 +11,8 @@ import { ScapePlannerStyleAnglesScenario } from "./ScapePlannerStyleAnglesScenar
 import { ScapePlannerTabsTankScenario } from "./ScapePlannerTabsTankScenario";
 import { ScapePlannerDemoScenario } from "./ScapePlannerDemoScenario";
 import { ScapePlannerV4Scenario } from "./ScapePlannerV4Scenario";
-import { ScapePlannerAdaScenario } from "./ScapePlannerAdaScenario";
-import { ScapePlannerGreenAquaScenario } from "./ScapePlannerGreenAquaScenario";
+import { ScapePlannerIwagumi60Scenario } from "./ScapePlannerIwagumi60Scenario";
+import { ScapePlannerJungle120Scenario } from "./ScapePlannerJungle120Scenario";
 
 @component
 export class LeafIndex extends BaseScriptComponent {
@@ -27,8 +27,8 @@ export class LeafIndex extends BaseScriptComponent {
     { id: "scape-7-style-and-angles", typename: ScapePlannerStyleAnglesScenario.getTypeName() },
     { id: "scape-8-tabs-and-tank-sizes", typename: ScapePlannerTabsTankScenario.getTypeName() },
     { id: "scape-10-v4-substrate-carpet-moss", typename: ScapePlannerV4Scenario.getTypeName() },
-    { id: "scape-11-ada-60p-iwagumi", typename: ScapePlannerAdaScenario.getTypeName() },
-    { id: "scape-12-greenaqua-120p-jungle", typename: ScapePlannerGreenAquaScenario.getTypeName() },
+    { id: "scape-11-iwagumi-60p", typename: ScapePlannerIwagumi60Scenario.getTypeName() },
+    { id: "scape-12-jungle-120p", typename: ScapePlannerJungle120Scenario.getTypeName() },
     { id: "scape-9-demo", typename: ScapePlannerDemoScenario.getTypeName() },
   ];
 }

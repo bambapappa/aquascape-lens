@@ -1,5 +1,7 @@
 # Demo video storyboard (under 3 minutes)
 
+> Superseded by `video-script.md`, which is timed to the final cut.
+
 Record the Lens Studio preview (QuickTime: File > New Screen Recording, pick
 the Preview panel area). Interactive Preview, Sunlit Room, SPECS 27 device.
 Click is a pinch. Right-drag or Shift to look around, WASD to walk.

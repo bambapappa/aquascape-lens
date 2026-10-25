@@ -1,9 +1,8 @@
-// Recreates a Green Aqua jungle-style 120P (reference photo: hardscape before planting,
-// then the planted result): tall redmoor roots in three clusters leaning in different
+// Builds a jungle-style 120P in two phases (hardscape, then planting): tall redmoor roots in three clusters leaning in different
 // directions, grey stones at their feet, white sand in front and soil behind; then moss,
 // Bucephalandra and Anubias on the wood, Cryptocoryne and Staurogyne in the midground and
 // stem plants and Vallisneria at the back. Everything goes through the palette; Main's
-// scripted move puts each piece at its spot. "[GA] hardscape done" marks the before state.
+// scripted move puts each piece at its spot. "[J120] hardscape done" marks the before state.
 import { Scenario } from "Leaf.lspkg/Scenarios/scenario/Scenario";
 import { findSceneObjectsByName, sleep } from "Leaf.lspkg/Utils/common/Utils";
 import { ScapePlannerMain } from "../Scripts/ScapePlannerMain";
@@ -42,7 +41,7 @@ const BACK_X = [-55, -48, -41, -34, -27, -20, -13, -6, 1, 8, 15, 22, 29, 36, 43,
 const RED_ACCENTS = [5, 12];
 
 @component
-export class ScapePlannerGreenAquaScenario extends Scenario {
+export class ScapePlannerJungle120Scenario extends Scenario {
   private interactor = new ScapePlannerLeafInteractor();
   private main!: ScapePlannerMain;
 
@@ -51,7 +50,7 @@ export class ScapePlannerGreenAquaScenario extends Scenario {
       try {
         await this.interactor.tapButton(name, FAST_MS);
       } catch (e) {
-        print("[GA] skipped " + name + ": " + e);
+        print("[J120] skipped " + name + ": " + e);
       }
       await sleep(20);
     }
@@ -63,7 +62,7 @@ export class ScapePlannerGreenAquaScenario extends Scenario {
     try {
       await this.interactor.tapPiece(id, FAST_MS);
     } catch (e) {
-      print("[GA] skipped " + id + ": " + e);
+      print("[J120] skipped " + id + ": " + e);
       return -1;
     }
     if (size > 0) await this.tap("Button_bigger", size);
@@ -83,7 +82,7 @@ export class ScapePlannerGreenAquaScenario extends Scenario {
     try {
       await this.interactor.tapPiece(id, FAST_MS);
     } catch (e) {
-      print("[GA] skipped " + id + ": " + e);
+      print("[J120] skipped " + id + ": " + e);
     }
     await sleep(120);
   }
@@ -117,7 +116,7 @@ export class ScapePlannerGreenAquaScenario extends Scenario {
     await this.put("spiderwood", 40, 6, -1, 12, 0, true);
 
     print("[DEMO] cam:before");
-    print("[GA] hardscape done, pieces " + this.main.pieceCount);
+    print("[J120] hardscape done, pieces " + this.main.pieceCount);
     await sleep(BEFORE_HOLD_MS);
 
     // Several small tufts per root: moss everywhere, Anubias and Buce on most.
@@ -145,7 +144,7 @@ export class ScapePlannerGreenAquaScenario extends Scenario {
     }
 
     print("[DEMO] cam:after");
-    print("[GA] planted, pieces " + this.main.pieceCount);
+    print("[J120] planted, pieces " + this.main.pieceCount);
     await sleep(3000);
   }
 }

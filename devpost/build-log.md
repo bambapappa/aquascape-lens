@@ -151,8 +151,8 @@ wood, and the substrate must be built up with soil and sand. Done:
 - The palette moved below the line of sight into the tank; the preview uses
   the empty Plane scene.
 - New LEAF scenarios: v4 checks (mounds, carpet row, moss follows the stone,
-  mirror and bigger) and an ADA-style 60P Iwagumi built with the palette
-  alone (devpost/ada-60p-preview.png). All ten pass.
+  mirror and bigger) and a classic 60P Iwagumi built with the palette
+  alone (devpost/iwagumi-60p-preview.png). All ten pass.
 
 ## Credits
 

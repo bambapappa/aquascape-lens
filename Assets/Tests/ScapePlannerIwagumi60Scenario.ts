@@ -1,4 +1,4 @@
-// Builds an ADA-style Iwagumi in a 60P with the palette alone, after the reference photo:
+// Builds a classic Iwagumi in a 60P with the palette alone, after the reference photo:
 // two tall Seiryu stones leaning outward in a V, a few small stones at their feet, the
 // substrate mounded toward the middle and back, and dwarf hairgrass over the whole floor.
 // It asserts nothing; it is a showcase and a check that the tools are enough.
@@ -8,7 +8,7 @@ import { ScapePlannerMain } from "../Scripts/ScapePlannerMain";
 import { ScapePlannerLeafInteractor } from "./ScapePlannerLeafInteractor";
 
 @component
-export class ScapePlannerAdaScenario extends Scenario {
+export class ScapePlannerIwagumi60Scenario extends Scenario {
   private interactor = new ScapePlannerLeafInteractor();
 
   private async tap(name: string, times: number = 1, holdMs: number = 150): Promise<void> {
@@ -16,7 +16,7 @@ export class ScapePlannerAdaScenario extends Scenario {
       try {
         await this.interactor.tapButton(name);
       } catch (e) {
-        print("[ADA] skipped " + name + ": " + e);
+        print("[IWA] skipped " + name + ": " + e);
       }
       await sleep(holdMs);
     }
@@ -26,7 +26,7 @@ export class ScapePlannerAdaScenario extends Scenario {
     try {
       await this.interactor.tapPiece(id);
     } catch (e) {
-      print("[ADA] skipped " + id + ": " + e);
+      print("[IWA] skipped " + id + ": " + e);
     }
     await sleep(holdMs);
   }
@@ -94,6 +94,6 @@ export class ScapePlannerAdaScenario extends Scenario {
     // Dwarf hairgrass over the whole floor, row by row from the front glass.
     for (let i = 0; i < 32; i++) await this.place("hairgrass", 100);
     await this.tap("Button_guides");
-    print("[ADA] pieces " + this.interactor.countPieces());
+    print("[IWA] pieces " + this.interactor.countPieces());
   }
 }
